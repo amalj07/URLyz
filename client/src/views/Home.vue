@@ -7,7 +7,7 @@
             </div>
             <div>
                 <v-row justify="center">
-                   <v-col cols="2" md="6">
+                   <v-col cols="8" md="6">
                         <v-text-field
                             flat
                             label="Solo"
