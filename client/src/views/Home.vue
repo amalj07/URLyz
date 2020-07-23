@@ -16,11 +16,17 @@
                             height="60"
                             outlined
                             color="deep-purple lighten-1"
+                            v-model="longUrl"
                         ></v-text-field>
                     </v-col>
                     <v-col cols="1" md="1">
                         <div>
-                            <v-btn flat height="57" color="deep-purple lighten-1 white--text">Shorten</v-btn>
+                            <v-btn 
+                                flat 
+                                height="57" 
+                                color="deep-purple lighten-1 white--text"
+                                @click="shorten"
+                            >Shorten</v-btn>
                         </div>
                     </v-col>
                 </v-row>
@@ -31,7 +37,16 @@
 
 <script>
 export default {
-
+    data() {
+        return {
+            longUrl: ''
+        }
+    },
+    methods: {
+        shorten() {
+            console.log(this.longUrl)
+        }
+    }
 }
 </script>
 
