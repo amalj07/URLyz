@@ -31,7 +31,7 @@ router
                 let url = await urlModel.findOne({ longUrl })
 
                 if(url) {
-                    res.status(200).json(url)
+                    res.status(200).json(url.shortUrl)
                 } else {
                     // Create new short url if long url is not present
                     const shortUrl = baseUrl + '/' + urlCode
@@ -45,7 +45,7 @@ router
 
                     await url.save()
 
-                    res.status(200).json(url)
+                    res.status(200).json(url.shortUrl)
                 }
             } catch (error) {
                 console.log(error)

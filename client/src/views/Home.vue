@@ -44,7 +44,18 @@ export default {
     },
     methods: {
         shorten() {
-            console.log(this.longUrl)
+            let url = this.$serverURLI + "/api/url/shorten"
+            this.$http.post(url, {
+                longUrl: this.longUrl
+            }).then(response => {
+                if(response.status == 200) {
+                    console.log(response.data)
+                } else {
+                    console.log(response.data)
+                }
+            }).catch(error => {
+                alert(error)
+            })
         }
     }
 }

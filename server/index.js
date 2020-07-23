@@ -1,10 +1,14 @@
 const express = require('express')
+const cors = require('cors')
 const connectDB = require('./config/db')
 
 const app = express()
 
 // connect ot database
 connectDB()
+
+// Handle cross origin request
+app.use(cors())
 
 // Body parser
 app.use(express.json({ extented: false}))
