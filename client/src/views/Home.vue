@@ -5,6 +5,7 @@
                 <p class="text-center text-h3 pt-5">myURL</p>
                 <p class="text-center text-h5 pb-5">Create your own links...</p>
             </div>
+            <div>
                 <v-row class="mt-16" justify="center">
                    <v-col cols="8" md="6">
                         <v-text-field
@@ -27,6 +28,24 @@
                             >Shorten</v-btn>
                     </v-col>
                 </v-row>
+                <v-snackbar
+                    text
+                    top
+                    color="error"
+                    v-model="snackbar">
+                    {{ this.snackbarText }}
+                    <template v-slot:action="{ attrs }">
+                        <v-btn
+                        color="error"
+                        text
+                        v-bind="attrs"
+                        @click="snackbar = false"
+                        >
+                        <v-icon left>close</v-icon>
+                        </v-btn>
+                    </template>
+                </v-snackbar>
+            </div>
                 <v-row justify="center">
                         <v-card class="ml-8"
                             outlined
@@ -60,7 +79,9 @@ export default {
             longUrl: '',
             shortUrl: '',
             copyBtn: 'COPY LINK',
-            copyBtnTxtClr: 'purple--text'
+            copyBtnTxtClr: 'purple--text',
+            snackbar: false,
+            snackbarText: ''
         }
     },
     watch: {
@@ -81,10 +102,16 @@ export default {
                 if(response.status == 200) {
                     this.shortUrl = response.data
                 } else {
-                    console.log(response.data)
+                    this.snackbar = true
+                    this.snackbarText = response.data
                 }
             }).catch(error => {
-                alert(error)
+                this.snackbar = true
+                if(error.message == 'Request failed with status code 401') {
+                    this.snackbarText = 'Invalid URL'
+                } else if (error.message == 'Request failed with status code 500') {
+                    this.snackbarText = 'Internal server error'
+                }
             })
         },
         copyShortUrl() {
