@@ -49,8 +49,8 @@
                 <v-row justify="center">
                         <v-card class="ml-8"
                             outlined
-                            max-width=800
-                            min-width=800
+                            max-width=600
+                            min-width=710
                             min-height=60>
                             <v-list-item>
                                 <v-card-text>
@@ -61,6 +61,7 @@
                                     text
                                     :class="`copy white lighten-1 ${this.copyBtnTxtClr}`"
                                     height=59
+                                    v-ripple="{ class: 'white--text' }"
                                     v-clipboard:copy="shortUrl"
                                     v-clipboard:success="copyShortUrl">
                                         {{ this.copyBtn }}
