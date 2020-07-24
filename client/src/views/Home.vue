@@ -1,12 +1,11 @@
 <template>
     <div class="home">
         <v-container>
-            <div class="my-16">
+            <div class="my-10">
                 <p class="text-center text-h3 pt-5">myURL</p>
                 <p class="text-center text-h5 pb-5">Create your own links...</p>
             </div>
-            <div>
-                <v-row justify="center">
+                <v-row class="mt-16" justify="center">
                    <v-col cols="8" md="6">
                         <v-text-field
                             flat
@@ -20,17 +19,34 @@
                         ></v-text-field>
                     </v-col>
                     <v-col cols="1" md="1">
-                        <div>
                             <v-btn 
                                 flat 
                                 height="57" 
                                 color="deep-purple lighten-1 white--text"
                                 @click="shorten"
                             >Shorten</v-btn>
-                        </div>
                     </v-col>
                 </v-row>
-            </div>
+                <v-row justify="center">
+                        <v-card class="ml-8"
+                            outlined
+                            max-width=800
+                            min-width=800
+                            min-height=60>
+                            <v-list-item>
+                                <v-card-text>
+                                    {{ this.shortUrl }}
+                                </v-card-text>
+                                <v-spacer></v-spacer>
+                                <v-btn
+                                    text
+                                    class="white lighten-1 purple--text"
+                                    height=59>
+                                        copy link
+                                </v-btn>
+                            </v-list-item>
+                        </v-card>  
+                </v-row>
         </v-container>
     </div>
 </template>
@@ -39,7 +55,8 @@
 export default {
     data() {
         return {
-            longUrl: ''
+            longUrl: '',
+            shortUrl: ''
         }
     },
     methods: {
@@ -49,7 +66,7 @@ export default {
                 longUrl: this.longUrl
             }).then(response => {
                 if(response.status == 200) {
-                    console.log(response.data)
+                    this.shortUrl = response.data
                 } else {
                     console.log(response.data)
                 }
