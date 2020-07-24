@@ -63,6 +63,15 @@ export default {
             copyBtnTxtClr: 'purple--text'
         }
     },
+    watch: {
+        longUrl: function() {
+            if(this.longUrl == '') {
+                this.shortUrl = '',
+                this.copyBtn = 'COPY LINK',
+                this.copyBtnTxtClr = 'purple--text'
+            }
+        }
+    },
     methods: {
         shorten() {
             let url = this.$serverURLI + "/api/url/shorten"
