@@ -40,9 +40,11 @@
                                 <v-spacer></v-spacer>
                                 <v-btn
                                     text
-                                    class="white lighten-1 purple--text"
-                                    height=59>
-                                        copy link
+                                    :class="`copy white lighten-1 ${this.copyBtnTxtClr}`"
+                                    height=59
+                                    v-clipboard:copy="shortUrl"
+                                    v-clipboard:success="copyShortUrl">
+                                        {{ this.copyBtn }}
                                 </v-btn>
                             </v-list-item>
                         </v-card>  
@@ -56,7 +58,9 @@ export default {
     data() {
         return {
             longUrl: '',
-            shortUrl: ''
+            shortUrl: '',
+            copyBtn: 'COPY LINK',
+            copyBtnTxtClr: 'purple--text'
         }
     },
     methods: {
@@ -73,11 +77,17 @@ export default {
             }).catch(error => {
                 alert(error)
             })
+        },
+        copyShortUrl() {
+            this.copyBtn = "LINK COPIED!"
+            this.copyBtnTxtClr = 'green--text'
         }
     }
 }
 </script>
 
 <style>
-
+.v-btn.copy::before {
+  background-color: transparent;
+}
 </style>

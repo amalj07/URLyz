@@ -4,6 +4,9 @@ import vuetify from './plugins/vuetify';
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
 import router from './router'
 import Axios from 'axios'
+import VueClipboard from 'vue-clipboard2'
+
+Vue.use(VueClipboard)
 
 Vue.prototype.$http = Axios
 Vue.prototype.$serverURLI = "http://localhost:5000";
