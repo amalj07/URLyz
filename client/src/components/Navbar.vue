@@ -2,8 +2,8 @@
   <nav>
       <v-app-bar flat app class="deep-purple lighten-1">
           <v-toolbar-title class="white--text ml-13">
-              <span class="font-weight-light">my</span>
-              <span>URL</span>
+              <span class="font-weight-light">URL</span>
+              <span class="font-weight-medium">yz</span>
           </v-toolbar-title>
 
         <v-spacer></v-spacer>

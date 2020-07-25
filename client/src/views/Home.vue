@@ -2,7 +2,7 @@
     <div class="home">
         <v-container>
             <div class="my-10">
-                <p class="text-center text-h3 pt-5">myURL</p>
+                <p class="text-center text-h3 pt-5">URLyz</p>
                 <p class="text-center text-h5 pb-5">Create your own links...</p>
             </div>
             <div>
