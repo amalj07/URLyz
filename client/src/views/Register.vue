@@ -5,7 +5,7 @@
                 <p class="text-center text-h4">Create new account</p>
             </div> -->
             <v-row justify="center">
-                <v-form >
+                <v-form class="mt-10">
                     <v-card
                         outlined
                         min-width="450">
