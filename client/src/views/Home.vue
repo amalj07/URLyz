@@ -100,6 +100,8 @@ export default {
             this.$http.post(url, {
                 longUrl: this.longUrl
             }).then(response => {
+                this.copyBtn = 'COPY LINK'
+                this.copyBtnTxtClr = 'purple--text'
                 if(response.status == 200) {
                     this.shortUrl = response.data
                 } else {
