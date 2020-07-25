@@ -17,6 +17,7 @@ app.use(express.urlencoded({ extended: false }))
 // Define routes
 app.use('/api/url', require('./routes/url'))
 app.use('/', require('./routes/redirect'))
+app.use('/api/user', require('./routes/user'))
 
 
 const PORT = 5000
