@@ -15,7 +15,7 @@
                             solo
                             height="60"
                             outlined
-                            color="deep-purple lighten-1"
+                            color="blue darken-2"
                             v-model="longUrl"
                         ></v-text-field>
                     </v-col>
@@ -25,7 +25,7 @@
                                 :loading= this.loading
                                 :disabled= this.disabled
                                 height="57" 
-                                color="deep-purple lighten-1 white--text"
+                                color="blue darken-2 white--text"
                                 @click="shorten"
                             >Shorten</v-btn>
                     </v-col>
@@ -82,7 +82,7 @@ export default {
             longUrl: '',
             shortUrl: '',
             copyBtn: 'COPY LINK',
-            copyBtnTxtClr: 'purple--text',
+            copyBtnTxtClr: 'blue--text text--darken-2',
             snackbar: false,
             snackbarText: '',
             loading: false,
@@ -94,7 +94,7 @@ export default {
             if(this.longUrl == '') {
                 this.shortUrl = '',
                 this.copyBtn = 'COPY LINK',
-                this.copyBtnTxtClr = 'purple--text'
+                this.copyBtnTxtClr = 'blue--text text--darken-2'
             }
         }
     },
@@ -109,7 +109,7 @@ export default {
                 this.loading = false
                 this.disabled = false
                 this.copyBtn = 'COPY LINK'
-                this.copyBtnTxtClr = 'purple--text'
+                this.copyBtnTxtClr = 'blue--text text--darken-2'
                 if(response.status == 200) {
                     this.shortUrl = response.data
                 } else {
