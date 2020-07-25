@@ -21,7 +21,9 @@
                     </v-col>
                     <v-col cols="1" md="1">
                             <v-btn 
-                                flat 
+                                flat
+                                :loading= this.loading
+                                :disabled= this.disabled
                                 height="57" 
                                 color="deep-purple lighten-1 white--text"
                                 @click="shorten"
@@ -82,7 +84,9 @@ export default {
             copyBtn: 'COPY LINK',
             copyBtnTxtClr: 'purple--text',
             snackbar: false,
-            snackbarText: ''
+            snackbarText: '',
+            loading: false,
+            disabled: false
         }
     },
     watch: {
@@ -96,10 +100,14 @@ export default {
     },
     methods: {
         shorten() {
+            this.loading = true
+            this.disabled = true
             let url = this.$serverURLI + "/api/url/shorten"
             this.$http.post(url, {
                 longUrl: this.longUrl
             }).then(response => {
+                this.loading = false
+                this.disabled = false
                 this.copyBtn = 'COPY LINK'
                 this.copyBtnTxtClr = 'purple--text'
                 if(response.status == 200) {
@@ -109,6 +117,8 @@ export default {
                     this.snackbarText = response.data
                 }
             }).catch(error => {
+                this.loading = false
+                this.disabled =false
                 this.snackbar = true
                 if(error.message == 'Request failed with status code 401') {
                     this.snackbarText = 'Invalid URL'
