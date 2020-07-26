@@ -7,6 +7,7 @@
             <v-row justify="center">
                 <v-form class="mt-10" ref="registerForm">
                     <v-card
+                        :loading="this.loading"
                         outlined
                         min-width="450">
                         <v-card-title class="justify-center">
@@ -50,6 +51,7 @@
                         </div>
                         <v-card-actions class="justify-center">
                             <v-btn
+                                :disabled="this.disabled"
                                 class="reg_btn"
                                 text
                                 color="blue darken-2 white--text"
@@ -72,6 +74,8 @@ export default {
             email: '',
             password: '',
             confirmPassword: '',
+            loading: false,
+            disabled: false,
             inputRules: [
                 value => value.length > 0 || 'required',
             ],
@@ -83,15 +87,20 @@ export default {
     methods: {
         registerUser() {
             if(this.$refs.registerForm.validate()) {
-                this.$refs.registerForm.validate()
+                this.loading = true
+                this.disabled = true
                 let url= 'http://localhost:5000/api/user/user_register'
                 this.$http.post(url, {
                     name: this.name,
                     email: this.email,
                     password: this.password
                 }).then(response => {
+                    this.loading = false
+                    this.disabled = false
                     console.log(response.data)
                 }).catch(error => {
+                    this.loading = false
+                    this.disabled = false
                     console.log(error)
                 })
             }     
