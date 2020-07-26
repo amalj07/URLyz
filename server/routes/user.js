@@ -6,10 +6,10 @@ const crypt = require('../misc/crypt')
 // Import user model
 const User = require('../models/User')
 
-// @route POST /api/user/register
+// @route POST /api/user/user_register
 // @desc Register new user
 router
-    .route('/register')
+    .route('/user_register')
     .post(async (req, res) => {
         try {
             if(!req.body.name || !req.body.email || !req.body.password) {
