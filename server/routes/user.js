@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const uid = require('../misc/uid')
+const crypt = require('../misc/crypt')
 
 // Import user model
 const User = require('../models/User')
@@ -17,11 +18,16 @@ router
                 const userId = uid.uid()
                 const { name, email, password } = req.body
 
+                const setPassword = crypt.createPassword(password)
+                const salt = (await setPassword).salt
+                const hash = (await setPassword).hash
+
                 user = new User({
                     userId,
                     name,
                     email,
-                    password
+                    salt,
+                    hash
                 })
 
                 await user.save()
