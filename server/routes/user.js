@@ -4,8 +4,9 @@ const uid = require('../misc/uid')
 const crypt = require('../misc/crypt')
 const mail = require('../misc/mail')
 
-// Import user model
+// Import models
 const User = require('../models/User')
+const VerifyOTP = require('../models/verifyOTP')
 
 // @route POST /api/user/user_register
 // @desc Register new user
@@ -33,9 +34,19 @@ router
 
                 await user.save()
 
-                res.status(200).send('user registered')
+                
+                const mailResponse = mail.sendMail(user)
+                const otp = mailResponse
+                
+                verifyOTP = new VerifyOTP({
+                    otp,
+                    userId,
+                    email
+                })
+                
+                await verifyOTP.save()
 
-                mail.sendMail(user)
+                res.status(200).send('user registered')
             }
         } catch (error) {
             console.log(error)

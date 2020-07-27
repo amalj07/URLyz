@@ -30,15 +30,15 @@ exports.sendMail = (user) => {
         from: config.mail.user,
         to: user.email,
         subject: 'URLyz account confirmation',
-        text: `Hello ${user.name}, ${OTP} is the OTP for confirming your account`
+        text: `Hello ${user.name}, ${OTP} is the OTP for confirming your account. OTP will be valid only for 2 hours`
     }
 
     // Send mail to the user
-    const mailResponse = transporter.sendMail(mailOptions, (error, info) => {
+    transporter.sendMail(mailOptions, (error, info) => {
         if (error)
             throw error
         return info.response
     })
 
-    return mailResponse
+    return OTP
 }
