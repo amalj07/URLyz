@@ -4,7 +4,8 @@ const verifyOTPSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: new Date(),
-        expires: 7200
+        expires: 7200,
+        required: true
     },
     otp: {
         type: String,
@@ -16,6 +17,11 @@ const verifyOTPSchema = new mongoose.Schema({
     },
     email: {
         type: String,
+        required: true
+    },
+    valid: {
+        type: Boolean,
+        default: true,
         required: true
     }
 })

@@ -54,4 +54,28 @@ router
         }
     })
 
+router
+    .route('/user_account/verify')
+    .post(async(req, res) => {
+        try {
+            const { otp, email } = req.body
+
+            const userId = await User.findOne({ email }, 'userId -_id')
+
+            const verifyOtp = await VerifyOTP.findOne({ userId: userId.userId, valid: true})
+
+            if(verifyOtp.otp == otp && verifyOtp.email == email) {
+                await VerifyOTP.updateOne({otp: otp}, {valid: false})
+                await User.updateOne({ userId: userId.userId }, {verified: true})
+
+                res.status(200).send('user account verified')
+            } else {
+                res.status(400).send('user verification failed')
+            }
+
+        } catch (error) {
+            res.status(400).send('failed to verify account')
+        }
+    })
+
 module.exports = router

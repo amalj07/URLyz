@@ -6,35 +6,39 @@
             max-width="500"
             persistent
             v-model="userVerifyDialog">
-            <v-card>
-                <v-card-title class="justify-center">
-                    Verify Account
-                </v-card-title>
-                <v-card-text class="pt-11">
-                    <p>Enter the OTP send to {{ this.email }}</p>
-                    <v-text-field
-                        v-model="registerOTP"
-                        :rules="inputRules"
-                        label="OTP"
-                        outlined    
-                    ></v-text-field>
-                    <p class="text-caption">It will take upto 5 min to recive the confirmation email</p>
-                </v-card-text>
-                <v-card-actions class="justify-end">
-                    <v-btn
-                        text
-                        @click="verifyOTP"
-                        class="verify_btn mb-3 mr-4"
-                        color="blue darken-2 white--text">
+            <v-form ref="verifyUserForm">
+                <v-card
+                    :loading="this.loadverify_form">
+                    <v-card-title class="justify-center">
                         Verify Account
-                    </v-btn>
-                </v-card-actions>
-            </v-card>
+                    </v-card-title>
+                    <v-card-text class="pt-11">
+                        <p>Enter the OTP send to {{ this.email }}</p>
+                        <v-text-field
+                            v-model="registerOTP"
+                            :rules="inputRules"
+                            label="OTP"
+                            outlined    
+                        ></v-text-field>
+                        <p class="text-caption">It will take upto 5 min to recive the confirmation email</p>
+                    </v-card-text>
+                    <v-card-actions class="justify-end">
+                        <v-btn
+                            text
+                            @click="verifyOTP"
+                            :disabled="this.verify_btnStatus"
+                            class="verify_btn mb-3 mr-4"
+                            color="blue darken-2 white--text">
+                            Verify Account
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-form>
         </v-dialog>
             <v-row justify="center">
                 <v-form class="mt-10" ref="registerForm">
                     <v-card
-                        :loading="this.loading"
+                        :loading="this.loadreg_form"
                         outlined
                         min-width="450">
                         <v-card-title class="justify-center">
@@ -78,7 +82,7 @@
                         </div>
                         <v-card-actions class="justify-center">
                             <v-btn
-                                :disabled="this.disabled"
+                                :disabled="this.reg_btnStatus"
                                 class="reg_btn"
                                 text
                                 color="blue darken-2 white--text"
@@ -101,10 +105,12 @@ export default {
             email: '',
             password: '',
             confirmPassword: '',
-            loading: false,
-            disabled: false,
+            loadreg_form: false,
+            reg_btnStatus: false,
             userVerifyDialog: false,
             registerOTP: '',
+            loadverify_form: false,
+            verify_btnStatus: false,
             inputRules: [
                 value => value.length > 0 || 'required',
             ],
@@ -116,27 +122,44 @@ export default {
     methods: {
         registerUser() {
             if(this.$refs.registerForm.validate()) {
-                this.loading = true
-                this.disabled = true
+                this.loadreg_form = true
+                this.reg_btnStatus = true
                 let url= 'http://localhost:5000/api/user/user_register'
                 this.$http.post(url, {
                     name: this.name,
                     email: this.email,
                     password: this.password
                 }).then(response => {
-                    this.loading = false
-                    this.disabled = false
+                    this.loadreg_form = false
+                    this.reg_btnStatus = false
                     console.log(response.data)
                     this.userVerifyDialog = true
                 }).catch(error => {
-                    this.loading = false
-                    this.disabled = false
+                    this.loadreg_form = false
+                    this.reg_btnStatus = false
                     console.log(error)
                 })
             }     
         },
         verifyOTP() {
-            this.userVerifyDialog = false
+            if(this.$refs.verifyUserForm.validate()) {
+                this.loadverify_form = true
+                this.verify_btnStatus = true
+                let url = 'http://localhost:5000/api/user/user_account/verify'
+                this.$http.post(url, {
+                    otp: this.registerOTP,
+                    email: this.email
+                }).then(response => {
+                    console.log(response.data)
+                    this.loadverify_form = false
+                    this.verify_btnStatus = false
+                    this.userVerifyDialog = false
+                }).catch(error => {
+                    console.log(error)
+                    this.loadverify_form = false
+                    this.verify_btnStatus = false
+                })
+            }
         }
     },
     computed: {
