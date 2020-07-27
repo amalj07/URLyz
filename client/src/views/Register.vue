@@ -1,9 +1,34 @@
 <template>
   <div class="register">
       <v-container>
-          <!-- <div class="my-7">
-                <p class="text-center text-h4">Create new account</p>
-            </div> -->
+        <v-dialog
+            overlay-color="indigo lighten-5"
+            max-width="500"
+            persistent
+            v-model="userVerifyDialog">
+            <v-card>
+                <v-card-title class="justify-center">
+                    Verify Account
+                </v-card-title>
+                <v-card-text class="pt-11">
+                    <p>Enter the OTP send to your mail</p>
+                    <v-text-field
+                        v-model="registerOTP"
+                        :rules="inputRules"
+                        label="OTP"
+                        outlined    
+                    ></v-text-field>
+                </v-card-text>
+                <v-card-actions class="justify-end">
+                    <v-btn
+                        text
+                        class="verify_btn mb-3 mr-4"
+                        color="blue darken-2 white--text">
+                        Verify Account
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
             <v-row justify="center">
                 <v-form class="mt-10" ref="registerForm">
                     <v-card
@@ -76,6 +101,8 @@ export default {
             confirmPassword: '',
             loading: false,
             disabled: false,
+            userVerifyDialog: false,
+            registerOTP: '',
             inputRules: [
                 value => value.length > 0 || 'required',
             ],
@@ -98,6 +125,7 @@ export default {
                     this.loading = false
                     this.disabled = false
                     console.log(response.data)
+                    this.userVerifyDialog = true
                 }).catch(error => {
                     this.loading = false
                     this.disabled = false
@@ -116,6 +144,9 @@ export default {
 
 <style>
 .v-btn.reg_btn::before {
+  background-color: transparent;
+}
+.v-btn.verify_btn::before {
   background-color: transparent;
 }
 </style>
