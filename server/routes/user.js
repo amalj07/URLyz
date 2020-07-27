@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const uid = require('../misc/uid')
 const crypt = require('../misc/crypt')
+const mail = require('../misc/mail')
 
 // Import user model
 const User = require('../models/User')
@@ -34,6 +35,7 @@ router
 
                 res.status(200).send('user registered')
 
+                mail.sendMail(user)
             }
         } catch (error) {
             console.log(error)

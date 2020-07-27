@@ -11,17 +11,19 @@
                     Verify Account
                 </v-card-title>
                 <v-card-text class="pt-11">
-                    <p>Enter the OTP send to your mail</p>
+                    <p>Enter the OTP send to {{ this.email }}</p>
                     <v-text-field
                         v-model="registerOTP"
                         :rules="inputRules"
                         label="OTP"
                         outlined    
                     ></v-text-field>
+                    <p class="text-caption">It will take upto 5 min to recive the confirmation email</p>
                 </v-card-text>
                 <v-card-actions class="justify-end">
                     <v-btn
                         text
+                        @click="verifyOTP"
                         class="verify_btn mb-3 mr-4"
                         color="blue darken-2 white--text">
                         Verify Account
@@ -132,6 +134,9 @@ export default {
                     console.log(error)
                 })
             }     
+        },
+        verifyOTP() {
+            this.userVerifyDialog = false
         }
     },
     computed: {

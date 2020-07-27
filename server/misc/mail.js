@@ -1,0 +1,44 @@
+const nodemailer = require('nodemailer')
+const config = require('../config/config')
+const { response } = require('express')
+const { use } = require('../routes/user')
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: config.mail.user,
+        pass: config.mail.pass
+    }
+})
+
+exports.sendMail = (user) => {
+    // Create s six charecter OTP
+    function makeOTP() {
+        var result           = '';
+        var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        var charactersLength = 6;
+        for ( var i = 0; i < 6; i++ ) {
+           result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+    }
+    
+    const OTP = makeOTP()
+
+    // Configure mail credentials and message
+    const mailOptions = {
+        from: config.mail.user,
+        to: user.email,
+        subject: 'URLyz account confirmation',
+        text: `Hello ${user.name}, ${OTP} is the OTP for confirming your account`
+    }
+
+    // Send mail to the user
+    const mailResponse = transporter.sendMail(mailOptions, (error, info) => {
+        if (error)
+            throw error
+        return info.response
+    })
+
+    return mailResponse
+}
