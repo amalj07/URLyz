@@ -91,19 +91,18 @@ router
             const user = await User.findOne({ email })
             
             if(user) {
-                if(user.verified == true){
-                    const validPassword = crypt.checkPassword(password, user.salt, user.hash)
-                    console.log(validPassword)
-                    if(validPassword == true) {
+                const validPassword = crypt.checkPassword(password, user.salt, user.hash)
+                if(validPassword == true){
+                    if(user.verified == true) {
                         res.status(200).send('login success')
                     } else{
-                        res.status(400).send('Invalid credentials')
+                        res.status(400).send('Please verify your account')
                     }
                 } else {
-                    res.status(400).send('Please verify your account')
+                    res.status(400).send('Invalid credentials')
                 }
             } else {
-                res.status(400).send('login failed')
+                res.status(400).send('Invalid credentials')
             }
         } catch (error) {
             res.status(400).send('failed to login')

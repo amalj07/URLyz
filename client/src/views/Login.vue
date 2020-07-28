@@ -7,6 +7,7 @@
             <v-row justify="center">
                 <v-form class="mt-7" ref="loginForm">
                     <v-card
+                        :loading="this.loading"
                         class="mt-16"
                         outlined
                         min-width="450">
@@ -34,6 +35,7 @@
                         </div>
                         <v-card-actions class="justify-center">
                             <v-btn
+                                :disabled="this.disabled"
                                 class="reg_btn"
                                 text
                                 color="blue darken-2 white--text"
@@ -54,6 +56,8 @@ export default {
         return {
             email: '',
             password: '',
+            loading: false,
+            disabled: false,
             inputRules: [
                 value => value.length > 0 || 'required',
             ],
@@ -65,14 +69,19 @@ export default {
     methods: {
         submitLogin() {
             if(this.$refs.loginForm.validate()) {
-                console.log(this.email, this.password)
+                this.loading = true
+                this.disabled = true
                 let url = 'http://localhost:5000/api/user/user_login'
                 this.$http.post(url, {
                     email: this.email,
                     password: this.password
                 }).then(response => {
+                    this.loading = false
+                    this.disabled = false
                     console.log(response.data)
                 }).catch(error => {
+                    this.loading = false
+                    this.disabled = false
                     console.log(error)
                 })
             }
