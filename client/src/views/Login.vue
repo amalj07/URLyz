@@ -66,6 +66,15 @@ export default {
         submitLogin() {
             if(this.$refs.loginForm.validate()) {
                 console.log(this.email, this.password)
+                let url = 'http://localhost:5000/api/user/user_login'
+                this.$http.post(url, {
+                    email: this.email,
+                    password: this.password
+                }).then(response => {
+                    console.log(response.data)
+                }).catch(error => {
+                    console.log(error)
+                })
             }
         }
     }

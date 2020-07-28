@@ -54,6 +54,8 @@ router
         }
     })
 
+// @route POST /api/user/user_account/verify
+// @desc Verify the user account
 router
     .route('/user_account/verify')
     .post(async(req, res) => {
@@ -75,6 +77,36 @@ router
 
         } catch (error) {
             res.status(400).send('failed to verify account')
+        }
+    })
+
+// @route POST /api/user/user_login
+// @desc Login the user
+router
+    .route('/user_login')
+    .post(async (req, res) => {
+        try {
+            const { email, password } = req.body
+            
+            const user = await User.findOne({ email })
+            
+            if(user) {
+                if(user.verified == true){
+                    const validPassword = crypt.checkPassword(password, user.salt, user.hash)
+                    console.log(validPassword)
+                    if(validPassword == true) {
+                        res.status(200).send('login success')
+                    } else{
+                        res.status(400).send('Invalid credentials')
+                    }
+                } else {
+                    res.status(400).send('Please verify your account')
+                }
+            } else {
+                res.status(400).send('login failed')
+            }
+        } catch (error) {
+            res.status(400).send('failed to login')
         }
     })
 
