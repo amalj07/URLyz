@@ -96,7 +96,7 @@ router
                     if(user.verified == true) {
                         res.status(200).send('login success')
                     } else{
-                        res.status(400).send('Please verify your account')
+                        res.status(200).send('Please verify your account')
                     }
                 } else {
                     res.status(400).send('Invalid credentials')
