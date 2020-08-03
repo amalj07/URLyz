@@ -109,8 +109,10 @@ export default {
                 }).then(response => {
                     this.loading = false
                     this.disabled = false
-                    if(response.data == 'Please verify your account') {
-                        this.notVerified = true
+                    if(response.data.STATUS === 'SUCCESS') {
+                        if(response.data.MSG === 'login_success'){
+                            this.$router.push({name: 'Dashboard'})
+                        }
                     }
                     console.log(response.data)
                 }).catch(error => {

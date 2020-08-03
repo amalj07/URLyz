@@ -88,15 +88,20 @@ router
         try {
             const { email, password } = req.body
             
-            const user = await User.findOne({ email })
+            const user = await User.findOne({ email }, '-_id')
             
             if(user) {
                 const validPassword = crypt.checkPassword(password, user.salt, user.hash)
                 if(validPassword == true){
                     if(user.verified == true) {
-                        res.status(200).send('login success')
+                        res.status(200).json({STATUS: 'SUCCESS', MSG: 'login_success', user: {
+                            name: user.name,
+                            email: user.email,
+                            userId: user.userId,
+                            verified: user.verified
+                        }})
                     } else{
-                        res.status(200).send('Please verify your account')
+                        res.status(200).json({STATUS: 'SUCCESS', MSG: 'unverifed_account'})
                     }
                 } else {
                     res.status(400).send('Invalid credentials')
