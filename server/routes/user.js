@@ -118,4 +118,40 @@ router
         }
     })
 
+// @route POST /api/user/user_account/resendotp
+// @desc Resend the otp
+router
+    .route('/user_account/resendotp')
+    .post(async(req, res) => {
+        try {
+            const { email } = req.body
+
+            const user = await User.findOne({ email }, 'userId name email -_id')
+            // Check if the user already have an otp in db
+            const otpIndb = await VerifyOTP.findOne({email}, '-_id')
+
+            if(user != null) {
+                if(otpIndb != null) {
+                    await VerifyOTP.updateOne({email: email}, {valid: false})
+                }
+                const otp = mail.sendMail(user)
+    
+                const userId = user.userId
+                const emial =user.email
+                verifyOTP = new VerifyOTP({
+                    otp,
+                    userId,
+                    email
+                })
+                
+                await verifyOTP.save()
+    
+                res.status(200).send(`OTP send to ${email}`)
+            }
+            
+        } catch (error) {
+            res.status(400).send('failed to send otp')
+        }       
+    })
+
 module.exports = router

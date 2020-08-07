@@ -50,6 +50,11 @@
                                     :rules="inputRules"
                                     validate-on-blur
                                 ></v-text-field>
+                                <p
+                                    id="resendotp"
+                                    class="text-caption blue--text text--darken-2"
+                                    @click="resendOTP"
+                                >Resend OTP</p>
                             </div>
                         </div>
                         <v-card-actions class="justify-center">
@@ -74,7 +79,24 @@
                         </v-card-actions>
                     </v-card>
                 </v-form>
-            </v-row>   
+            </v-row> 
+             <v-snackbar
+                    text
+                    top
+                    color="success"
+                    v-model="snackbar">
+                    {{ this.snackbarText }}
+                    <template v-slot:action="{ attrs }">
+                        <v-btn
+                        color="green"
+                        text
+                        v-bind="attrs"
+                        @click="snackbar = false"
+                        >
+                        <v-icon left>close</v-icon>
+                        </v-btn>
+                    </template>
+                </v-snackbar> 
       </v-container>
   </div>
 </template>
@@ -89,6 +111,8 @@ export default {
             loading: false,
             disabled: false,
             notVerified: false,
+            snackbar: false,
+            snackbarText: '',
             inputRules: [
                 value => value.length > 0 || 'required',
             ],
@@ -143,6 +167,17 @@ export default {
                     this.disabled = false
                 })
             }
+        },
+        resendOTP() {
+            let url = 'http://localhost:5000/api/user/user_account/resendotp'
+            this.$http.post(url, {
+                email: this.email
+            }).then(response => {
+                this.snackbar = true
+                this.snackbarText = response.data
+            }).catch(error => {
+                console.log(error)
+            })
         }
     }
 }
@@ -151,5 +186,8 @@ export default {
 <style>
 .v-btn.reg_btn::before {
   background-color: transparent;
+}
+#resendotp {
+    cursor: pointer;
 }
 </style>
