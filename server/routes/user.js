@@ -127,6 +127,7 @@ router
             const { email } = req.body
 
             const user = await User.findOne({ email }, 'userId name email -_id')
+            
             // Check if the user already have an otp in db
             const otpIndb = await VerifyOTP.findOne({email}, '-_id')
 

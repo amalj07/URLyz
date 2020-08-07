@@ -12,7 +12,7 @@
                     <v-card-title class="justify-center">
                         Verify Account
                     </v-card-title>
-                    <v-card-text class="pt-11">
+                    <v-card-text class="pt-5">
                         <p>Enter the OTP send to {{ this.email }}</p>
                         <v-text-field
                             v-model="registerOTP"
@@ -21,6 +21,11 @@
                             outlined    
                         ></v-text-field>
                         <p class="text-caption">It will take upto 5 min to recive the confirmation email</p>
+                        <p
+                            id="resendotp"
+                            class="text-caption blue--text text--darken-2"
+                            @click="resendOTP"
+                        >Resend OTP</p>
                     </v-card-text>
                     <v-card-actions class="justify-end">
                         <v-btn
@@ -34,6 +39,23 @@
                     </v-card-actions>
                 </v-card>
             </v-form>
+            <v-snackbar
+                    text
+                    top
+                    color="success"
+                    v-model="snackbar">
+                    {{ this.snackbarText }}
+                    <template v-slot:action="{ attrs }">
+                        <v-btn
+                        color="green"
+                        text
+                        v-bind="attrs"
+                        @click="snackbar = false"
+                        >
+                        <v-icon left>close</v-icon>
+                        </v-btn>
+                    </template>
+                </v-snackbar> 
         </v-dialog>
             <v-row justify="center">
                 <v-form class="mt-10" ref="registerForm">
@@ -92,7 +114,7 @@
                         </v-card-actions>
                     </v-card>
                 </v-form>
-            </v-row>   
+            </v-row>
       </v-container>
   </div>
 </template>
@@ -111,6 +133,8 @@ export default {
             registerOTP: '',
             loadverify_form: false,
             verify_btnStatus: false,
+            snackbar: false,
+            snackbarText: '',
             inputRules: [
                 value => value.length > 0 || 'required',
             ],
@@ -160,6 +184,19 @@ export default {
                     this.verify_btnStatus = false
                 })
             }
+        },
+        resendOTP() {
+            console.log(this.email)
+            let url = 'http://localhost:5000/api/user/user_account/resendotp'
+            this.$http.post(url, {
+                email: this.email
+            }).then(response => {
+                this.snackbar = true
+                this.snackbarText = response.data
+                console.log(response.data)
+            }).catch(error => {
+                console.log(error)
+            })
         }
     },
     computed: {
@@ -176,5 +213,8 @@ export default {
 }
 .v-btn.verify_btn::before {
   background-color: transparent;
+}
+#resendotp {
+    cursor: pointer;
 }
 </style>
