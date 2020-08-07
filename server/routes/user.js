@@ -66,17 +66,21 @@ router
 
             const verifyOtp = await VerifyOTP.findOne({ userId: userId.userId, valid: true})
 
-            if(verifyOtp.otp == otp && verifyOtp.email == email) {
-                await VerifyOTP.updateOne({otp: otp}, {valid: false})
-                await User.updateOne({ userId: userId.userId }, {verified: true})
-
-                res.status(200).send('user account verified')
+            if(verifyOtp != null) {
+                if(verifyOtp.otp == otp && verifyOtp.email == email) {
+                    await VerifyOTP.updateOne({otp: otp}, {valid: false})
+                    await User.updateOne({ userId: userId.userId }, {verified: true})
+    
+                    res.status(200).send('user account verified')
+                } else {
+                    res.status(200).send('user verification failed')
+                }
             } else {
-                res.status(400).send('user verification failed')
+                res.status(200).send('Invalid otp')
             }
 
         } catch (error) {
-            res.status(400).send('failed to verify account')
+            res.status(200).send('failed to verify account')
         }
     })
 

@@ -112,6 +112,8 @@ export default {
                     if(response.data.STATUS === 'SUCCESS') {
                         if(response.data.MSG === 'login_success'){
                             this.$router.push({name: 'Dashboard'})
+                        } else {
+                            this.notVerified = true
                         }
                     }
                     console.log(response.data)
