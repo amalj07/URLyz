@@ -1,4 +1,5 @@
 const express = require('express')
+const crypto = require('crypto')
 const router = express.Router()
 const uid = require('../misc/uid')
 const crypt = require('../misc/crypt')
@@ -98,10 +99,10 @@ router
                 const validPassword = crypt.checkPassword(password, user.salt, user.hash)
                 if(validPassword == true){
                     if(user.verified == true) {
+                        const id = crypt.encrypt(user.userId)
                         res.status(200).json({STATUS: 'SUCCESS', MSG: 'login_success', user: {
                             name: user.name,
-                            email: user.email,
-                            userId: user.userId,
+                            userId: id,
                             verified: user.verified
                         }})
                     } else{

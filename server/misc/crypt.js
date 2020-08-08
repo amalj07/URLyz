@@ -1,4 +1,5 @@
 const crypto = require('crypto')
+const { text } = require('express')
 
 exports.createPassword = async (password) => {
     // Create unique salt for every user
@@ -26,4 +27,20 @@ exports.checkPassword = (password, salt, hash) => {
     } else {
         return 'incorrect password'
     }
+}
+
+// encrypts userid
+exports.encrypt = text => {
+    var mykey = crypto.createCipher('aes-128-cbc', 'aICt27c@v9y#');
+    var mystr = mykey.update(text, 'utf8', 'hex')
+    mystr += mykey.final('hex');
+    return mystr
+}
+
+// decrypts userid
+exports.decrypt = text => {
+    var mykey = crypto.createDecipher('aes-128-cbc', 'aICt27c@v9y#');
+	var mystr = mykey.update(text, 'hex', 'utf8')
+	mystr += mykey.final('utf8');
+	return mystr;
 }

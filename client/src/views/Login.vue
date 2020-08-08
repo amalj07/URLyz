@@ -135,12 +135,12 @@ export default {
                     this.disabled = false
                     if(response.data.STATUS === 'SUCCESS') {
                         if(response.data.MSG === 'login_success'){
+                            this.$cookies.set("i", response.data.user.userId)
                             this.$router.push({name: 'Dashboard'})
                         } else {
                             this.notVerified = true
                         }
                     }
-                    console.log(response.data)
                 }).catch(error => {
                     this.loading = false
                     this.disabled = false
