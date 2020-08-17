@@ -86,7 +86,9 @@ export default {
             snackbar: false,
             snackbarText: '',
             loading: false,
-            disabled: false
+            disabled: false,
+            sid: '',
+            token: ''
         }
     },
     watch: {
@@ -100,10 +102,16 @@ export default {
     },
     methods: {
         shorten() {
+            if(this.$cookies.get("sid") != null && this.$cookies.get("t") != null) {
+                this.sid = this.$cookies.get("sid")
+                this.token = this.$cookies.get("t")
+            }
             this.loading = true
             this.disabled = true
             let url = this.$serverURLI + "/api/url/shorten"
             this.$http.post(url, {
+                sid: this.sid,
+                token: this.token,
                 longUrl: this.longUrl
             }).then(response => {
                 this.loading = false
@@ -122,8 +130,8 @@ export default {
                 this.snackbar = true
                 if(error.message == 'Request failed with status code 401') {
                     this.snackbarText = 'Invalid URL'
-                } else if (error.message == 'Request failed with status code 500') {
-                    this.snackbarText = 'Internal server error'
+                } else if (error.message == 'Request failed with status code 500' || error.message == 'Request failed with status code 400') {
+                    this.snackbarText = 'Oh no, Something went wrong!'
                 }
             })
         },

@@ -105,7 +105,7 @@ router
                         
                         session = new Session({
                             sid: sid,
-                            uid: user.userId,
+                            userId: user.userId,
                             token: token
                         })
 
@@ -173,9 +173,7 @@ router
     .post(async (req, res) => {
         try {
             const { sid, token } = req.body
-            console.log(token)
             const userSession = await Session.findOne({ sid }, '-_id')
-            console.log(userSession)
             if(userSession != null) {
                 if(token == undefined) {
                     res.status(200).send({status: 'FAIL'})
