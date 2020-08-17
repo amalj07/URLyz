@@ -100,8 +100,7 @@ router
                 const validPassword = crypt.checkPassword(password, user.salt, user.hash)
                 if(validPassword == true){
                     if(user.verified == true) {
-                        const id = crypt.encrypt(user.userId)
-                        const token = id.slice(0,16)
+                        const token = uid.token()
                         const sid = uid.sid()
                         
                         session = new Session({
@@ -175,8 +174,6 @@ router
         try {
             const { sid, token } = req.body
             console.log(token)
-            // TODO: create diffrent token for user. encrypting userid will give only same token. change token 
-            // TODO: the same user at different times. user another method for token generation like sid
             const userSession = await Session.findOne({ sid }, '-_id')
             console.log(userSession)
             if(userSession != null) {
