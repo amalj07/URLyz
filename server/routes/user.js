@@ -8,6 +8,7 @@ const mail = require('../misc/mail')
 // Import models
 const User = require('../models/User')
 const VerifyOTP = require('../models/verifyOTP')
+const Session = require('../models/Session')
 
 // @route POST /api/user/user_register
 // @desc Register new user
@@ -100,10 +101,20 @@ router
                 if(validPassword == true){
                     if(user.verified == true) {
                         const id = crypt.encrypt(user.userId)
+                        const token = id.slice(0,16)
+                        const sid = uid.sid()
+                        
+                        session = new Session({
+                            sid: sid,
+                            uid: user.userId,
+                            token: token
+                        })
+
+                        await session.save()
+
                         res.status(200).json({STATUS: 'SUCCESS', MSG: 'login_success', user: {
-                            name: user.name,
-                            userId: id,
-                            verified: user.verified
+                            sid: sid,
+                            token: token,
                         }})
                     } else{
                         res.status(200).json({STATUS: 'SUCCESS', MSG: 'unverifed_account'})
@@ -154,6 +165,37 @@ router
         } catch (error) {
             res.status(400).send('failed to send otp')
         }       
+    })
+
+// @route POST /api/user/authenticate
+// @desc Authenticate user at request
+router
+    .route('/authenticate')
+    .post(async (req, res) => {
+        try {
+            const { sid, token } = req.body
+            console.log(token)
+            // TODO: create diffrent token for user. encrypting userid will give only same token. change token 
+            // TODO: the same user at different times. user another method for token generation like sid
+            const userSession = await Session.findOne({ sid }, '-_id')
+            console.log(userSession)
+            if(userSession != null) {
+                if(token == undefined) {
+                    res.status(200).send({status: 'FAIL'})
+                }else {
+                    if(userSession.token == token) {
+                        res.status(200).send({status: "SUCCESS"})
+                        console.log('sucess')
+                    }else {
+                        res.status(200).send({status: 'FAIL'})
+                    }
+                }
+            }else {
+                res.status(200).send({status: 'FAIL'})
+            }
+        } catch (error) {
+            console.log(error)
+        }
     })
 
 module.exports = router

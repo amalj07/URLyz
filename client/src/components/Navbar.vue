@@ -11,13 +11,13 @@
         <v-spacer></v-spacer>
         <div class="mr-13">
           <v-btn
-            to="Login" 
+            to="/login" 
             depressed
             class="signin white blue--text text--darken-2 mr-5">
           <span>Signin</span>
           </v-btn>
           <v-btn
-            to="Register"
+            to="/register"
             depressed
             shaped class="blue darken-2 white--text">
           <span>Register</span>
