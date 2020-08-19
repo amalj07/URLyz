@@ -14,7 +14,6 @@ router
         const userSession = await Session.findOne({sid: sid, token: token}, '-_id')
 
         const urls = await Url.find({userId: userSession.userId}, '-userId -_id -date')
-        console.log(urls[0])
         res.status(200).send(urls)
     })
 

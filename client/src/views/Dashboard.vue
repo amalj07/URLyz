@@ -9,7 +9,7 @@
                 <div class="my-2">{{ url.shortUrl }}</div>
               </v-flex>
               <v-flex xs6 sm4 md2>
-                <v-chip small text-color="white" class="my-2">status</v-chip>
+                <v-chip small text-color="white" :color="getColor(url.status)" class="my-2">{{ url.status }}</v-chip>
               </v-flex>
               <v-flex xs6 sm4 md2>
                 <div class="my-2">Disable</div>
@@ -42,10 +42,16 @@ export default {
         token
       }).then(response => {
         this.urls = response.data
-        console.log(this.urls)
       }).catch(error => {
         console.log(error)
       })
+    },
+    getColor(status) {
+      if(status == 'active') {
+        return "green"
+      }else {
+        return "red"
+      }
     }
   },
   created() {

@@ -17,6 +17,11 @@ const urlSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    status: {
+        type: String,
+        reqiured: true,
+        default: 'active'
+    },
     date: {
         type: String,
         default: Date.now
