@@ -7,6 +7,7 @@ import Axios from 'axios'
 import VueClipboard from 'vue-clipboard2'
 import VueCookies from 'vue-cookies'
 import VueCryptojs from 'vue-cryptojs'
+import 'material-design-icons-iconfont/dist/material-design-icons.css'
 
 // Copy to clipboard
 Vue.use(VueClipboard)
