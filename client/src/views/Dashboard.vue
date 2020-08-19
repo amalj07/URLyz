@@ -3,10 +3,10 @@
       <div class="dashboard">
         <v-container>
           <h1>My URLs</h1>
-          <v-card text max-width="800" class="px-3" >
+          <v-card text max-width="800" class="px-3" v-for="url in urls" :key="url.urlCode">
             <v-layout row wrap>
               <v-flex xs10 md5>
-                <div class="my-2">Short url</div>
+                <div class="my-2">{{ url.shortUrl }}</div>
               </v-flex>
               <v-flex xs6 sm4 md2>
                 <v-chip small text-color="white" class="my-2">status</v-chip>
