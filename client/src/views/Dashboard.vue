@@ -27,7 +27,30 @@
 
 <script>
 export default {
-
+  data() {
+    return {
+      urls: []
+    }
+  },
+  methods: {
+    fetchUrls() {
+      const sid = this.$cookies.get("sid")
+      const token = this.$cookies.get("t")
+      const url = 'http://localhost:5000/api/fetch/fetchurl'
+      this.$http.post(url, {
+        sid,
+        token
+      }).then(response => {
+        this.urls = response.data
+        console.log(this.urls)
+      }).catch(error => {
+        console.log(error)
+      })
+    }
+  },
+  created() {
+    this.fetchUrls()
+  }
 }
 </script>
 

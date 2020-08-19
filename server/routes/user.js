@@ -180,7 +180,6 @@ router
                 }else {
                     if(userSession.token == token) {
                         res.status(200).send({status: "SUCCESS"})
-                        console.log('sucess')
                     }else {
                         res.status(200).send({status: 'FAIL'})
                     }
