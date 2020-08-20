@@ -8,6 +8,7 @@ import VueClipboard from 'vue-clipboard2'
 import VueCookies from 'vue-cookies'
 import VueCryptojs from 'vue-cryptojs'
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
+import store from './store/index'
 
 // Copy to clipboard
 Vue.use(VueClipboard)
@@ -26,5 +27,6 @@ Vue.config.productionTip = false
 new Vue({
   vuetify,
   router,
+  store,
   render: h => h(App)
 }).$mount('#app')

@@ -108,7 +108,7 @@ export default {
             }
             this.loading = true
             this.disabled = true
-            let url = this.$serverURLI + "/api/url/shorten"
+            let url = this.$serverURLI + "/api/shortenurl/shorten"
             this.$http.post(url, {
                 sid: this.sid,
                 token: this.token,

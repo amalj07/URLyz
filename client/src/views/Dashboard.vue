@@ -25,7 +25,8 @@
                       shaped
                       small
                       class="my-3"
-                      color="blue darken-2">
+                      color="blue darken-2"
+                      @click="disableLink(url.urlCode)">
                       <span>Disable</span>
                     </v-btn>
                   </div>
@@ -51,34 +52,27 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex'
+
 export default {
   data() {
     return {
-      urls: []
     }
   },
   methods: {
-    fetchUrls() {
-      const sid = this.$cookies.get("sid")
-      const token = this.$cookies.get("t")
-      const url = 'http://localhost:5000/api/fetch/fetchurl'
-      this.$http.post(url, {
-        sid,
-        token
-      }).then(response => {
-        this.urls = response.data
-      }).catch(error => {
-        console.log(error)
-      })
-    },
+    ...mapActions(['fetchUrls']),
     getColor(status) {
       if(status == 'active') {
         return "green"
       }else {
         return "red"
       }
+    },
+    disableLink(url) {
+      console.log(url)
     }
   },
+  computed: mapGetters(['urls']),
   created() {
     this.fetchUrls()
   }
