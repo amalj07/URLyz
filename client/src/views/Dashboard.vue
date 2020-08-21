@@ -11,11 +11,13 @@
                 </v-flex>
                 <v-flex xs6 sm4 md2>
                     <v-chip
+                      label
+                      outlined
                       small
-                      text-color="white"
+                      :text-color="getColor(url.status)"
                       :color="getColor(url.status)"
-                      class="my-3 ml-4">
-                      {{ url.status }}
+                      class="my-3 ml-4 size">
+                      <span>{{ url.status }}</span>
                     </v-chip>
                 </v-flex>
                 <v-flex xs6 sm4 md2>
@@ -101,5 +103,7 @@ export default {
 </script>
 
 <style>
-
+.size {
+  width: 70px;
+}
 </style>
