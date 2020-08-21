@@ -15,10 +15,10 @@ app.use(express.json({ extented: false}))
 app.use(express.urlencoded({ extended: false }))
 
 // Define routes
-app.use('/api/url', require('./routes/url'))
+app.use('/api/shortenurl', require('./routes/shortenUrl'))
 app.use('/', require('./routes/redirect'))
 app.use('/api/user', require('./routes/user'))
-app.use('/api/fetch', require('./routes/fetchurl'))
+app.use('/api/urls', require('./routes/url'))
 
 
 const PORT = 5000

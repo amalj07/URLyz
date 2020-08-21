@@ -1,87 +1,51 @@
 const express = require('express')
-const validUrl = require('valid-url')
-const shortid = require('shortid')
-const config = require('../config/config')
-
 const router = express.Router()
 
-// import models
-const urlModel = require('../models/Url')
+// Import Models
 const Session = require('../models/Session')
+const User = require('../models/User')
+const Url = require('../models/Url')
 
-// @route POST /api/url/shorten
-// @desc Create the short url
 router
-    .route('/shorten')
+    .route('/fetchurl')
     .post(async (req, res) => {
-        const { sid, token, longUrl } = req.body
-        const baseUrl = config.baseUrl.baseurl
+        const { sid, token } = req.body
 
-        // Check base url
-        if(!validUrl.isUri(baseUrl)) {
-            return res.status(401).json("invalid base url")
-        }
+        const userSession = await Session.findOne({sid: sid, token: token}, '-_id')
 
-        // Create url code
-        const urlCode = shortid.generate()
+        const urls = await Url.find({userId: userSession.userId}, '-userId -_id -date')
+        res.status(200).send(urls)
+    })
 
-        // Check long url
-        if(validUrl.isUri(longUrl)) {
-            try {
-                if(sid != '' && token != '') {
-                    const userSession = await Session.findOne({sid: sid, token: token}, '-_id')
+router
+    .route('/disable')
+    .post(async (req, res) => {
+        try {
+            let { url } = req.body
 
-                    if(userSession) {
-                        const url = await urlModel.findOne({longUrl: longUrl, userId: userSession.userId})
-                        if(url) {
-                            res.status(200).json(url.shortUrl)
-                        } else {
-                            // Create new short url if long url is not present
-                            const shortUrl = baseUrl + '/' + urlCode
-    
-                            newUrl = new urlModel({
-                                longUrl,
-                                shortUrl,
-                                urlCode,
-                                userId: userSession.userId,
-                                date: new Date
-                            })
-    
-                            await newUrl.save()
-    
-                            res.status(200).json(newUrl.shortUrl)
-                        }
-                    }else {
-                        res.status(400).end()
-                    }
-                }else {
-                    const url = await urlModel.findOne({longUrl: longUrl, userId: 'nouser'}, '-_id')
-                    if(url) {
-                        res.status(200).json(url.shortUrl)
-                    }else {
-                        // Create new short url if long url is not present
-                        const shortUrl = baseUrl + '/' + urlCode
-                        console.log(shortUrl)
+            if(url.status === 'active'){
+                const response = await Url.findOneAndUpdate({ urlCode: url.urlCode }, { status: 'disabled'})
 
-                        newUrl = new urlModel({
-                            longUrl,
-                            shortUrl,
-                            urlCode,
-                            userId: 'nouser',
-                            date: new Date
-                        })
-
-                        await newUrl.save()
-
-                        res.status(200).json(newUrl.shortUrl)
-                    }
+                url = {
+                    status: response.status,
+                    urlCode: response.urlCode,
+                    longUrl: response.longUrl,
+                    shortUrl: response.shortUrl
                 }
-            } catch (error) {
-                console.log(error)
-                res.status(500).end()
+            } else {
+                const response = await Url.findOneAndUpdate({urlCode: url.urlCode}, {status: 'active'})
+
+                url = {
+                    status: response.status,
+                    urlCode: response.urlCode,
+                    longUrl: response.longUrl,
+                    shortUrl: response.shortUrl
+                }
             }
-        } else {
-            res.status(401).json('Invalid long url')
+    
+            res.status(200).send(url)
+        } catch (error) {
+            console.log(error)
         }
     })
 

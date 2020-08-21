@@ -24,10 +24,12 @@
                       outlined
                       shaped
                       small
+                      min-width=83
                       class="my-3"
                       color="blue darken-2"
-                      @click="disableLink(url.urlCode)">
-                      <span>Disable</span>
+                      @click="updateLinkStatus(url)">
+                      <span v-if="url.status === 'active'">Disable</span>
+                      <span v-else>Enable</span>
                     </v-btn>
                   </div>
                 </v-flex>
@@ -60,16 +62,16 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetchUrls']),
+    ...mapActions(['fetchUrls', 'updateLink']),
+    updateLinkStatus(url) {
+      this.updateLink(url)
+    },
     getColor(status) {
       if(status == 'active') {
         return "green"
       }else {
         return "red"
       }
-    },
-    disableLink(url) {
-      console.log(url)
     }
   },
   computed: mapGetters(['urls']),
