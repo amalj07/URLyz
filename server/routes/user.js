@@ -192,4 +192,17 @@ router
         }
     })
 
+router
+    .route('/logout')
+    .post(async (req, res) => {
+        try {
+            const { sid, token } = req.body
+    
+            await Session.findOneAndDelete({sid: sid, token: token})
+            res.status(200).send("SUCCESS")
+        } catch (error) {
+            console.log(error)
+        }
+    })
+
 module.exports = router

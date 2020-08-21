@@ -137,7 +137,8 @@ export default {
                         if(response.data.MSG === 'login_success'){
                             this.$cookies.set("sid", response.data.user.sid)
                             this.$cookies.set("t",response.data.user.token)
-                            this.$router.push({name: 'Dashboard'})
+                            // this.$router.push({name: 'Dashboard'})
+                            window.location.href = 'http://localhost:8080/dashboard'
                         } else {
                             this.notVerified = true
                         }

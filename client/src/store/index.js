@@ -1,11 +1,11 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import urls from './modules/urls'
+import loginstatus from './modules/loginstatus'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
     modules: {
-        urls
+        loginstatus
     }
 })
