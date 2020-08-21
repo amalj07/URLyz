@@ -39,7 +39,7 @@ const mutations = {
     setUrls: (state, urlsArray) => (state.urlsArray = urlsArray),
     linkStatus: (state, updatedUrl) => {
         const index = state.urlsArray.findIndex(urlsArray => urlsArray.urlCode === updatedUrl.urlCode)
-        if(index !== 1) {
+        if(index >= 0) {
             state.urlsArray.splice(index, 1, updatedUrl)
         }
     }

@@ -24,7 +24,7 @@ router
             let { url } = req.body
 
             if(url.status === 'active'){
-                const response = await Url.findOneAndUpdate({ urlCode: url.urlCode }, { status: 'disabled'})
+                const response = await Url.findOneAndUpdate({ urlCode: url.urlCode }, { status: 'disabled'}, {new: true})
 
                 url = {
                     status: response.status,
@@ -33,7 +33,7 @@ router
                     shortUrl: response.shortUrl
                 }
             } else {
-                const response = await Url.findOneAndUpdate({urlCode: url.urlCode}, {status: 'active'})
+                const response = await Url.findOneAndUpdate({urlCode: url.urlCode}, {status: 'active'}, {new: true})
 
                 url = {
                     status: response.status,
