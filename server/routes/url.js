@@ -42,8 +42,9 @@ router
                     shortUrl: response.shortUrl
                 }
             }
-    
+            
             res.status(200).send(url)
+
         } catch (error) {
             console.log(error)
         }
