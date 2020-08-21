@@ -4,7 +4,7 @@
         <v-container>
           <h1>My URLs</h1>
           <v-card outlined text max-width="800" class="px-3">
-            <div v-for="url in urls" :key="url.urlCode">
+            <div v-for="(url, index) in urls" :key="url.urlCode">
               <v-layout row wrap>
                 <v-flex xs10 md5>
                   <div class="my-3 ml-4 grey--text text--darken-3">{{ url.shortUrl }}</div>
@@ -27,7 +27,7 @@
                       min-width=83
                       class="my-3"
                       color="blue darken-2"
-                      @click="updateLinkStatus(url)">
+                      @click="updateLink(url, index)">
                       <span v-if="url.status === 'active'">Disable</span>
                       <span v-else>Enable</span>
                     </v-btn>
@@ -54,17 +54,37 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
 
 export default {
   data() {
     return {
+      urls: [],
+      updateLinkIndex: null
     }
   },
   methods: {
-    ...mapActions(['fetchUrls', 'updateLink']),
-    updateLinkStatus(url) {
-      this.updateLink(url)
+    fetchUrls() {
+      this.$http.post('http://localhost:5000/api/urls/fetchurl', {
+            sid: this.$cookies.get("sid"),
+            token: this.$cookies.get("t")
+          }).then(response => {
+            this.urls = response.data
+          }).catch(error => {
+            console.log(error)
+          })
+    },
+    updateLink(url, index) {
+      this.updateLinkIndex = index
+      this.$http.post('http://localhost:5000/api/urls/disable', {
+            url
+        }).then(response => {
+          this.urls[this.updateLinkIndex].status = response.data.status
+          console.log(response.data.status)
+          console.log(this.urls[this.updateLinkIndex].status)
+          this.getColor(response.data.status)
+        }).catch(error => {
+            console.log(error)
+        })
     },
     getColor(status) {
       if(status == 'active') {
@@ -74,7 +94,6 @@ export default {
       }
     }
   },
-  computed: mapGetters(['urls']),
   created() {
     this.fetchUrls()
   }
