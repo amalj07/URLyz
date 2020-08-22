@@ -9,12 +9,12 @@
 
         <v-list-item>
           <v-list-item-avatar class="pl-3 mt-5" size="90">
-            <img src="https://avatars.dicebear.com/api/bottts/:john.svg">
+            <img :src="'https://avatars.dicebear.com/api/bottts/:'+user.name+'.svg'">
           </v-list-item-avatar>
         </v-list-item>
         <v-list-item>
           <v-list-item-content>
-            <v-list-item-title class="text-h5 text-uppercase white--text">Amal Jose</v-list-item-title>
+            <v-list-item-title class="text-h5 text-uppercase white--text">{{ user.name }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
         </v-layout>
@@ -39,18 +39,22 @@
 </template>
 
 <script>
-  export default {
-    data () {
-      return {
-        items: [
-            { title: 'My Profile', icon: 'mdi-account' },
-            { title: 'My URLs', icon: 'link' },
-            { title: 'New URL', icon: 'note_add' },
-        ],
-      }
-    },
-    created() {
-        console.log(this.$route.name)
+import { mapGetters, mapActions } from 'vuex'
+
+export default {
+  data () {
+    return {
+      items: [
+          { title: 'My Profile', icon: 'mdi-account' },
+          { title: 'My URLs', icon: 'link' },
+          { title: 'New URL', icon: 'note_add' },
+      ],
     }
+  },
+  methods: mapActions(['fetchUser']),
+  computed: mapGetters(['user']),
+  created() {
+      this.fetchUser()
   }
+}
 </script>

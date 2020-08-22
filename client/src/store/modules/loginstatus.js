@@ -13,7 +13,6 @@ const actions = {
     async checkLoginStatus({ commit }) {
         let sid = getCookie("sid")
         let token = getCookie("t")
-        console.log(sid, token)
 
         if(sid != '' && token != '') {
             commit('loginStatus', true)

@@ -3,7 +3,7 @@
     <NavDrawer />
       <div class="dashboard mt-10 ml-8">
         <v-container>
-          <h1>My URLs</h1>
+          <h1 class="mb-10 text-decoration-underline grey--text text--darken-2 font-italic">My URLs</h1>
           <v-card outlined text max-width="800" class="px-3">
             <div v-for="(url, index) in urls" :key="url.urlCode">
               <v-layout row wrap>
