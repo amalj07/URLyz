@@ -1,6 +1,7 @@
 <template>
   <div>
-      <div class="dashboard">
+    <NavDrawer />
+      <div class="dashboard mt-10 ml-8">
         <v-container>
           <h1>My URLs</h1>
           <v-card outlined text max-width="800" class="px-3">
@@ -56,8 +57,11 @@
 </template>
 
 <script>
-
+import NavDrawer from '@/components/NavDrawer'
 export default {
+  components: {
+    NavDrawer
+  },
   data() {
     return {
       urls: [],

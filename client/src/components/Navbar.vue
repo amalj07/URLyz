@@ -1,6 +1,6 @@
 <template>
   <nav>
-      <v-app-bar flat app class="white">
+      <v-app-bar clipped-left flat app class="white">
           <v-toolbar-title class="title blue--text text--darken-2 ml-13">
             <router-link to="/">
               <span class="font-weight-light">URL</span>
