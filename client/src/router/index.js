@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 import Register from '../views/Register'
 import Login from '../views/Login'
 import Dashboard from '../views/Dashboard'
+import Profile from '../views/Profile'
 import { isAuthenticated } from '../auth'
 
 Vue.use(VueRouter)
@@ -27,6 +28,12 @@ Vue.use(VueRouter)
     path: '/dashboard',
     name: 'Dashboard',
     component: Dashboard,
+    beforeEnter: isAuthenticated
+  },
+  {
+    path: '/myprofile',
+    name: 'Profile',
+    component: Profile,
     beforeEnter: isAuthenticated
   }
 ]

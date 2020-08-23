@@ -9,7 +9,7 @@
 
         <v-list-item>
           <v-list-item-avatar class="pl-3 mt-5" size="90">
-            <img :src="'https://avatars.dicebear.com/api/bottts/:'+user.name+'.svg'">
+            <img v-if="user.name != undefined" :src="'https://avatars.dicebear.com/api/bottts/:'+user.name+'.svg'">
           </v-list-item-avatar>
         </v-list-item>
         <v-list-item>
@@ -23,8 +23,10 @@
 
       <v-list>
         <v-list-item
-          v-for="item in items"
+          v-for="item in navItems"
           :key="item.title"
+          router
+          :to="item.path"
         >
           <v-list-item-icon>
             <v-icon class="white--text">{{ item.icon }}</v-icon>
@@ -44,10 +46,10 @@ import { mapGetters, mapActions } from 'vuex'
 export default {
   data () {
     return {
-      items: [
-          { title: 'My Profile', icon: 'mdi-account' },
-          { title: 'My URLs', icon: 'link' },
-          { title: 'New URL', icon: 'note_add' },
+      navItems: [
+          { title: 'My Profile', icon: 'mdi-account', path: '/myprofile' },
+          { title: 'My URLs', icon: 'link', path: '/dashboard' },
+          { title: 'New URL', icon: 'note_add' }
       ],
     }
   },

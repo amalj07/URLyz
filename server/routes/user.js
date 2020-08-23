@@ -217,7 +217,6 @@ router
             if (userId) {
                 const user = await User.findOne({ userId: userId.userId }, '-_id -userId -salt -hash -verified')
                 res.status(200).send(user)
-                console.log(user)
             }else {
                 res.status(401).end()
             }

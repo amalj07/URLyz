@@ -1,10 +1,10 @@
 <template>
   <div>
     <NavDrawer />
-      <div class="dashboard mt-10 ml-8">
+      <div class="mt-10 ml-8">
         <v-container>
           <h1 class="mb-10 text-decoration-underline grey--text text--darken-2 font-italic">My URLs</h1>
-          <v-card outlined text max-width="800" class="px-3">
+          <v-card outlined max-width="800" class="px-3">
             <div v-for="(url, index) in urls" :key="url.urlCode">
               <v-layout row wrap>
                 <v-flex xs10 md5>
