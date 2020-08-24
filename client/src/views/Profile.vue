@@ -12,13 +12,27 @@
                                 <v-text-field
                                     class="textfeildwidth ml-5 m"
                                     dense
-                                    disabled
+                                    :disabled="this.disabledName"
                                     outlined
-                                    v-model="name"  
+                                    v-model="name"
                                 ></v-text-field>
-                                <v-btn class="ml-2 mt-1 blue--text text--darken-2" text small>
+                                <v-btn
+                                    v-if="!saveName"
+                                    class="ml-2 mt-1 blue--text text--darken-2"
+                                    text
+                                    small
+                                    @click="editUserName">
                                     <v-icon small>edit</v-icon>
                                     <span>Edit</span>
+                                </v-btn>
+                                <v-btn
+                                    v-if="saveName"
+                                    class="ml-2 mt-1 blue--text text--darken-2"
+                                    text
+                                    small
+                                    @click="saveUserName(name, 'name')">
+                                    <v-icon small>save</v-icon>
+                                    <span>Save</span>
                                 </v-btn>
                             </v-row>
                             <h3 class="mb-3">Email:</h3>
@@ -26,13 +40,27 @@
                                 <v-text-field
                                     class="textfeildwidth ml-5"
                                     dense
-                                    disabled
+                                    :disabled="this.disabledEmail"
                                     outlined
-                                    v-model="email"  
+                                    v-model="email"
                                 ></v-text-field>
-                                <v-btn class="ml-2 mt-1 blue--text text--darken-2" text small>
+                                <v-btn
+                                    v-if="!saveEmail"
+                                    class="ml-2 mt-1 blue--text text--darken-2"
+                                    text
+                                    small
+                                    @click="editUserEmail">
                                     <v-icon small>edit</v-icon>
                                     <span>Edit</span>
+                                </v-btn>
+                                <v-btn
+                                    v-if="saveEmail"
+                                    class="ml-2 mt-1 blue--text text--darken-2"
+                                    text
+                                    small
+                                    @click="saveUserEmail">
+                                    <v-icon small>save</v-icon>
+                                    <span>Save</span>
                                 </v-btn>
                             </v-row>
                         </div>
@@ -49,7 +77,8 @@
                                     v-model="password"  
                                 ></v-text-field>
                                 <v-btn
-                                    class="blue white--text mt-n2">
+                                    class="blue white--text mt-n2"
+                                    @click="changeUserPassword">
                                     Change Password
                                 </v-btn>
                             </v-col>
@@ -70,6 +99,7 @@
 
 <script>
 import NavDrawer from '@/components/NavDrawer'
+import { mapActions } from 'vuex'
 
 export default {
     components: {
@@ -77,8 +107,47 @@ export default {
     },
     data() {
         return {
-            name: '',
-            email: ''
+            saveName: false,
+            disabledName: true,
+            saveEmail: false,
+            disabledEmail: true,
+            password: ''
+        }
+    },
+    methods: {
+        ...mapActions(['updateUser']),
+        editUserName() {
+            this.saveName = true
+            this.disabledName = false
+        },
+        editUserEmail() {
+            this.saveEmail = true
+            this.disabledEmail = false
+        },
+        saveUserName(name, type) {
+            this.saveName = false
+            this.disabledName = true
+            this.updateUser({ name, type })
+        },
+        saveUserEmail() {
+            this.saveEmail = false
+            this.disabledEmail = true
+        },
+        changeUserPassword() {}
+    },
+    computed: {
+        name: {
+            get() {
+                return this.$store.getters.user.name
+            },
+            set (value) {
+            this.$store.commit('userUpdate', value)
+    }
+        },
+        email: {
+            get() {
+                return this.$store.getters.user.email
+            }
         }
     }
 }

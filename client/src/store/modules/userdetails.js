@@ -20,15 +20,30 @@ const actions = {
                 sid,
                 token
             }).then(response => {
-                console.log(response.data)
                 commit('userDetails', response.data)
             })
         }
+    },
+    
+    async updateUser({ commit },{ name, type }) {
+        axios.post('http://localhost:5000/api/user_details/updateuser',{
+            sid: getCookie("sid"),
+            token: getCookie("t"),
+            data: name,
+            type: type
+        }).then(response => {
+            commit('updatedUser', response.data)
+        }).catch(error => {
+            console.log(error)
+        })
+
     }
 }
 
 const mutations = {
-    userDetails: (state, user) => (state.user = user)
+    userDetails: (state, user) => (state.user = user),
+    updatedUser: (state, user) => (state.user = user),
+    userUpdate: (state, value) => (state.user.name = value)
 }
 
 export default {
