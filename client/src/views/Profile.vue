@@ -58,7 +58,7 @@
                                     class="ml-2 mt-1 blue--text text--darken-2"
                                     text
                                     small
-                                    @click="saveUserEmail">
+                                    @click="saveUserEmail(email, 'email')">
                                     <v-icon small>save</v-icon>
                                     <span>Save</span>
                                 </v-btn>
@@ -127,11 +127,12 @@ export default {
         saveUserName(name, type) {
             this.saveName = false
             this.disabledName = true
-            this.updateUser({ name, type })
+            this.updateUser({ data: name, type })
         },
-        saveUserEmail() {
+        saveUserEmail(email, type) {
             this.saveEmail = false
             this.disabledEmail = true
+            this.updateUser({ data: email, type })
         },
         changeUserPassword() {}
     },
@@ -141,12 +142,15 @@ export default {
                 return this.$store.getters.user.name
             },
             set (value) {
-            this.$store.commit('userUpdate', value)
-    }
+            this.$store.commit('userUpdateName', value)
+            }
         },
         email: {
             get() {
                 return this.$store.getters.user.email
+            },
+            set (value) {
+            this.$store.commit('userUpdateEmail', value)
             }
         }
     }

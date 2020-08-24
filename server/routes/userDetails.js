@@ -22,7 +22,6 @@ router
                         email: response.email,
                         urlNos: response.urlNos
                     }
-                    console.log(user)
                     res.status(200).send(user)
                 }else if(type == 'email'){
                     let response = await User.findOneAndUpdate({ userId: userId.userId }, { email: data}, {new: true})
