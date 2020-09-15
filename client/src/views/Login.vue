@@ -134,7 +134,6 @@ export default {
                     this.loading = false
                     this.disabled = false
                     if(response.data.STATUS === 'SUCCESS') {
-                        console.log(response.data)
                         if(response.data.MSG === 'login_success'){
                             this.$cookies.set("sid", response.data.user.sid)
                             this.$cookies.set("t",response.data.user.token)
@@ -163,10 +162,21 @@ export default {
                     otp: this.otp,
                     email: this.email
                 }).then(response => {
-                    console.log(response.data)
-                    this.loading = false
-                    this.disabled = false
-                    this.userVerifyDialog = false
+                    if(response.data == 'user account verified') {
+                        this.loading = false
+                        this.disabled = false
+                        this.snackbar = true
+                        this.snackbarText = 'account verified'
+                        this.submitLogin()
+                    } else {
+                        if(response.data == 'Invalid otp') {
+                            this.snackbar = true
+                            this.snackbarText = 'Invalid OTP!'
+                        } else {
+                            this.snackbar = true
+                            this.snackbarText = 'failed to verify account'
+                        }
+                    }
                 }).catch(error => {
                     console.log(error)
                     this.loading = false
