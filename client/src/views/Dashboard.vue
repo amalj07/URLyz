@@ -3,6 +3,39 @@
     <NavDrawer />
       <div class="mt-10 ml-8">
         <v-container>
+          <v-dialog
+              overlay-color="indigo lighten-5"
+              max-width="450"
+              persistent
+              v-model="deleteUrlDialog">
+              <v-form ref="verifyUserForm">
+                  <v-card
+                      :loading="this.deleteurl">
+                      <v-card-title class="justify-center blue--text text--darken-2">
+                          Delete Url
+                      </v-card-title>
+                      <v-card-text class="pt-5">
+                          <p>Are you sure to delete the url?</p>
+                      </v-card-text>
+                      <v-card-actions class="justify-end">
+                          <v-btn
+                              text
+                              @click="deleteUrl"
+                              :disabled="this.delete_btnStatus"
+                              class="verify_btn mb-3 red white--text">
+                              Delete url
+                          </v-btn>
+                          <v-btn
+                              text
+                              @click="cancelDelete"
+                              class="verify_btn mb-3 mr-4"
+                              color="blue darken-2 white--text">
+                              Cancel
+                          </v-btn>
+                      </v-card-actions>
+                  </v-card>
+              </v-form>
+          </v-dialog>
           <h1 class="mb-10 text-decoration-underline grey--text text--darken-2 font-italic">My URLs</h1>
           <v-card outlined max-width="800" class="px-3">
             <div v-for="(url, index) in urls" :key="url.urlCode">
@@ -43,7 +76,7 @@
                       shaped
                       class="my-2 white blue--text text--darken-2">
                       <!-- <span>Delete</span> -->
-                      <v-icon>delete</v-icon>
+                      <v-icon @click="deleteUrl(url, index)">delete</v-icon>
                     </v-btn>
                   </div>
                 </v-flex>
@@ -65,7 +98,12 @@ export default {
   data() {
     return {
       urls: [],
-      updateLinkIndex: null
+      updateLinkIndex: null,
+      deleteUrlDialog: false,
+      deleteurl: false,
+      delete_btnStatus: false,
+      snackbar: false,
+      snackbarText: ''
     }
   },
   methods: {
@@ -98,6 +136,13 @@ export default {
       }else {
         return "red"
       }
+    },
+    deleteUrl(url, index) {
+      console.log(url, index)
+      this.deleteUrlDialog = true
+    },
+    cancelDelete() {
+      this.deleteUrlDialog = false
     }
   },
   created() {

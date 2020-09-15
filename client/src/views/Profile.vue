@@ -46,7 +46,6 @@
                                 <v-btn
                                     text
                                     @click="cancelUpdate"
-                                    :disabled="this.update_btnStatus"
                                     class="verify_btn mb-3 mr-4"
                                     color="blue darken-2 white--text">
                                     Cancel
