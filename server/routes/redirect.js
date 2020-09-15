@@ -12,8 +12,12 @@ router
         try {
             const url = await urlModel.findOne({ urlCode: req.params.code })
 
-            if(url) {
-                return res.redirect(url.longUrl)
+            if (url) {
+                if (url.status == 'disabled') {
+                    res.status(404).end()
+                } else {
+                    return res.redirect(url.longUrl)
+                }
             } else {
                 return res.status(404).json('No url found')
             }
