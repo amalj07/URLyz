@@ -3,6 +3,44 @@
         <NavDrawer />
         <div  class="mt-3 ml-8">
             <v-container>
+                <v-dialog
+                    overlay-color="indigo lighten-5"
+                    max-width="500"
+                    persistent
+                    v-model="updatePasswordDialog">
+                    <v-form ref="verifyUserForm">
+                        <v-card
+                            :loading="this.loadpasswd_form">
+                            <v-card-title class="justify-center">
+                                Enter new password
+                            </v-card-title>
+                            <v-card-text class="pt-5">
+                                <v-text-field
+                                    v-model="newPassword"
+                                    :rules="inputRules"
+                                    label="Password"
+                                    outlined    
+                                ></v-text-field>
+                                <v-text-field
+                                    v-model="confirmPassword"
+                                    :rules="inputRules.concat(confirmPasswordRule)"
+                                    label="Confirm password"
+                                    outlined    
+                                ></v-text-field>
+                            </v-card-text>
+                            <v-card-actions class="justify-end">
+                                <v-btn
+                                    text
+                                    @click="updatePassword"
+                                    :disabled="this.update_btnStatus"
+                                    class="verify_btn mb-3 mr-4"
+                                    color="blue darken-2 white--text">
+                                    Update Password
+                                </v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-form>
+                </v-dialog>
                 <h1 class="mb-7 text-decoration-underline grey--text text--darken-2 font-italic">My Profile</h1>
                 <div>
                     <v-card class="mb-2" outlined max-width="900">
@@ -111,7 +149,15 @@ export default {
             disabledName: true,
             saveEmail: false,
             disabledEmail: true,
-            password: ''
+            password: '',
+            updatePasswordDialog: false,
+            loadpasswd_form: false,
+            newPassword: '',
+            confirmPassword: '',
+            update_btnStatus: false,
+            inputRules: [
+                value => value.length > 0 || 'required',
+            ],
         }
     },
     methods: {
@@ -134,7 +180,19 @@ export default {
             this.disabledEmail = true
             this.updateUser({ data: email, type })
         },
-        changeUserPassword() {}
+        changeUserPassword() {
+            let url = 'http://localhost:5000/api/user_details/updatepassword'
+            this.$http.post(url, {
+                sid: this.$cookies.get("sid"),
+                token: this.$cookies.get("t"),
+                password: this.password
+            }).then(response => {
+                console.log(response.data)
+                if(response.data == 'passwd_verification_success') {
+                    this.updatePasswordDialog = true
+                } 
+            })
+        }
     },
     computed: {
         name: {
@@ -152,6 +210,9 @@ export default {
             set (value) {
             this.$store.commit('userUpdateEmail', value)
             }
+        },
+        confirmPasswordRule() {
+            return () => (this.password === this.confirmPassword) || 'Passwords doesn\'t match'
         }
     }
 }
