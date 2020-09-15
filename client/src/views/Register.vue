@@ -9,7 +9,7 @@
             <v-form ref="verifyUserForm">
                 <v-card
                     :loading="this.loadverify_form">
-                    <v-card-title class="justify-center">
+                    <v-card-title class="justify-center blue--text text--darken-2">
                         Verify Account
                     </v-card-title>
                     <v-card-text class="pt-5">
