@@ -11,9 +11,9 @@ router
     .post(async (req, res) => {
         const { sid, token } = req.body
 
-        const userSession = await Session.findOne({sid: sid, token: token}, '-_id')
+        const userSession = await Session.findOne({ sid: sid, token: token }, '-_id')
 
-        const urls = await Url.find({userId: userSession.userId}, '-userId -_id -date')
+        const urls = await Url.find({ userId: userSession.userId }, '-userId -_id -date')
         res.status(200).send(urls)
     })
 
@@ -23,8 +23,8 @@ router
         try {
             let { url } = req.body
 
-            if(url.status === 'active'){
-                const response = await Url.findOneAndUpdate({ urlCode: url.urlCode }, { status: 'disabled'}, {new: true})
+            if (url.status === 'active') {
+                const response = await Url.findOneAndUpdate({ urlCode: url.urlCode }, { status: 'disabled' }, { new: true })
 
                 url = {
                     status: response.status,
@@ -33,7 +33,7 @@ router
                     shortUrl: response.shortUrl
                 }
             } else {
-                const response = await Url.findOneAndUpdate({urlCode: url.urlCode}, {status: 'active'}, {new: true})
+                const response = await Url.findOneAndUpdate({ urlCode: url.urlCode }, { status: 'active' }, { new: true })
 
                 url = {
                     status: response.status,
@@ -42,7 +42,7 @@ router
                     shortUrl: response.shortUrl
                 }
             }
-            
+
             res.status(200).send(url)
 
         } catch (error) {
@@ -50,4 +50,17 @@ router
         }
     })
 
+router
+    .route('/delete')
+    .post(async (req, res) => {
+        try {
+            let { url } = req.body
+
+            await Url.findOneAndDelete({ urlCode: url.urlCode })
+
+            res.status(200).send('url_deleted')
+        } catch (error) {
+            console.log(error)
+        }
+    })
 module.exports = router

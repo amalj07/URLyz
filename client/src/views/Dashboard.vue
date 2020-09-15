@@ -5,24 +5,25 @@
         <v-container>
           <v-dialog
               overlay-color="indigo lighten-5"
-              max-width="450"
+              max-width="350"
               persistent
               v-model="deleteUrlDialog">
               <v-form ref="verifyUserForm">
                   <v-card
-                      :loading="this.deleteurl">
+                      :loading="this.deleteurl_load">
                       <v-card-title class="justify-center blue--text text--darken-2">
                           Delete Url
                       </v-card-title>
-                      <v-card-text class="pt-5">
-                          <p>Are you sure to delete the url?</p>
+                      <v-card-text class="pt-2 text-center">
+                          <p class="body-1">Are you sure to delete the url?</p>
                       </v-card-text>
-                      <v-card-actions class="justify-end">
+                      <v-card-actions class="mt-n3 justify-center">
                           <v-btn
                               text
-                              @click="deleteUrl"
+                              @click="confirmDelete"
                               :disabled="this.delete_btnStatus"
-                              class="verify_btn mb-3 red white--text">
+                              class="verify_btn mb-3"
+                              color="red darken-2 white--text">
                               Delete url
                           </v-btn>
                           <v-btn
@@ -36,6 +37,23 @@
                   </v-card>
               </v-form>
           </v-dialog>
+          <v-snackbar
+              text
+              top
+              color="success"
+              v-model="snackbar">
+              {{ this.snackbarText }}
+              <template v-slot:action="{ attrs }">
+                  <v-btn
+                  color="green"
+                  text
+                  v-bind="attrs"
+                  @click="snackbar = false"
+                  >
+                  <v-icon left>close</v-icon>
+                  </v-btn>
+              </template>
+          </v-snackbar> 
           <h1 class="mb-10 text-decoration-underline grey--text text--darken-2 font-italic">My URLs</h1>
           <v-card outlined max-width="800" class="px-3">
             <div v-for="(url, index) in urls" :key="url.urlCode">
@@ -100,10 +118,12 @@ export default {
       urls: [],
       updateLinkIndex: null,
       deleteUrlDialog: false,
-      deleteurl: false,
+      deleteurl_load: false,
       delete_btnStatus: false,
       snackbar: false,
-      snackbarText: ''
+      snackbarText: '',
+      deleteurl: '',
+      deleteurlindex: null
     }
   },
   methods: {
@@ -123,8 +143,6 @@ export default {
             url
         }).then(response => {
           this.urls[this.updateLinkIndex].status = response.data.status
-          console.log(response.data.status)
-          console.log(this.urls[this.updateLinkIndex].status)
           this.getColor(response.data.status)
         }).catch(error => {
             console.log(error)
@@ -138,11 +156,32 @@ export default {
       }
     },
     deleteUrl(url, index) {
-      console.log(url, index)
+      this.deleteurl = url
+      this.deleteurlindex = index
       this.deleteUrlDialog = true
     },
     cancelDelete() {
+      this.deleteUrl = ''
       this.deleteUrlDialog = false
+    },
+    confirmDelete() {
+      this.deleteurl_load = true
+      this.$http.post('http://localhost:5000/api/urls/delete', {
+        url: this.deleteurl
+      }).then(response => {
+        if(response.data == 'url_deleted') {
+          this.urls.splice(this.deleteurlindex, 1)
+          this.deleteurl_load = false
+          this.deleteUrlDialog = false
+          this.snackbar = true
+          this.snackbarText = 'url deleted'
+        } else {
+          this.snackbar = true
+          this.snackbarText = 'failed to delete url'
+        }
+      }).catch(error => {
+        console.log(error)
+      })
     }
   },
   created() {

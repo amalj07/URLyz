@@ -149,7 +149,7 @@ export default {
                 }).catch(error => {
                     this.loading = false
                     this.disabled = false
-                    console.log(error)
+                    console.log(error.message)
                 })
             }
         },
