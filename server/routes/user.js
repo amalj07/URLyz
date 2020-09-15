@@ -16,39 +16,52 @@ router
     .route('/user_register')
     .post(async (req, res) => {
         try {
-            if(!req.body.name || !req.body.email || !req.body.password) {
+            // Check if req body is not empty
+            if (!req.body.name || !req.body.email || !req.body.password) {
                 res.status(400).send('Error registering user')
             } else {
-                const userId = uid.uid()
+
                 const { name, email, password } = req.body
 
-                const setPassword = crypt.createPassword(password)
-                const salt = (await setPassword).salt
-                const hash = (await setPassword).hash
+                const existingUser = await User.findOne({ email })
+                if (existingUser) {
+                    res.status(200).send('email already registered')
+                } else {
+                    // Create a new userId
+                    const userId = uid.uid()
 
-                user = new User({
-                    userId,
-                    name,
-                    email,
-                    salt,
-                    hash
-                })
+                    // Create a new password hash and salt
+                    const setPassword = crypt.createPassword(password)
+                    const salt = (await setPassword).salt
+                    const hash = (await setPassword).hash
 
-                await user.save()
+                    // Create a new user model to save to db
+                    user = new User({
+                        userId,
+                        name,
+                        email,
+                        salt,
+                        hash
+                    })
 
-                
-                const mailResponse = mail.sendMail(user)
-                const otp = mailResponse
-                
-                verifyOTP = new VerifyOTP({
-                    otp,
-                    userId,
-                    email
-                })
-                
-                await verifyOTP.save()
+                    await user.save()
 
-                res.status(200).send('user registered')
+                    // Send otp to user email
+                    const mailResponse = mail.sendMail(user)
+                    const otp = mailResponse
+
+                    // Create new otp model to save to db
+                    verifyOTP = new VerifyOTP({
+                        otp,
+                        userId,
+                        email
+                    })
+
+                    await verifyOTP.save()
+
+                    res.status(200).send('user registered')
+                }
+
             }
         } catch (error) {
             console.log(error)
@@ -60,19 +73,19 @@ router
 // @desc Verify the user account
 router
     .route('/user_account/verify')
-    .post(async(req, res) => {
+    .post(async (req, res) => {
         try {
             const { otp, email } = req.body
 
             const userId = await User.findOne({ email }, 'userId -_id')
 
-            const verifyOtp = await VerifyOTP.findOne({ userId: userId.userId, valid: true})
+            const verifyOtp = await VerifyOTP.findOne({ userId: userId.userId, valid: true })
 
-            if(verifyOtp != null) {
-                if(verifyOtp.otp == otp && verifyOtp.email == email) {
-                    await VerifyOTP.updateOne({otp: otp}, {valid: false})
-                    await User.updateOne({ userId: userId.userId }, {verified: true})
-    
+            if (verifyOtp != null) {
+                if (verifyOtp.otp == otp && verifyOtp.email == email) {
+                    await VerifyOTP.updateOne({ otp: otp }, { valid: false })
+                    await User.updateOne({ userId: userId.userId }, { verified: true })
+
                     res.status(200).send('user account verified')
                 } else {
                     res.status(200).send('user verification failed')
@@ -93,16 +106,16 @@ router
     .post(async (req, res) => {
         try {
             const { email, password } = req.body
-            
+
             const user = await User.findOne({ email }, '-_id')
-            
-            if(user) {
+
+            if (user) {
                 const validPassword = crypt.checkPassword(password, user.salt, user.hash)
-                if(validPassword == true){
-                    if(user.verified == true) {
+                if (validPassword == true) {
+                    if (user.verified == true) {
                         const token = uid.token()
                         const sid = uid.sid()
-                        
+
                         session = new Session({
                             sid: sid,
                             userId: user.userId,
@@ -111,18 +124,20 @@ router
 
                         await session.save()
 
-                        res.status(200).json({STATUS: 'SUCCESS', MSG: 'login_success', user: {
-                            sid: sid,
-                            token: token,
-                        }})
-                    } else{
-                        res.status(200).json({STATUS: 'SUCCESS', MSG: 'unverifed_account'})
+                        res.status(200).json({
+                            STATUS: 'SUCCESS', MSG: 'login_success', user: {
+                                sid: sid,
+                                token: token,
+                            }
+                        })
+                    } else {
+                        res.status(200).json({ STATUS: 'SUCCESS', MSG: 'unverifed_account' })
                     }
                 } else {
-                    res.status(400).send('Invalid credentials')
+                    res.status(200).send('Invalid credentials')
                 }
             } else {
-                res.status(400).send('Invalid credentials')
+                res.status(200).send('Invalid credentials')
             }
         } catch (error) {
             res.status(400).send('failed to login')
@@ -133,37 +148,37 @@ router
 // @desc Resend the otp
 router
     .route('/user_account/resendotp')
-    .post(async(req, res) => {
+    .post(async (req, res) => {
         try {
             const { email } = req.body
 
             const user = await User.findOne({ email }, 'userId name email -_id')
-            
-            // Check if the user already have an otp in db
-            const otpIndb = await VerifyOTP.findOne({email}, '-_id')
 
-            if(user != null) {
-                if(otpIndb != null) {
-                    await VerifyOTP.updateOne({email: email}, {valid: false})
+            // Check if the user already have an otp in db
+            const otpIndb = await VerifyOTP.findOne({ email }, '-_id')
+
+            if (user != null) {
+                if (otpIndb != null) {
+                    await VerifyOTP.updateOne({ email: email }, { valid: false })
                 }
                 const otp = mail.sendMail(user)
-    
+
                 const userId = user.userId
-                const emial =user.email
+                const emial = user.email
                 verifyOTP = new VerifyOTP({
                     otp,
                     userId,
                     email
                 })
-                
+
                 await verifyOTP.save()
-    
+
                 res.status(200).send(`OTP send to ${email}`)
             }
-            
+
         } catch (error) {
             res.status(400).send('failed to send otp')
-        }       
+        }
     })
 
 // @route POST /api/user/authenticate
@@ -174,18 +189,18 @@ router
         try {
             const { sid, token } = req.body
             const userSession = await Session.findOne({ sid }, '-_id')
-            if(userSession != null) {
-                if(token == undefined) {
-                    res.status(200).send({status: 'FAIL'})
-                }else {
-                    if(userSession.token == token) {
-                        res.status(200).send({status: "SUCCESS"})
-                    }else {
-                        res.status(200).send({status: 'FAIL'})
+            if (userSession != null) {
+                if (token == undefined) {
+                    res.status(200).send({ status: 'FAIL' })
+                } else {
+                    if (userSession.token == token) {
+                        res.status(200).send({ status: "SUCCESS" })
+                    } else {
+                        res.status(200).send({ status: 'FAIL' })
                     }
                 }
-            }else {
-                res.status(200).send({status: 'FAIL'})
+            } else {
+                res.status(200).send({ status: 'FAIL' })
             }
         } catch (error) {
             console.log(error)
@@ -197,8 +212,8 @@ router
     .post(async (req, res) => {
         try {
             const { sid, token } = req.body
-    
-            await Session.findOneAndDelete({sid: sid, token: token})
+
+            await Session.findOneAndDelete({ sid: sid, token: token })
             res.status(200).send("SUCCESS")
         } catch (error) {
             console.log(error)
@@ -212,12 +227,12 @@ router
     .post(async (req, res) => {
         try {
             const { sid, token } = req.body
-    
-            const userId = await Session.findOne({ sid: sid, token: token}, '-sid -token -_id')
+
+            const userId = await Session.findOne({ sid: sid, token: token }, '-sid -token -_id')
             if (userId) {
                 const user = await User.findOne({ userId: userId.userId }, '-_id -userId -salt -hash -verified')
                 res.status(200).send(user)
-            }else {
+            } else {
                 res.status(401).end()
             }
 

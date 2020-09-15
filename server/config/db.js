@@ -4,7 +4,7 @@ const config = require('./config')
 const connectDB = async () => {
     // Handle initial connection
     try {
-        await mongoose.connect(config.DB.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+        await mongoose.connect(config.DB.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true, useFindAndModify: false })
         console.log('MongoDB Connected...')
     } catch (error) {
         console.error(error.message)

@@ -18,7 +18,7 @@ router
         const baseUrl = config.baseUrl.baseurl
 
         // Check base url
-        if(!validUrl.isUri(baseUrl)) {
+        if (!validUrl.isUri(baseUrl)) {
             return res.status(401).json("invalid base url")
         }
 
@@ -26,19 +26,22 @@ router
         const urlCode = shortid.generate()
 
         // Check long url
-        if(validUrl.isUri(longUrl)) {
+        if (validUrl.isUri(longUrl)) {
             try {
-                if(sid != '' && token != '') {
-                    const userSession = await Session.findOne({sid: sid, token: token}, '-_id')
+                // Check if sid and token is not null
+                if (sid != '' && token != '') {
+                    // Find usersession based on sid and token
+                    const userSession = await Session.findOne({ sid: sid, token: token }, '-_id')
 
-                    if(userSession) {
-                        const url = await urlModel.findOne({longUrl: longUrl, userId: userSession.userId})
-                        if(url) {
+                    if (userSession) {
+                        // If valid userSession, check if short url already exist
+                        const url = await urlModel.findOne({ longUrl: longUrl, userId: userSession.userId })
+                        if (url) {
                             res.status(200).json(url.shortUrl)
                         } else {
                             // Create new short url if long url is not present
                             const shortUrl = baseUrl + '/' + urlCode
-    
+
                             newUrl = new urlModel({
                                 longUrl,
                                 shortUrl,
@@ -46,19 +49,20 @@ router
                                 userId: userSession.userId,
                                 date: new Date
                             })
-    
+
                             await newUrl.save()
-    
+
                             res.status(200).json(newUrl.shortUrl)
                         }
-                    }else {
+                    } else {
                         res.status(400).end()
                     }
-                }else {
-                    const url = await urlModel.findOne({longUrl: longUrl, userId: 'nouser'}, '-_id')
-                    if(url) {
+                } else {             // If sid and token is null
+                    // Check if short url already exist
+                    const url = await urlModel.findOne({ longUrl: longUrl, userId: 'nouser' }, '-_id')
+                    if (url) {
                         res.status(200).json(url.shortUrl)
-                    }else {
+                    } else {
                         // Create new short url if long url is not present
                         const shortUrl = baseUrl + '/' + urlCode
                         console.log(shortUrl)

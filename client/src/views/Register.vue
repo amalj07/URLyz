@@ -39,24 +39,24 @@
                     </v-card-actions>
                 </v-card>
             </v-form>
-            <v-snackbar
-                    text
-                    top
-                    color="success"
-                    v-model="snackbar">
-                    {{ this.snackbarText }}
-                    <template v-slot:action="{ attrs }">
-                        <v-btn
-                        color="green"
-                        text
-                        v-bind="attrs"
-                        @click="snackbar = false"
-                        >
-                        <v-icon left>close</v-icon>
-                        </v-btn>
-                    </template>
-                </v-snackbar> 
         </v-dialog>
+        <v-snackbar
+                text
+                top
+                color="success"
+                v-model="snackbar">
+                {{ this.snackbarText }}
+                <template v-slot:action="{ attrs }">
+                    <v-btn
+                    color="green"
+                    text
+                    v-bind="attrs"
+                    @click="snackbar = false"
+                    >
+                    <v-icon left>close</v-icon>
+                    </v-btn>
+                </template>
+            </v-snackbar> 
             <v-row justify="center">
                 <v-form class="mt-10" ref="registerForm">
                     <v-card
@@ -154,10 +154,17 @@ export default {
                     email: this.email,
                     password: this.password
                 }).then(response => {
-                    this.loadreg_form = false
-                    this.reg_btnStatus = false
                     console.log(response.data)
-                    this.userVerifyDialog = true
+                    if(response.data == 'email already registered') {
+                        this.loadreg_form = false,
+                        this.reg_btnStatus = false,
+                        this.snackbar = true,
+                        this.snackbarText = 'email already registered'
+                    } else {
+                        this.loadreg_form = false
+                        this.reg_btnStatus = false
+                        this.userVerifyDialog = true
+                    }
                 }).catch(error => {
                     this.loadreg_form = false
                     this.reg_btnStatus = false

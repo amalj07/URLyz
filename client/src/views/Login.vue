@@ -134,6 +134,7 @@ export default {
                     this.loading = false
                     this.disabled = false
                     if(response.data.STATUS === 'SUCCESS') {
+                        console.log(response.data)
                         if(response.data.MSG === 'login_success'){
                             this.$cookies.set("sid", response.data.user.sid)
                             this.$cookies.set("t",response.data.user.token)
@@ -142,6 +143,9 @@ export default {
                         } else {
                             this.notVerified = true
                         }
+                    } else {
+                        this.snackbar = true,
+                        this.snackbarText = 'Invalid email or password!'
                     }
                 }).catch(error => {
                     this.loading = false
