@@ -11,6 +11,13 @@
         <v-spacer></v-spacer>
         <div class="mr-13">
           <v-btn
+            v-if="getLoginStatus && this.$route.path == '/'"
+            to="/dashboard" 
+            depressed
+            class="signin white blue--text text--darken-2 mr-5">
+          <span>Dashboard</span>
+          </v-btn>
+          <v-btn
             v-if="getLoginStatus"
             to="/login" 
             depressed

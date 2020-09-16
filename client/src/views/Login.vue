@@ -138,7 +138,7 @@ export default {
                             this.$cookies.set("sid", response.data.user.sid)
                             this.$cookies.set("t",response.data.user.token)
                             // this.$router.push({name: 'Dashboard'})
-                            window.location.href = 'http://localhost:8080/dashboard'
+                            window.location.href = 'http://localhost:8080/'
                         } else {
                             this.notVerified = true
                         }
