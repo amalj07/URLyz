@@ -146,6 +146,15 @@
                                     <v-icon small>save</v-icon>
                                     <span>Save</span>
                                 </v-btn>
+                                <v-btn
+                                    v-if="saveName"
+                                    class="ml-2 mt-1 blue--text text--darken-2"
+                                    text
+                                    small
+                                    @click="saveUserName(name, 'name')">
+                                    <v-icon small>cancel</v-icon>
+                                    <span>Cancel</span>
+                                </v-btn>
                             </v-row>
                             <h3 class="mb-3">Email:</h3>
                             <v-row>
@@ -170,9 +179,18 @@
                                     class="ml-2 mt-1 blue--text text--darken-2"
                                     text
                                     small
-                                    @click="saveUserEmail(email, 'email')">
+                                    @click="cancelSaveUserEmail">
                                     <v-icon small>save</v-icon>
                                     <span>Save</span>
+                                </v-btn>
+                                <v-btn
+                                    v-if="saveEmail"
+                                    class="ml-2 mt-1 blue--text text--darken-2"
+                                    text
+                                    small
+                                    @click="cancelSaveUserEmail">
+                                    <v-icon small>cancel</v-icon>
+                                    <span>Cancel</span>
                                 </v-btn>
                             </v-row>
                         </div>
@@ -258,6 +276,14 @@ export default {
             this.saveEmail = false
             this.disabledEmail = true
             this.updateUser({ data: email, type })
+        },
+        cancelSaveUserName() {
+            this.saveName = false
+            this.disabledName = true
+        },
+        cancelSaveUserEmail() {
+            this.saveEmail = false
+            this.disabledEmail = true
         },
         changeUserPassword() {
             let url = 'http://localhost:5000/api/user_details/verifypassword'
