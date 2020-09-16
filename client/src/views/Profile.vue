@@ -231,22 +231,27 @@ export default {
             })
         },
         updatePassword() {
-            let url = 'http://localhost:5000/api/user_details/updatepassword'
-            this.$http.post(url, {
-                sid: this.$cookies.get("sid"),
-                token: this.$cookies.get("t"),
-                newPassword: this.newPassword,
-            }).then(response => {
-                if(response.data == 'password_updated') {
-                    this.updatePasswordDialog = false
-                    this.snackbar = true
-                    this.snackbarText = 'Password updated'
-                } else {
-                    this.updatePasswordDialog = false
-                    this.snackbar = true
-                    this.snackbarText = 'Failed to update password'
-                }
-            })
+            if(this.newPassword == '' || this.confirmPassword == '') {
+                this.snackbar = true,
+                this.snackbarText = 'Enter a password'
+            } else {
+                let url = 'http://localhost:5000/api/user_details/updatepassword'
+                this.$http.post(url, {
+                    sid: this.$cookies.get("sid"),
+                    token: this.$cookies.get("t"),
+                    newPassword: this.newPassword,
+                }).then(response => {
+                    if(response.data == 'password_updated') {
+                        this.updatePasswordDialog = false
+                        this.snackbar = true
+                        this.snackbarText = 'Password updated'
+                    } else {
+                        this.updatePasswordDialog = false
+                        this.snackbar = true
+                        this.snackbarText = 'Failed to update password'
+                    }
+                })
+            }
         },
         cancelUpdate() {
             this.updatePasswordDialog = false
