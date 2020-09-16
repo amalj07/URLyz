@@ -78,25 +78,30 @@ router
         try {
             const { sid, token, newPassword } = req.body
 
-            const userId = await Session.findOne({ sid: sid, token: token }, '-_id -sid -token')
+            if (newPassword == '') {
+                res.status(200).send('update_failed')
+            } else {
+                const userId = await Session.findOne({ sid: sid, token: token }, '-_id -sid -token')
 
-            if (userId) {
+                if (userId) {
 
-                // Create a new password hash and salt
-                const setPassword = crypt.createPassword(newPassword)
-                const salt = (await setPassword).salt
-                const hash = (await setPassword).hash
+                    // Create a new password hash and salt
+                    const setPassword = crypt.createPassword(newPassword)
+                    const salt = (await setPassword).salt
+                    const hash = (await setPassword).hash
 
-                const user = await User.findOneAndUpdate({ userId: userId.userId }, { salt: salt, hash: hash }, { new: true })
+                    const user = await User.findOneAndUpdate({ userId: userId.userId }, { salt: salt, hash: hash }, { new: true })
 
-                if (user) {
-                    res.status(200).send('password_updated')
+                    if (user) {
+                        res.status(200).send('password_updated')
+                    } else {
+                        res.status(200).send('update_failed')
+                    }
                 } else {
                     res.status(200).send('update_failed')
                 }
-            } else {
-                res.status(200).send('update_failed')
             }
+
         } catch (error) {
             console.log(error)
         }
