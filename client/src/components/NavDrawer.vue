@@ -5,12 +5,12 @@
       clipped
       class="blue darken-5"
     >
-        <v-layout column align-center class="pr-10">
+        <v-layout column align-center class="mr-8">
 
         <v-list-item>
-          <v-list-item-avatar class="ml-5 mt-5" size="90">
+          <v-list-item-avatar class="ml-5 mt-5" size="85">
             <!-- <img v-if="user.name != undefined" :src="'https://avatars.dicebear.com/api/bottts/:'+user.name+'.svg'"> -->
-            <img v-if="user.name != undefined" :src="`https://ui-avatars.com/api/?name=${user.name}&size=128&background=ECEFF1&color=546E7A`">
+            <img v-if="user.name != undefined" :src="`https://ui-avatars.com/api/?name=${user.name}&size=128&background=F5F5F5&color=4CAF50`">
           </v-list-item-avatar>
         </v-list-item>
         <v-list-item>
@@ -48,9 +48,9 @@ export default {
   data () {
     return {
       navItems: [
-          { title: 'My Profile', icon: 'mdi-account', path: '/myprofile' },
-          { title: 'My URLs', icon: 'link', path: '/dashboard' },
-          { title: 'New URL', icon: 'note_add' }
+        { title: 'My URLs', icon: 'link', path: '/dashboard' },
+        { title: 'My Profile', icon: 'mdi-account', path: '/myprofile' },
+        { title: 'New URL', icon: 'note_add', path: '/' }
       ],
     }
   },
