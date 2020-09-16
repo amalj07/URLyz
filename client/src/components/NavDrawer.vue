@@ -8,8 +8,9 @@
         <v-layout column align-center class="pr-10">
 
         <v-list-item>
-          <v-list-item-avatar class="pl-3 mt-5" size="90">
-            <img v-if="user.name != undefined" :src="'https://avatars.dicebear.com/api/bottts/:'+user.name+'.svg'">
+          <v-list-item-avatar class="ml-5 mt-5" size="90">
+            <!-- <img v-if="user.name != undefined" :src="'https://avatars.dicebear.com/api/bottts/:'+user.name+'.svg'"> -->
+            <img v-if="user.name != undefined" :src="`https://ui-avatars.com/api/?name=${user.name}&size=128&background=ECEFF1&color=546E7A`">
           </v-list-item-avatar>
         </v-list-item>
         <v-list-item>
