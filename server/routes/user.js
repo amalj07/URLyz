@@ -47,17 +47,17 @@ router
                     await user.save()
 
                     // Send otp to user email
-                    const mailResponse = mail.sendMail(user)
-                    const otp = mailResponse
+                    // const mailResponse = mail.sendMail(user)
+                    // const otp = mailResponse
 
-                    // Create new otp model to save to db
-                    verifyOTP = new VerifyOTP({
-                        otp,
-                        userId,
-                        email
-                    })
+                    // // Create new otp model to save to db
+                    // verifyOTP = new VerifyOTP({
+                    //     otp,
+                    //     userId,
+                    //     email
+                    // })
 
-                    await verifyOTP.save()
+                    // await verifyOTP.save()
 
                     res.status(200).send('user registered')
                 }
@@ -239,7 +239,43 @@ router
         } catch (error) {
             console.log(error)
         }
-
     })
 
+
+router
+    .route('/delete_account')
+    .post(async (req, res) => {
+        try {
+            const { sid, token, password } = req.body
+
+            const userId = await Session.findOne({ sid: sid, token: token }, '-sid -token -_id')
+
+            if (userId) {
+                const user = await User.findOne({ userId: userId.userId }, '-email -name -urlNos -verified -userId-_id')
+
+                if (user) {
+                    const validPassword = crypt.checkPassword(password, user.salt, user.hash)
+
+                    if (validPassword == true) {
+                        const deleteUser = await User.findOneAndDelete({ userId: userId.userId })
+                        if (deleteUser) {
+                            res.status(200).send("user_deleted")
+                        } else {
+                            res.status(200).send("delete_failed")
+                        }
+
+                    } else {
+                        res.status(200).send("invalid_password")
+                    }
+                } else {
+                    res.status(200).send("delete_failed")
+                }
+            } else {
+                res.status(200).send("delete_failed")
+            }
+        } catch (error) {
+            console.log(error)
+            res.status(200).send("delete_failed")
+        }
+    })
 module.exports = router

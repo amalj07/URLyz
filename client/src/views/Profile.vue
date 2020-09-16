@@ -10,7 +10,7 @@
                     v-model="updatePasswordDialog">
                     <v-form ref="verifyUserForm">
                         <v-card
-                            :loading="this.loadpasswd_form">
+                            :loading="this.loading">
                             <v-card-title class="justify-center blue--text text--darken-2">
                                 Enter new password
                             </v-card-title>
@@ -38,7 +38,7 @@
                                 <v-btn
                                     text
                                     @click="updatePassword"
-                                    :disabled="this.update_btnStatus"
+                                    :disabled="this.disabled"
                                     class="verify_btn mb-3"
                                     color="blue darken-2 white--text">
                                     Update Password
@@ -47,6 +47,50 @@
                                     text
                                     @click="cancelUpdate"
                                     class="verify_btn mb-3 mr-4"
+                                    color="blue darken-2 white--text">
+                                    Cancel
+                                </v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-form>
+                </v-dialog>
+                <v-dialog
+                    overlay-color="indigo lighten-5"
+                    max-width="500"
+                    persistent
+                    v-model="deleteAccountDialog">
+                    <v-form ref="verifyUserForm">
+                        <v-card
+                            :loading="this.loading">
+                            <v-card-title class="justify-center red--text text--darken-2">
+                                Delete Account
+                            </v-card-title>
+                            <v-card-text class="pt-5">
+                                <p class="mx-5 mb-5 text-body-1">Are you sure want to delete your account?</p>
+                                <v-text-field
+                                    class="mx-5"
+                                    dense
+                                    v-model="deleteAccountPassword"
+                                    :rules="inputRules"
+                                    label="Password"
+                                    type="password"
+                                    outlined    
+                                ></v-text-field>
+                                <p class="mx-5">Deleting your account removes all the data and urls associated with your account. This action cannot be undone</p>
+                            </v-card-text>
+                            <v-card-actions class="justify-end">
+                                <v-btn
+                                    text
+                                    @click="confirmDeleteAccount"
+                                    :disabled="this.disabled"
+                                    class="verify_btn mb-3 mr-2"
+                                    color="red darken-2 white--text">
+                                    Delete Account
+                                </v-btn>
+                                <v-btn
+                                    text
+                                    @click="cancelDeleteAccount"
+                                    class="verify_btn mb-3 mr-5"
                                     color="blue darken-2 white--text">
                                     Cancel
                                 </v-btn>
@@ -152,7 +196,8 @@
                             </v-col>
                             <v-col class="mt-4">
                                 <v-btn
-                                    class="red white--text">
+                                    class="red white--text"
+                                    @click="deleteAccount">
                                     Delete Account
                                 </v-btn>
                                 <p class="caption mt-2 grey--text text--darken-1">Deleting your account removes all your account data.</p>
@@ -180,11 +225,13 @@ export default {
             saveEmail: false,
             disabledEmail: true,
             password: '',
+            loading: false,
+            disabled: false,
             updatePasswordDialog: false,
-            loadpasswd_form: false,
             newPassword: '',
             confirmPassword: '',
-            update_btnStatus: false,
+            deleteAccountDialog: false,
+            deleteAccountPassword: '',
             snackbar: false,
             snackbarText: '',
             inputRules: [
@@ -255,6 +302,54 @@ export default {
         },
         cancelUpdate() {
             this.updatePasswordDialog = false
+        },
+        deleteAccount(){
+            this.deleteAccountDialog = true
+        },
+        confirmDeleteAccount() {
+            if(this.deleteAccountPassword == '') {
+                this.snackbar = true
+                this.snackbarText = 'Enter your password'
+            } else {
+                this.loading = true
+                this.disabled = true
+                let url = 'http://localhost:5000/api/user/delete_account'
+                this.$http.post(url, {
+                    sid: this.$cookies.get("sid"),
+                    token: this.$cookies.get("t"),
+                    password: this.deleteAccountPassword
+                }).then(response => {
+                    if(response.data == 'user_deleted'){
+                        this.snackbar = true
+                        this.snackbarText = response.data
+                        this.logout()
+                    } else {
+                        this.loading = false
+                        this.disabled = false
+                        this.deleteAccountDialog = false
+                        this.snackbar = true
+                        this.snackbarText = response.data
+                    }
+                }).catch(error => {
+                    console.log(error)
+                })
+            }
+        },
+        cancelDeleteAccount() {
+            this.deleteAccountDialog = false
+        },
+        async logout() {
+            this.$http.post('http://localhost:5000/api/user/logout', {
+                sid: this.$cookies.get("sid"),
+                token: this.$cookies.get("t")
+            }).then(async () => {
+                await this.$cookies.remove("sid")
+                await this.$cookies.remove("t")
+                // this.$router.push('/login')
+                window.location.href = 'http://localhost:8080/'
+            }).catch(error => {
+                console.log(error)
+            })
         }
     },
     computed: {
