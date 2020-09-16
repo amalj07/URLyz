@@ -291,15 +291,14 @@ export default {
                 sid: this.$cookies.get("sid"),
                 token: this.$cookies.get("t"),
                 password: this.password
-            }).then(response => {
-                if(response.data == 'passwd_verification_success') {
+            }).then(() => {
                     this.updatePasswordDialog = true
                     this.password = ''
-                } else {
-                    this.updatePasswordDialog = false
-                    this.snackbar = true
-                    this.snackbarText = response.data
+            }).catch(error => {
+                if(error.response.data == 'Invalid password' || error.response.data == 'Failed to verify password'){
                     this.password = ''
+                    this.snackbar = true,
+                    this.snackbarText = error.response.data
                 }
             })
         },
@@ -313,15 +312,19 @@ export default {
                     sid: this.$cookies.get("sid"),
                     token: this.$cookies.get("t"),
                     newPassword: this.newPassword,
-                }).then(response => {
-                    if(response.data == 'password_updated') {
+                }).then(() => {
                         this.updatePasswordDialog = false
                         this.snackbar = true
                         this.snackbarText = 'Password updated'
-                    } else {
+                }).catch(error => {
+                    if(error.response.data == "Failed to update password") {
                         this.updatePasswordDialog = false
                         this.snackbar = true
-                        this.snackbarText = 'Failed to update password'
+                        this.snackbarText = error.response.data
+                    }
+                    else {
+                        this.snackbar = true,
+                        this.snackbarText = 'Something went wrong!'
                     }
                 })
             }
@@ -344,20 +347,24 @@ export default {
                     sid: this.$cookies.get("sid"),
                     token: this.$cookies.get("t"),
                     password: this.deleteAccountPassword
-                }).then(response => {
-                    if(response.data == 'user_deleted'){
+                }).then( response => {
+                        this.password = ''
                         this.snackbar = true
                         this.snackbarText = response.data
                         this.logout()
-                    } else {
+                }).catch(error => {
+                    console.log(error)
+                    if(error.response.data == 'Invalid password' || error.response.data == 'Failed to delete user'){
+                        this.password = ''
                         this.loading = false
                         this.disabled = false
                         this.deleteAccountDialog = false
                         this.snackbar = true
-                        this.snackbarText = response.data
+                        this.snackbarText = error.response.data
+                    }else {
+                        this.snackbar = true,
+                        this.snackbarText = 'Something went wrong!'
                     }
-                }).catch(error => {
-                    console.log(error)
                 })
             }
         },
@@ -375,6 +382,13 @@ export default {
                 window.location.href = 'http://localhost:8080/'
             }).catch(error => {
                 console.log(error)
+                if(error.response.data == 'Failed to logout user') {
+                    this.snackbar = true,
+                    this.snackbarText = error.response.data
+                } else {
+                    this.snackbar = true,
+                    this.snackbarText = 'Something went wrong!'
+                }
             })
         }
     },

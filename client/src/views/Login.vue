@@ -133,23 +133,31 @@ export default {
                 }).then(response => {
                     this.loading = false
                     this.disabled = false
-                    if(response.data.STATUS === 'SUCCESS') {
-                        if(response.data.MSG === 'login_success'){
-                            this.$cookies.set("sid", response.data.user.sid)
-                            this.$cookies.set("t",response.data.user.token)
-                            // this.$router.push({name: 'Dashboard'})
-                            window.location.href = 'http://localhost:8080/'
-                        } else {
-                            this.notVerified = true
-                        }
-                    } else {
+                    if(response.data.MSG === 'login_success'){
+                        this.$cookies.set("sid", response.data.user.sid)
+                        this.$cookies.set("t",response.data.user.token)
+                        // this.$router.push({name: 'Dashboard'})
+                        window.location.href = 'http://localhost:8080/'
+                    }else {
                         this.snackbar = true,
-                        this.snackbarText = 'Invalid email or password!'
+                        this.snackbarText = 'Something went wrong!'
                     }
                 }).catch(error => {
-                    this.loading = false
-                    this.disabled = false
-                    console.log(error.message)
+                    if(error.response.data == 'Account not verified'){
+                        this.notVerified = true
+                        this.snackbar = true,
+                        this.snackbarText = 'Please verify your account'
+                        this.loading = false
+                        this.disabled = false
+                    }else if(error.response.data == 'Invalid email or password') {
+                        this.snackbar = true,
+                        this.snackbarText = error.response.data
+                        this.loading = false
+                        this.disabled = false
+                    }else {
+                        this.snackbar = true
+                        this.snackbarText = 'Something went wrong!'
+                    }
                 })
             }
         },
@@ -162,25 +170,26 @@ export default {
                     otp: this.otp,
                     email: this.email
                 }).then(response => {
-                    if(response.data == 'user account verified') {
+                    this.loading = false
+                    this.disabled = false
+                    this.snackbar = true
+                    this.snackbarText = response.data
+                    this.submitLogin()
+                }).catch(error => {
+                    if(error.response.data == 'Failed to veriy user') {
                         this.loading = false
                         this.disabled = false
                         this.snackbar = true
-                        this.snackbarText = 'account verified'
-                        this.submitLogin()
+                        this.snackbarText = error.response.data
+                    } else if(error.response.data == 'Invalid OTP') {
+                        this.loading = false
+                        this.disabled = false
+                        this.snackbar = true
+                        this.snackbarText = error.response.data
                     } else {
-                        if(response.data == 'Invalid otp') {
-                            this.snackbar = true
-                            this.snackbarText = 'Invalid OTP!'
-                        } else {
-                            this.snackbar = true
-                            this.snackbarText = 'failed to verify account'
-                        }
+                        this.snackbar = true
+                        this.snackbarText = 'Something went wrong'
                     }
-                }).catch(error => {
-                    console.log(error)
-                    this.loading = false
-                    this.disabled = false
                 })
             }
         },
@@ -192,7 +201,16 @@ export default {
                 this.snackbar = true
                 this.snackbarText = response.data
             }).catch(error => {
-                console.log(error)
+                if(error.response.data == 'Invalid email'){
+                    this.snackbar = true
+                    this.snackbarText = error.response.data
+                } else if(error.response.data == 'Failed to send otp'){
+                    this.snackbar = true
+                    this.snackbarText = error.response.data
+                } else {
+                    this.snackbar = true
+                    this.snackbarText = 'Something went wrong!'
+                }
             })
         }
     }

@@ -57,18 +57,19 @@ router
                     if (validPassword == true) {
                         res.status(200).send("passwd_verification_success")
                     } else {
-                        res.status(200).send("Invalid password")
+                        res.status(401).send("Invalid password")
                     }
                 } else {
                     res.status(401).send("Invalid user")
                 }
 
             } else {
-                res.status(200).send("Invalid user")
+                res.status(401).send("Invalid user")
             }
 
         } catch (error) {
             console.log(error)
+            res.status(401).send("Failed to verify password")
         }
     })
 
@@ -79,7 +80,7 @@ router
             const { sid, token, newPassword } = req.body
 
             if (newPassword == '') {
-                res.status(200).send('update_failed')
+                res.status(401).send('Failed to update password')
             } else {
                 const userId = await Session.findOne({ sid: sid, token: token }, '-_id -sid -token')
 
@@ -95,15 +96,15 @@ router
                     if (user) {
                         res.status(200).send('password_updated')
                     } else {
-                        res.status(200).send('update_failed')
+                        res.status(401).send('Failed to update password')
                     }
                 } else {
-                    res.status(200).send('update_failed')
+                    res.status(401).send('Invalid user')
                 }
             }
-
         } catch (error) {
             console.log(error)
+            res.status(401).send('Failed to update password')
         }
     })
 

@@ -47,17 +47,17 @@ router
                     await user.save()
 
                     // Send otp to user email
-                    // const mailResponse = mail.sendMail(user)
-                    // const otp = mailResponse
+                    const mailResponse = mail.sendMail(user)
+                    const otp = mailResponse
 
-                    // // Create new otp model to save to db
-                    // verifyOTP = new VerifyOTP({
-                    //     otp,
-                    //     userId,
-                    //     email
-                    // })
+                    // Create new otp model to save to db
+                    verifyOTP = new VerifyOTP({
+                        otp,
+                        userId,
+                        email
+                    })
 
-                    // await verifyOTP.save()
+                    await verifyOTP.save()
 
                     res.status(200).send('user registered')
                 }
@@ -81,21 +81,21 @@ router
 
             const verifyOtp = await VerifyOTP.findOne({ userId: userId.userId, valid: true })
 
-            if (verifyOtp != null) {
-                if (verifyOtp.otp == otp && verifyOtp.email == email) {
+            if (verifyOtp != null || verifyOtp.otp != otp) {
+                if (verifyOtp.email == email) {
                     await VerifyOTP.updateOne({ otp: otp }, { valid: false })
                     await User.updateOne({ userId: userId.userId }, { verified: true })
 
-                    res.status(200).send('user account verified')
+                    res.status(200).send('Account verified succesfully')
                 } else {
-                    res.status(200).send('user verification failed')
+                    res.status(401).send('Failed to veriy user')
                 }
             } else {
-                res.status(200).send('Invalid otp')
+                res.status(401).send('Invalid OTP')
             }
 
         } catch (error) {
-            res.status(200).send('failed to verify account')
+            res.status(401).send('Failed to veriy user')
         }
     })
 
@@ -125,22 +125,23 @@ router
                         await session.save()
 
                         res.status(200).json({
-                            STATUS: 'SUCCESS', MSG: 'login_success', user: {
+                            MSG: 'login_success', user: {
                                 sid: sid,
                                 token: token,
                             }
                         })
                     } else {
-                        res.status(200).json({ STATUS: 'SUCCESS', MSG: 'unverifed_account' })
+                        res.status(401).send('Account not verified')
                     }
                 } else {
-                    res.status(200).send('Invalid credentials')
+                    res.status(401).send('Invalid email or password')
                 }
             } else {
-                res.status(200).send('Invalid credentials')
+                res.status(401).send('Invalid email or password')
             }
         } catch (error) {
-            res.status(400).send('failed to login')
+            console.log(error)
+            res.status(401).send('failed to login')
         }
     })
 
@@ -174,10 +175,12 @@ router
                 await verifyOTP.save()
 
                 res.status(200).send(`OTP send to ${email}`)
+            } else {
+                res.status(401).send("Invalid email")
             }
 
         } catch (error) {
-            res.status(400).send('failed to send otp')
+            res.status(401).send('Failed to send otp')
         }
     })
 
@@ -217,6 +220,7 @@ router
             res.status(200).send("SUCCESS")
         } catch (error) {
             console.log(error)
+            res.status(401).send("Failed to logout user")
         }
     })
 
@@ -261,21 +265,21 @@ router
                         if (deleteUser) {
                             res.status(200).send("user_deleted")
                         } else {
-                            res.status(200).send("delete_failed")
+                            res.status(401).send("Failed to delete user")
                         }
 
                     } else {
-                        res.status(200).send("invalid_password")
+                        res.status(401).send("Invalid password")
                     }
                 } else {
-                    res.status(200).send("delete_failed")
+                    res.status(401).send("Invalid user")
                 }
             } else {
-                res.status(200).send("delete_failed")
+                res.status(401).send("Invalid user")
             }
         } catch (error) {
             console.log(error)
-            res.status(200).send("delete_failed")
+            res.status(401).send("Failed to delete user")
         }
     })
 module.exports = router
