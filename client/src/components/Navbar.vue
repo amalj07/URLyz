@@ -1,20 +1,21 @@
 <template>
   <nav>
-      <v-app-bar clipped-left flat elevation=0 app class="grey lighten-3">
-          <v-toolbar-title class="title blue--text text--darken-2 ml-13">
+      <v-app-bar clipped-left flat elevation=0 app :class="getColor(this.$route.path)">
+          <v-toolbar-title class="title ml-10">
             <router-link to="/">
-              <span class="font-weight-light">URL</span>
-              <span class="font-weight-medium">yz</span>
+              <span class="font-weight-light text-h5" :class="getColorTitle(this.$route.path)">URL</span>
+              <span class="font-weight-bold text-h5" :class="getColorTitle(this.$route.path)">yz</span>
             </router-link>
           </v-toolbar-title>
 
         <v-spacer></v-spacer>
-        <div class="mr-13">
+        <div class="mr-10">
           <v-btn
             v-if="getLoginStatus && this.$route.path == '/'"
             to="/dashboard" 
             depressed
-            class="signin grey lighten-3 blue--text text--darken-2 mr-5">
+            class="signin mr-5"
+            :color="getColorBtnSignin(this.$route.path)">
           <span>Dashboard</span>
           </v-btn>
           <v-btn
@@ -22,21 +23,25 @@
             to="/login" 
             depressed
             @click="logout"
-            class="signin grey lighten-3 blue--text text--darken-2 mr-5">
+            class="signin"
+            :color="getColorBtnSignin(this.$route.path)">
           <span>Logout</span>
           </v-btn>
           <v-btn
             v-if="!getLoginStatus"
             to="/login" 
             depressed
-            class="signin grey lighten-3 blue--text text--darken-2 mr-5">
+            class="signin mr-5"
+            :color="getColorBtnSignin(this.$route.path)">
           <span>Signin</span>
           </v-btn>
           <v-btn
             v-if="!getLoginStatus"
             to="/register"
             depressed
-            shaped class="blue darken-1 white--text">
+            shaped 
+            class="white"
+            :color="getColorBtnRegister(this.$route.path)">
           <span>Register</span>
           </v-btn>
         </div>
@@ -63,6 +68,34 @@ export default {
       }).catch(error => {
         console.log(error)
       })
+    },
+    getColor(path) {
+      if(path == '/') {
+        return "blue darken-1"
+      }else {
+        return "white"
+      }
+    },
+    getColorTitle(path) {
+      if(path == '/') {
+        return "white--text"
+      }else {
+        return "blue--text text--darken-1"
+      }
+    },
+    getColorBtnRegister(path) {
+      if(path == '/') {
+        return "white blue--text text--darken-2"
+      }else {
+        return "blue darken-1 white--text"
+      }
+    },
+    getColorBtnSignin(path) {
+      if(path == '/') {
+        return "blue darken-1 white--text"
+      }else {
+        return "white blue--text text--darken-2"
+      }
     }
   },
   computed: mapGetters(['getLoginStatus']),
