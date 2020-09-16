@@ -1,6 +1,6 @@
 <template>
   <nav>
-      <v-app-bar clipped-left flat app class="white">
+      <v-app-bar clipped-left flat elevation=0 app class="grey lighten-3">
           <v-toolbar-title class="title blue--text text--darken-2 ml-13">
             <router-link to="/">
               <span class="font-weight-light">URL</span>
@@ -14,7 +14,7 @@
             v-if="getLoginStatus && this.$route.path == '/'"
             to="/dashboard" 
             depressed
-            class="signin white blue--text text--darken-2 mr-5">
+            class="signin grey lighten-3 blue--text text--darken-2 mr-5">
           <span>Dashboard</span>
           </v-btn>
           <v-btn
@@ -22,21 +22,21 @@
             to="/login" 
             depressed
             @click="logout"
-            class="signin white blue--text text--darken-2 mr-5">
+            class="signin grey lighten-3 blue--text text--darken-2 mr-5">
           <span>Logout</span>
           </v-btn>
           <v-btn
             v-if="!getLoginStatus"
             to="/login" 
             depressed
-            class="signin white blue--text text--darken-2 mr-5">
+            class="signin grey lighten-3 blue--text text--darken-2 mr-5">
           <span>Signin</span>
           </v-btn>
           <v-btn
             v-if="!getLoginStatus"
             to="/register"
             depressed
-            shaped class="blue darken-2 white--text">
+            shaped class="blue darken-1 white--text">
           <span>Register</span>
           </v-btn>
         </div>
