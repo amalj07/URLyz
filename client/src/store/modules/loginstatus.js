@@ -1,4 +1,3 @@
-import axios from 'axios'
 import { getCookie } from '../../getCookie'
 
 
@@ -12,18 +11,14 @@ const getters = {
 
 const actions = {
     async checkLoginStatus({ commit }) {
+        let sid = getCookie("sid")
+        let token = getCookie("t")
 
-        const url = 'http://localhost:5000/api/user/authenticate'
-        axios.post(url, {
-            sid: getCookie('sid'),
-            token: getCookie('t')
-        }).then(response => {
-            if (response.data.status == 'SUCCESS') {
-                commit('loginStatus', true)
-            } else {
-                commit('loginStatus', false)
-            }
-        })
+        if (sid != '' && token != '') {
+            commit('loginStatus', true)
+        } else {
+            commit('loginStatus', false)
+        }
     }
 }
 
