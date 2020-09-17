@@ -251,6 +251,10 @@ export default {
                 this.resendotpbtn_status = false
             }
         }
+    },
+    created() {
+        this.$cookies.remove("sid")
+        this.$cookies.remove("t")
     }
 }
 </script>

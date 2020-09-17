@@ -279,6 +279,10 @@ export default {
         confirmPasswordRule() {
             return () => (this.password === this.confirmPassword) || 'Passwords doesn\'t match'
         }
+    },
+    created() {
+        this.$cookies.remove("sid")
+        this.$cookies.remove("t")
     }
 }
 </script>
