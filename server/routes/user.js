@@ -83,7 +83,7 @@ router
 
             if (verifyOtp != null && verifyOtp.otp == otp) {
                 if (verifyOtp.email == email) {
-                    await VerifyOTP.updateOne({ otp: otp }, { valid: false })
+                    await VerifyOTP.deleteOne({ otp: otp })
                     await User.updateOne({ userId: userId.userId }, { verified: true })
 
                     res.status(200).send('Account verified succesfully')
@@ -160,7 +160,7 @@ router
 
             if (user != null) {
                 if (otpIndb != null) {
-                    await VerifyOTP.updateOne({ email: email }, { valid: false })
+                    await VerifyOTP.findOneAndDelete({ email: email })
                 }
                 const otp = mail.sendMail(user)
 
