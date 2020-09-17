@@ -173,10 +173,12 @@ export default {
       this.deleteurl = url
       this.deleteurlindex = index
       this.deleteUrlDialog = true
+      console.log(this.deleteUrl, this.deleteUrlDialog)
     },
     cancelDelete() {
-      this.deleteUrl = ''
+      this.deleteurl = ''
       this.deleteUrlDialog = false
+      console.log(this.deleteUrl, this.deleteUrlDialog)
     },
     confirmDelete() {
       this.deleteurl_load = true
