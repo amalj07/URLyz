@@ -181,7 +181,7 @@ router
                 const otp = mail.sendMail(user)
 
                 const userId = user.userId
-                const emial = user.email
+
                 verifyOTP = new VerifyOTP({
                     otp,
                     userId,
