@@ -15,7 +15,7 @@ const actions = {
         let sid = getCookie("sid")
         let token = getCookie("t")
 
-        if(sid != '' && token != '') {
+        if (sid != '' && token != '') {
             axios.post('http://localhost:5000/api/user/user_details', {
                 sid,
                 token
@@ -24,9 +24,9 @@ const actions = {
             })
         }
     },
-    
-    async updateUser({ commit },{ data, type }) {
-        axios.post('http://localhost:5000/api/user_details/updateuser',{
+
+    async updateUser({ commit }, { data, type }) {
+        axios.post('http://localhost:5000/api/user_details/updateuser', {
             sid: getCookie("sid"),
             token: getCookie("t"),
             data: data,

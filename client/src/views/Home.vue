@@ -118,20 +118,17 @@ export default {
                 this.disabled = false
                 this.copyBtn = 'COPY LINK'
                 this.copyBtnTxtClr = 'blue--text text--darken-2'
-                if(response.status == 200) {
-                    this.shortUrl = response.data
-                } else {
-                    this.snackbar = true
-                    this.snackbarText = response.data
-                }
+                this.shortUrl = response.data
             }).catch(error => {
                 this.loading = false
                 this.disabled =false
                 this.snackbar = true
-                if(error.message == 'Request failed with status code 401') {
+                if(error.response.data == 'Invalid long url'){
                     this.snackbarText = 'Invalid URL'
-                } else if (error.message == 'Request failed with status code 500' || error.message == 'Request failed with status code 400') {
-                    this.snackbarText = 'Oh no, Something went wrong!'
+                } else if (error.response.data == 'Something went wrong!') {
+                    this.snackbarText = error.response.data
+                }else {
+                    this.snackbarText = 'Something went wrong!'
                 }
             })
         },

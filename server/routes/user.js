@@ -18,14 +18,14 @@ router
         try {
             // Check if req body is not empty
             if (!req.body.name || !req.body.email || !req.body.password) {
-                res.status(400).send('Error registering user')
+                res.status(401).send('Failed to regiester user')
             } else {
 
                 const { name, email, password } = req.body
 
                 const existingUser = await User.findOne({ email })
                 if (existingUser) {
-                    res.status(200).send('email already registered')
+                    res.status(401).send('Email already registered')
                 } else {
                     // Create a new userId
                     const userId = uid.uid()
@@ -59,13 +59,13 @@ router
 
                     await verifyOTP.save()
 
-                    res.status(200).send('user registered')
+                    res.status(200).send('User registered')
                 }
 
             }
         } catch (error) {
             console.log(error)
-            res.send(400).send('Error registering user')
+            res.send(401).send('Failed to register user')
         }
     })
 
@@ -81,7 +81,7 @@ router
 
             const verifyOtp = await VerifyOTP.findOne({ userId: userId.userId, valid: true })
 
-            if (verifyOtp != null || verifyOtp.otp != otp) {
+            if (verifyOtp != null && verifyOtp.otp == otp) {
                 if (verifyOtp.email == email) {
                     await VerifyOTP.updateOne({ otp: otp }, { valid: false })
                     await User.updateOne({ userId: userId.userId }, { verified: true })
@@ -237,11 +237,11 @@ router
                 const user = await User.findOne({ userId: userId.userId }, '-_id -userId -salt -hash -verified')
                 res.status(200).send(user)
             } else {
-                res.status(401).end()
+                res.status(401).send('Invalid user')
             }
 
         } catch (error) {
-            console.log(error)
+            res.status(401).send('Failed to fetch user data')
         }
     })
 
@@ -252,7 +252,7 @@ router
         try {
             const { sid, token, password } = req.body
 
-            const userId = await Session.findOne({ sid: sid, token: token }, '-sid -token -_id')
+            const userId = await Session.findOneAndDelete({ sid: sid, token: token })
 
             if (userId) {
                 const user = await User.findOne({ userId: userId.userId }, '-email -name -urlNos -verified -userId-_id')

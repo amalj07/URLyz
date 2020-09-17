@@ -12,41 +12,54 @@ router
         const { sid, token } = req.body
 
         const userSession = await Session.findOne({ sid: sid, token: token }, '-_id')
+        if (userSession) {
+            const urls = await Url.find({ userId: userSession.userId }, '-userId -_id -date')
+            if (urls) {
+                res.status(200).send(urls)
+            } else {
+                res.status(401).send('Failed to fetch urls')
+            }
+        } else {
+            res.status(401).send('Invalid user')
+        }
 
-        const urls = await Url.find({ userId: userSession.userId }, '-userId -_id -date')
-        res.status(200).send(urls)
     })
 
 router
     .route('/disable')
     .post(async (req, res) => {
         try {
-            let { url } = req.body
+            let { sid, token, url } = req.body
 
-            if (url.status === 'active') {
-                const response = await Url.findOneAndUpdate({ urlCode: url.urlCode }, { status: 'disabled' }, { new: true })
+            const userSession = await Session.findOne({ sid: sid, token: token }, '-_id')
 
-                url = {
-                    status: response.status,
-                    urlCode: response.urlCode,
-                    longUrl: response.longUrl,
-                    shortUrl: response.shortUrl
+            if (userSession) {
+                if (url.status === 'active') {
+                    const response = await Url.findOneAndUpdate({ urlCode: url.urlCode }, { status: 'disabled' }, { new: true })
+
+                    url = {
+                        status: response.status,
+                        urlCode: response.urlCode,
+                        longUrl: response.longUrl,
+                        shortUrl: response.shortUrl
+                    }
+                } else {
+                    const response = await Url.findOneAndUpdate({ urlCode: url.urlCode }, { status: 'active' }, { new: true })
+
+                    url = {
+                        status: response.status,
+                        urlCode: response.urlCode,
+                        longUrl: response.longUrl,
+                        shortUrl: response.shortUrl
+                    }
                 }
+
+                res.status(200).send(url)
             } else {
-                const response = await Url.findOneAndUpdate({ urlCode: url.urlCode }, { status: 'active' }, { new: true })
-
-                url = {
-                    status: response.status,
-                    urlCode: response.urlCode,
-                    longUrl: response.longUrl,
-                    shortUrl: response.shortUrl
-                }
+                res.status(401).send('Invalid user')
             }
-
-            res.status(200).send(url)
-
         } catch (error) {
-            console.log(error)
+            res.status(401).send('Failed to update url')
         }
     })
 
@@ -54,13 +67,18 @@ router
     .route('/delete')
     .post(async (req, res) => {
         try {
-            let { url } = req.body
+            let { sid, token, url } = req.body
 
-            await Url.findOneAndDelete({ urlCode: url.urlCode })
+            const userSession = await Session.findOne({ sid: sid, token: token }, '-_id')
 
-            res.status(200).send('url_deleted')
+            if (userSession) {
+                await Url.findOneAndDelete({ urlCode: url.urlCode })
+                res.status(200).send('Url deleted')
+            } else {
+                res.status(401).send('Invalid user')
+            }
         } catch (error) {
-            console.log(error)
+            res.status(401).send("Failed to delete url")
         }
     })
 module.exports = router

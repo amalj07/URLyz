@@ -66,7 +66,9 @@ export default {
         // this.$router.push('/login')
         window.location.href = 'http://localhost:8080/login'
       }).catch(error => {
-        console.log(error)
+        if(error.response.data == 'Failed to logout user') {
+          alert('Failed to logout user')
+        }
       })
     },
     getColor(path) {

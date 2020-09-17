@@ -55,7 +55,7 @@ router
                             res.status(200).json(newUrl.shortUrl)
                         }
                     } else {
-                        res.status(400).end()
+                        res.status(401).send('Invalid user')
                     }
                 } else {             // If sid and token is null
                     // Check if short url already exist
@@ -82,7 +82,7 @@ router
                 }
             } catch (error) {
                 console.log(error)
-                res.status(500).end()
+                res.status(401).send('Something went wrong!')
             }
         } else {
             res.status(401).json('Invalid long url')

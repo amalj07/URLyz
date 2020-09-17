@@ -153,22 +153,27 @@ export default {
                     name: this.name,
                     email: this.email,
                     password: this.password
-                }).then(response => {
-                    console.log(response.data)
-                    if(response.data == 'email already registered') {
-                        this.loadreg_form = false,
-                        this.reg_btnStatus = false,
-                        this.snackbar = true,
-                        this.snackbarText = 'email already registered'
-                    } else {
-                        this.loadreg_form = false
-                        this.reg_btnStatus = false
-                        this.userVerifyDialog = true
-                    }
-                }).catch(error => {
+                }).then(() => {
                     this.loadreg_form = false
                     this.reg_btnStatus = false
-                    console.log(error)
+                    this.userVerifyDialog = true
+                }).catch(error => {
+                    if(error.response.data == 'Failed to register user') {
+                        this.loadreg_form = false
+                        this.reg_btnStatus = false
+                        this.snackbar = true
+                        this.snackbarText = error.response.data
+                    }else if(error.response.data == 'Email already registered') {
+                        this.loadreg_form = false
+                        this.reg_btnStatus = false
+                        this.snackbar = true
+                        this.snackbarText = error.response.data
+                    }else {
+                        this.loadreg_form = false
+                        this.reg_btnStatus = false
+                        this.snackbar = true
+                        this.snackbarText = 'Something went wrong!'
+                    }
                 })
             }     
         },
@@ -180,15 +185,32 @@ export default {
                 this.$http.post(url, {
                     otp: this.registerOTP,
                     email: this.email
-                }).then(response => {
-                    console.log(response.data)
+                }).then( response => {
                     this.loadverify_form = false
                     this.verify_btnStatus = false
                     this.userVerifyDialog = false
+                    this.snackbar = true
+                    this.snackbarText = response.data
+                    this.$router.push({name: 'Login'})
                 }).catch(error => {
-                    console.log(error)
-                    this.loadverify_form = false
-                    this.verify_btnStatus = false
+                    if(error.response.data == 'Failed to veriy user') {
+                        this.loadverify_form = false
+                        this.verify_btnStatus = false
+                        this.userVerifyDialog = false
+                        this.snackbar = true
+                        this.snackbarText = error.response.data
+                    } else if(error.response.data == 'Invalid OTP') {
+                        this.loadverify_form = false
+                        this.verify_btnStatus = false
+                        this.snackbar = true
+                        this.snackbarText = error.response.data
+                    } else {
+                        this.loadverify_form = false
+                        this.verify_btnStatus = false
+                        this.userVerifyDialog = false
+                        this.snackbar = true
+                        this.snackbarText = 'Something went wrong'
+                    }
                 })
             }
         },
@@ -200,9 +222,17 @@ export default {
             }).then(response => {
                 this.snackbar = true
                 this.snackbarText = response.data
-                console.log(response.data)
             }).catch(error => {
-                console.log(error)
+                if(error.response.data == 'Invalid email'){
+                    this.snackbar = true
+                    this.snackbarText = error.response.data
+                } else if(error.response.data == 'Failed to send otp'){
+                    this.snackbar = true
+                    this.snackbarText = error.response.data
+                } else {
+                    this.snackbar = true
+                    this.snackbarText = 'Something went wrong!'
+                }
             })
         }
     },

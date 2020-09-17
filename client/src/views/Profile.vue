@@ -347,10 +347,10 @@ export default {
                     sid: this.$cookies.get("sid"),
                     token: this.$cookies.get("t"),
                     password: this.deleteAccountPassword
-                }).then( response => {
+                }).then( () => {
                         this.password = ''
                         this.snackbar = true
-                        this.snackbarText = response.data
+                        this.snackbarText = 'User deleted succesfully'
                         this.logout()
                 }).catch(error => {
                     console.log(error)

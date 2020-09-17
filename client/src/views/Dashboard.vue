@@ -134,18 +134,32 @@ export default {
           }).then(response => {
             this.urls = response.data
           }).catch(error => {
-            console.log(error)
+            if(error.response.data == 'Failed to fetch urls'){
+              this.snackbar = true
+              this.snackbarText = error.response.data
+            }else {
+              this.snackbar = true
+              this.snackbarText = 'Failed to fetch urls'
+            }
           })
     },
     updateLink(url, index) {
       this.updateLinkIndex = index
       this.$http.post('http://localhost:5000/api/urls/disable', {
-            url
+            sid: this.$cookies.get("sid"),
+            token: this.$cookies.get("t"),
+            url: url
         }).then(response => {
           this.urls[this.updateLinkIndex].status = response.data.status
           this.getColor(response.data.status)
         }).catch(error => {
-            console.log(error)
+          if(error.response.data == 'Failed to update url') {
+            this.snackbar = true
+            this.snackbarText = error.response.data
+          }else {
+            this.snackbar = true
+            this.snackbarText = 'Something went wrong!'
+          }
         })
     },
     getColor(status) {
@@ -167,20 +181,23 @@ export default {
     confirmDelete() {
       this.deleteurl_load = true
       this.$http.post('http://localhost:5000/api/urls/delete', {
+        sid: this.$cookies.get("sid"),
+        token: this.$cookies.get("t"),
         url: this.deleteurl
-      }).then(response => {
-        if(response.data == 'url_deleted') {
-          this.urls.splice(this.deleteurlindex, 1)
-          this.deleteurl_load = false
-          this.deleteUrlDialog = false
-          this.snackbar = true
-          this.snackbarText = 'url deleted'
-        } else {
-          this.snackbar = true
-          this.snackbarText = 'failed to delete url'
-        }
+      }).then(() => {
+        this.urls.splice(this.deleteurlindex, 1)
+        this.deleteurl_load = false
+        this.deleteUrlDialog = false
+        this.snackbar = true
+        this.snackbarText = 'Url deleted'
       }).catch(error => {
-        console.log(error)
+        if(error.response.data == 'Failed to delete url') {
+            this.snackbar = true
+            this.snackbarText = error.response.data
+          }else {
+            this.snackbar = true
+            this.snackbarText = 'Something went wrong!'
+          }
       })
     }
   },
