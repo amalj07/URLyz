@@ -1,9 +1,6 @@
 <template>
   <div class="register">
       <v-container>
-          <!-- <div class="my-7">
-                <p class="text-center text-h4">Create new account</p>
-            </div> -->
             <v-row justify="center">
                 <v-form class="mt-7" ref="loginForm">
                     <v-card
@@ -50,11 +47,17 @@
                                     :rules="inputRules"
                                     validate-on-blur
                                 ></v-text-field>
-                                <p
+                                <v-btn
+                                    text
+                                    :ripple="this.rippleEffect"
+                                    :disabled="this.resendotpbtn_status"
                                     id="resendotp"
-                                    class="text-caption blue--text text--darken-2"
-                                    @click="resendOTP"
-                                >Resend OTP</p>
+                                    class="reg_btn mt-n3 ml-n4"
+                                    color="blue darken-2 white--text"
+                                    @click="resendOTP">
+                                    <span class="text-body-2 text-capitalize" v-if="this.resendotpbtn_status">Resend OTP in {{ this.resendOtpTimer }} seconds.</span>
+                                    <span class="text-body-2 text-capitalize" v-else >Resend OTP</span> <br>
+                                </v-btn>
                             </div>
                         </div>
                         <v-card-actions class="justify-center">
@@ -108,11 +111,14 @@ export default {
             email: '',
             password: '',
             otp: '',
+            rippleEffect: false,
             loading: false,
             disabled: false,
             notVerified: false,
             snackbar: false,
             snackbarText: '',
+            resendOtpTimer: 30,
+            resendotpbtn_status: true,
             inputRules: [
                 value => value.length > 0 || 'required',
             ],
@@ -145,6 +151,7 @@ export default {
                 }).catch(error => {
                     if(error.response.data == 'Account not verified'){
                         this.notVerified = true
+                        this.resentOtpCountDown()
                         this.snackbar = true,
                         this.snackbarText = 'Please verify your account'
                         this.loading = false
@@ -194,6 +201,9 @@ export default {
             }
         },
         resendOTP() {
+            this.resendotpbtn_status = true
+            this.resendOtpTimer = 30
+            this.resentOtpCountDown()
             let url = 'http://localhost:5000/api/user/user_account/resendotp'
             this.$http.post(url, {
                 email: this.email
@@ -212,6 +222,16 @@ export default {
                     this.snackbarText = 'Something went wrong!'
                 }
             })
+        },
+        resentOtpCountDown() {
+            if(this.resendOtpTimer > 0) {
+                setTimeout(() => {
+                    this.resendOtpTimer -= 1
+                    this.resentOtpCountDown()
+                }, 1000);
+            }else {
+                this.resendotpbtn_status = false
+            }
         }
     }
 }
