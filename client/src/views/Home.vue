@@ -40,6 +40,7 @@
                         <v-btn
                         color="error"
                         text
+                        class="copy"
                         v-bind="attrs"
                         @click="snackbar = false"
                         >

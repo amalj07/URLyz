@@ -102,6 +102,7 @@
                     text
                     top
                     color="success"
+                    class="update_btn"
                     v-model="successSnackbar">
                     {{ this.snackbarText }}
                     <template v-slot:action="{ attrs }">
@@ -119,6 +120,7 @@
                     text
                     top
                     color="error"
+                    class="update_btn"
                     v-model="errorSnackbar">
                     {{ this.snackbarText }}
                     <template v-slot:action="{ attrs }">

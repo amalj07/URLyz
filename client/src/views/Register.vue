@@ -50,6 +50,7 @@
                 text
                 top
                 color="success"
+                class="reg_btn"
                 v-model="successSnackbar">
                 {{ this.snackbarText }}
                 <template v-slot:action="{ attrs }">
@@ -67,6 +68,7 @@
                 text
                 top
                 color="error"
+                class="reg_btn"
                 v-model="errorSnackbar">
                 {{ this.snackbarText }}
                 <template v-slot:action="{ attrs }">

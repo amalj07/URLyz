@@ -41,6 +41,7 @@
               text
               top
               color="success"
+              class="del_btn"
               v-model="successSnackbar">
               {{ this.snackbarText }}
               <template v-slot:action="{ attrs }">
@@ -58,6 +59,7 @@
               text
               top
               color="error"
+              class="del_btn"
               v-model="errorSnackbar">
               {{ this.snackbarText }}
               <template v-slot:action="{ attrs }">
