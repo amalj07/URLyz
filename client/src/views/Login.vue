@@ -87,11 +87,28 @@
                     text
                     top
                     color="success"
-                    v-model="snackbar">
+                    v-model="successSnackbar">
                     {{ this.snackbarText }}
                     <template v-slot:action="{ attrs }">
                         <v-btn
                         color="green"
+                        text
+                        v-bind="attrs"
+                        @click="snackbar = false"
+                        >
+                        <v-icon left>close</v-icon>
+                        </v-btn>
+                    </template>
+                </v-snackbar> 
+                <v-snackbar
+                    text
+                    top
+                    color="error"
+                    v-model="errorSnackbar">
+                    {{ this.snackbarText }}
+                    <template v-slot:action="{ attrs }">
+                        <v-btn
+                        color="error"
                         text
                         v-bind="attrs"
                         @click="snackbar = false"
@@ -114,7 +131,8 @@ export default {
             loading: false,
             disabled: false,
             notVerified: false,
-            snackbar: false,
+            successSnackbar: false,
+            errorSnackbar: false,
             snackbarText: '',
             resendOtpTimer: 30,
             resendotpbtn_status: true,
@@ -144,19 +162,19 @@ export default {
                         // this.$router.push({name: 'Dashboard'})
                         window.location.href = 'http://localhost:8080/'
                     }else {
-                        this.snackbar = true,
+                        this.errorSnackbar = true,
                         this.snackbarText = 'Something went wrong!'
                     }
                 }).catch(error => {
                     if(error.response.data == 'Account not verified'){
                         this.notVerified = true
                         this.resentOtpCountDown()
-                        this.snackbar = true,
+                        this.errorSnackbar = true,
                         this.snackbarText = 'Please verify your account'
                         this.loading = false
                         this.disabled = false
                     }else if(error.response.data == 'Invalid email or password') {
-                        this.snackbar = true,
+                        this.errorSnackbar = true,
                         this.snackbarText = error.response.data
                         this.loading = false
                         this.disabled = false
@@ -178,22 +196,24 @@ export default {
                 }).then(response => {
                     this.loading = false
                     this.disabled = false
-                    this.snackbar = true
+                    this.successSnackbar = true
                     this.snackbarText = response.data
                     this.submitLogin()
                 }).catch(error => {
                     if(error.response.data == 'Failed to veriy user') {
                         this.loading = false
                         this.disabled = false
-                        this.snackbar = true
+                        this.errorSnackbar = true
                         this.snackbarText = error.response.data
                     } else if(error.response.data == 'Invalid OTP') {
                         this.loading = false
                         this.disabled = false
-                        this.snackbar = true
+                        this.errorSnackbar = true
                         this.snackbarText = error.response.data
                     } else {
-                        this.snackbar = true
+                        this.loading = false
+                        this.disabled = false
+                        this.errorSnackbar = true
                         this.snackbarText = 'Something went wrong'
                     }
                 })
@@ -207,17 +227,17 @@ export default {
             this.$http.post(url, {
                 email: this.email
             }).then(response => {
-                this.snackbar = true
+                this.successSnackbar = true
                 this.snackbarText = response.data
             }).catch(error => {
                 if(error.response.data == 'Invalid email'){
-                    this.snackbar = true
+                    this.errorSnackbar = true
                     this.snackbarText = error.response.data
                 } else if(error.response.data == 'Failed to send otp'){
-                    this.snackbar = true
+                    this.errorSnackbar = true
                     this.snackbarText = error.response.data
                 } else {
-                    this.snackbar = true
+                    this.errorSnackbar = true
                     this.snackbarText = 'Something went wrong!'
                 }
             })

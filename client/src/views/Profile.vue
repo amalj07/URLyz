@@ -102,11 +102,28 @@
                     text
                     top
                     color="success"
-                    v-model="snackbar">
+                    v-model="successSnackbar">
                     {{ this.snackbarText }}
                     <template v-slot:action="{ attrs }">
                         <v-btn
                         color="green"
+                        text
+                        v-bind="attrs"
+                        @click="snackbar = false"
+                        >
+                        <v-icon left>close</v-icon>
+                        </v-btn>
+                    </template>
+                </v-snackbar> 
+                <v-snackbar
+                    text
+                    top
+                    color="error"
+                    v-model="errorSnackbar">
+                    {{ this.snackbarText }}
+                    <template v-slot:action="{ attrs }">
+                        <v-btn
+                        color="error"
                         text
                         v-bind="attrs"
                         @click="snackbar = false"
@@ -256,7 +273,8 @@ export default {
             confirmPassword: '',
             deleteAccountDialog: false,
             deleteAccountPassword: '',
-            snackbar: false,
+            successSnackbar: false,
+            errorSnackbar: false,
             snackbarText: '',
             inputRules: [
                 value => value.length > 0 || 'required',
@@ -303,14 +321,14 @@ export default {
             }).catch(error => {
                 if(error.response.data == 'Invalid password' || error.response.data == 'Failed to verify password'){
                     this.password = ''
-                    this.snackbar = true,
+                    this.errorSnackbar = true,
                     this.snackbarText = error.response.data
                 }
             })
         },
         updatePassword() {
             if(this.newPassword == '' || this.confirmPassword == '') {
-                this.snackbar = true,
+                this.errorSnackbar = true,
                 this.snackbarText = 'Enter a password'
             } else {
                 let url = 'http://localhost:5000/api/user_details/updatepassword'
@@ -320,16 +338,16 @@ export default {
                     newPassword: this.newPassword,
                 }).then(() => {
                         this.updatePasswordDialog = false
-                        this.snackbar = true
+                        this.successSnackbar = true
                         this.snackbarText = 'Password updated'
                 }).catch(error => {
                     if(error.response.data == "Failed to update password") {
                         this.updatePasswordDialog = false
-                        this.snackbar = true
+                        this.errorSnackbar = true
                         this.snackbarText = error.response.data
                     }
                     else {
-                        this.snackbar = true,
+                        this.errorSnackbar = true,
                         this.snackbarText = 'Something went wrong!'
                     }
                 })
@@ -343,7 +361,7 @@ export default {
         },
         confirmDeleteAccount() {
             if(this.deleteAccountPassword == '') {
-                this.snackbar = true
+                this.errorSnackbar = true
                 this.snackbarText = 'Enter your password'
             } else {
                 this.loading = true
@@ -355,7 +373,7 @@ export default {
                     password: this.deleteAccountPassword
                 }).then( () => {
                         this.password = ''
-                        this.snackbar = true
+                        this.successSnackbar = true
                         this.snackbarText = 'User deleted succesfully'
                         this.logout()
                 }).catch(error => {
@@ -365,10 +383,10 @@ export default {
                         this.loading = false
                         this.disabled = false
                         this.deleteAccountDialog = false
-                        this.snackbar = true
+                        this.errorSnackbar = true
                         this.snackbarText = error.response.data
                     }else {
-                        this.snackbar = true,
+                        this.errorSnackbar = true,
                         this.snackbarText = 'Something went wrong!'
                     }
                 })
@@ -389,10 +407,10 @@ export default {
             }).catch(error => {
                 console.log(error)
                 if(error.response.data == 'Failed to logout user') {
-                    this.snackbar = true,
+                    this.errorSnackbar = true,
                     this.snackbarText = error.response.data
                 } else {
-                    this.snackbar = true,
+                    this.errorSnackbar = true,
                     this.snackbarText = 'Something went wrong!'
                 }
             })

@@ -41,11 +41,28 @@
               text
               top
               color="success"
-              v-model="snackbar">
+              v-model="successSnackbar">
               {{ this.snackbarText }}
               <template v-slot:action="{ attrs }">
                   <v-btn
                   color="green"
+                  text
+                  v-bind="attrs"
+                  @click="snackbar = false"
+                  >
+                  <v-icon left>close</v-icon>
+                  </v-btn>
+              </template>
+          </v-snackbar>
+          <v-snackbar
+              text
+              top
+              color="error"
+              v-model="errorSnackbar">
+              {{ this.snackbarText }}
+              <template v-slot:action="{ attrs }">
+                  <v-btn
+                  color="error"
                   text
                   v-bind="attrs"
                   @click="snackbar = false"
@@ -120,7 +137,8 @@ export default {
       deleteUrlDialog: false,
       deleteurl_load: false,
       delete_btnStatus: false,
-      snackbar: false,
+      successSnackbar: false,
+      errorSnackbar: false,
       snackbarText: '',
       deleteurl: '',
       deleteurlindex: null
@@ -135,10 +153,10 @@ export default {
             this.urls = response.data
           }).catch(error => {
             if(error.response.data == 'Failed to fetch urls'){
-              this.snackbar = true
+              this.errorSnackbar = true
               this.snackbarText = error.response.data
             }else {
-              this.snackbar = true
+              this.errorSnackbar = true
               this.snackbarText = 'Failed to fetch urls'
             }
           })
@@ -154,10 +172,10 @@ export default {
           this.getColor(response.data.status)
         }).catch(error => {
           if(error.response.data == 'Failed to update url') {
-            this.snackbar = true
+            this.errorSnackbar = true
             this.snackbarText = error.response.data
           }else {
-            this.snackbar = true
+            this.errorSnackbar = true
             this.snackbarText = 'Something went wrong!'
           }
         })
@@ -188,14 +206,18 @@ export default {
         this.urls.splice(this.deleteurlindex, 1)
         this.deleteurl_load = false
         this.deleteUrlDialog = false
-        this.snackbar = true
+        this.successSnackbar = true
         this.snackbarText = 'Url deleted'
       }).catch(error => {
         if(error.response.data == 'Failed to delete url') {
-            this.snackbar = true
+            this.deleteurl_load = false
+            this.deleteUrlDialog = false
+            this.errorSnackbar = true
             this.snackbarText = error.response.data
           }else {
-            this.snackbar = true
+            this.deleteurl_load = false
+            this.deleteUrlDialog = false
+            this.errorSnackbar = true
             this.snackbarText = 'Something went wrong!'
           }
       })

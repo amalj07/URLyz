@@ -44,11 +44,28 @@
                 text
                 top
                 color="success"
-                v-model="snackbar">
+                v-model="successSnackbar">
                 {{ this.snackbarText }}
                 <template v-slot:action="{ attrs }">
                     <v-btn
                     color="green"
+                    text
+                    v-bind="attrs"
+                    @click="snackbar = false"
+                    >
+                    <v-icon left>close</v-icon>
+                    </v-btn>
+                </template>
+            </v-snackbar> 
+            <v-snackbar
+                text
+                top
+                color="error"
+                v-model="errorSnackbar">
+                {{ this.snackbarText }}
+                <template v-slot:action="{ attrs }">
+                    <v-btn
+                    color="error"
                     text
                     v-bind="attrs"
                     @click="snackbar = false"
@@ -133,7 +150,8 @@ export default {
             registerOTP: '',
             loadverify_form: false,
             verify_btnStatus: false,
-            snackbar: false,
+            successSnackbar: false,
+            errorSnackbar: false,
             snackbarText: '',
             inputRules: [
                 value => value.length > 0 || 'required',
@@ -161,17 +179,17 @@ export default {
                     if(error.response.data == 'Failed to register user') {
                         this.loadreg_form = false
                         this.reg_btnStatus = false
-                        this.snackbar = true
+                        this.errorSnackbar = true
                         this.snackbarText = error.response.data
                     }else if(error.response.data == 'Email already registered') {
                         this.loadreg_form = false
                         this.reg_btnStatus = false
-                        this.snackbar = true
+                        this.errorSnackbar = true
                         this.snackbarText = error.response.data
                     }else {
                         this.loadreg_form = false
                         this.reg_btnStatus = false
-                        this.snackbar = true
+                        this.errorSnackbar = true
                         this.snackbarText = 'Something went wrong!'
                     }
                 })
@@ -189,7 +207,7 @@ export default {
                     this.loadverify_form = false
                     this.verify_btnStatus = false
                     this.userVerifyDialog = false
-                    this.snackbar = true
+                    this.successSnackbar = true
                     this.snackbarText = response.data
                     this.$router.push({name: 'Login'})
                 }).catch(error => {
@@ -197,18 +215,18 @@ export default {
                         this.loadverify_form = false
                         this.verify_btnStatus = false
                         this.userVerifyDialog = false
-                        this.snackbar = true
+                        this.errorSnackbar = true
                         this.snackbarText = error.response.data
                     } else if(error.response.data == 'Invalid OTP') {
                         this.loadverify_form = false
                         this.verify_btnStatus = false
-                        this.snackbar = true
+                        this.errorSnackbar = true
                         this.snackbarText = error.response.data
                     } else {
                         this.loadverify_form = false
                         this.verify_btnStatus = false
                         this.userVerifyDialog = false
-                        this.snackbar = true
+                        this.errorSnackbar = true
                         this.snackbarText = 'Something went wrong'
                     }
                 })
@@ -220,17 +238,17 @@ export default {
             this.$http.post(url, {
                 email: this.email
             }).then(response => {
-                this.snackbar = true
+                this.successSnackbar = true
                 this.snackbarText = response.data
             }).catch(error => {
                 if(error.response.data == 'Invalid email'){
-                    this.snackbar = true
+                    this.errorSnackbar = true
                     this.snackbarText = error.response.data
                 } else if(error.response.data == 'Failed to send otp'){
-                    this.snackbar = true
+                    this.errorSnackbar = true
                     this.snackbarText = error.response.data
                 } else {
-                    this.snackbar = true
+                    this.errorSnackbar = true
                     this.snackbarText = 'Something went wrong!'
                 }
             })
