@@ -125,16 +125,27 @@ export default {
                 this.snackbar = true
                 if(error.response.data == 'Invalid long url'){
                     this.snackbarText = 'Invalid URL'
-                } else if (error.response.data == 'Something went wrong!') {
-                    this.snackbarText = error.response.data
-                }else {
+                } else if (error.response.data == 'Something went wrong!' || error.response.data == 'invalid base url') {
                     this.snackbarText = 'Something went wrong!'
+                }else {
+                    this.logout
                 }
             })
         },
         copyShortUrl() {
             this.copyBtn = "LINK COPIED!"
             this.copyBtnTxtClr = 'green--text'
+        },
+        async logout() {
+            this.$http.post('http://localhost:5000/api/user/logout', {
+                sid: this.$cookies.get("sid"),
+                token: this.$cookies.get("t")
+            }).then(async () => {
+                await this.$cookies.remove("sid")
+                await this.$cookies.remove("t")
+                // this.$router.push('/login')
+                window.location.href = 'http://localhost:8080/'
+            })
         }
     }
 }
