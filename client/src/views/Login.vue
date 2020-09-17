@@ -49,7 +49,7 @@
                                 ></v-text-field>
                                 <v-btn
                                     text
-                                    :ripple="this.rippleEffect"
+                                    :ripple=false
                                     :disabled="this.resendotpbtn_status"
                                     id="resendotp"
                                     class="reg_btn mt-n3 ml-n4"
@@ -111,7 +111,6 @@ export default {
             email: '',
             password: '',
             otp: '',
-            rippleEffect: false,
             loading: false,
             disabled: false,
             notVerified: false,

@@ -129,8 +129,9 @@
                                     v-model="name"
                                 ></v-text-field>
                                 <v-btn
+                                    :ripple=false
                                     v-if="!saveName"
-                                    class="ml-2 mt-1 blue--text text--darken-2"
+                                    class="update_btn ml-2 mt-1 blue--text text--darken-2"
                                     text
                                     small
                                     @click="editUserName">
@@ -138,8 +139,9 @@
                                     <span>Edit</span>
                                 </v-btn>
                                 <v-btn
+                                    :ripple=false
                                     v-if="saveName"
-                                    class="ml-2 mt-1 blue--text text--darken-2"
+                                    class="update_btn ml-2 mt-1 blue--text text--darken-2"
                                     text
                                     small
                                     @click="saveUserName(name, 'name')">
@@ -147,8 +149,9 @@
                                     <span>Save</span>
                                 </v-btn>
                                 <v-btn
+                                    :ripple=false
                                     v-if="saveName"
-                                    class="ml-2 mt-1 blue--text text--darken-2"
+                                    class="update_btn ml-2 mt-1 blue--text text--darken-2"
                                     text
                                     small
                                     @click="saveUserName(name, 'name')">
@@ -166,8 +169,9 @@
                                     v-model="email"
                                 ></v-text-field>
                                 <v-btn
+                                    :ripple=false
                                     v-if="!saveEmail"
-                                    class="ml-2 mt-1 blue--text text--darken-2"
+                                    class="update_btn ml-2 mt-1 blue--text text--darken-2"
                                     text
                                     small
                                     @click="editUserEmail">
@@ -175,8 +179,9 @@
                                     <span>Edit</span>
                                 </v-btn>
                                 <v-btn
+                                    :ripple=false
                                     v-if="saveEmail"
-                                    class="ml-2 mt-1 blue--text text--darken-2"
+                                    class="update_btn ml-2 mt-1 blue--text text--darken-2"
                                     text
                                     small
                                     @click="cancelSaveUserEmail">
@@ -184,8 +189,9 @@
                                     <span>Save</span>
                                 </v-btn>
                                 <v-btn
+                                    :ripple=false
                                     v-if="saveEmail"
-                                    class="ml-2 mt-1 blue--text text--darken-2"
+                                    class="update_btn ml-2 mt-1 blue--text text--darken-2"
                                     text
                                     small
                                     @click="cancelSaveUserEmail">
@@ -419,5 +425,8 @@ export default {
 <style>
 .textfeildwidth {
     max-width: 400px;
+}
+.v-btn.update_btn::before {
+  background-color: transparent;
 }
 </style>

@@ -91,9 +91,9 @@
                   <div class="text-right">
                     <v-btn
                       text
+                      :ripple=false
                       shaped
-                      class="my-2 white blue--text text--darken-2">
-                      <!-- <span>Delete</span> -->
+                      class="del_btn my-2 white blue--text text--darken-2">
                       <v-icon @click="deleteUrl(url, index)">delete</v-icon>
                     </v-btn>
                   </div>
@@ -173,12 +173,10 @@ export default {
       this.deleteurl = url
       this.deleteurlindex = index
       this.deleteUrlDialog = true
-      console.log(this.deleteUrl, this.deleteUrlDialog)
     },
     cancelDelete() {
       this.deleteurl = ''
       this.deleteUrlDialog = false
-      console.log(this.deleteUrl, this.deleteUrlDialog)
     },
     confirmDelete() {
       this.deleteurl_load = true
@@ -212,5 +210,8 @@ export default {
 <style>
 .size {
   width: 70px;
+}
+.v-btn.del_btn::before {
+  background-color: transparent;
 }
 </style>
