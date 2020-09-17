@@ -404,26 +404,6 @@ export default {
                 await this.$cookies.remove("t")
                 // this.$router.push('/login')
                 window.location.href = 'http://localhost:8080/'
-            }).catch(error => {
-                console.log(error)
-                if(error.response.data == 'Failed to logout user') {
-                    this.errorSnackbar = true,
-                    this.snackbarText = error.response.data
-                } else {
-                    this.errorSnackbar = true,
-                    this.snackbarText = 'Something went wrong!'
-                }
-            })
-        },
-        async logout() {
-            this.$http.post('http://localhost:5000/api/user/logout', {
-                sid: this.$cookies.get("sid"),
-                token: this.$cookies.get("t")
-            }).then(async () => {
-                await this.$cookies.remove("sid")
-                await this.$cookies.remove("t")
-                // this.$router.push('/login')
-                window.location.href = 'http://localhost:8080/'
             })
         }
     },

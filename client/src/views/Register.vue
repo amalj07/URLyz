@@ -212,13 +212,8 @@ export default {
                 this.$http.post(url, {
                     otp: this.registerOTP,
                     email: this.email
-                }).then( response => {
-                    this.loadverify_form = false
-                    this.verify_btnStatus = false
-                    this.userVerifyDialog = false
-                    this.successSnackbar = true
-                    this.snackbarText = response.data
-                    this.$router.push({name: 'Login'})
+                }).then( () => {
+                    this.submitLogin()
                 }).catch(error => {
                     if(error.response.data == 'Failed to veriy user') {
                         this.loadverify_form = false
@@ -273,6 +268,30 @@ export default {
             }else {
                 this.resendotpbtn_status = false
             }
+        },
+        submitLogin() {
+            this.loading = true
+            this.disabled = true
+            let url = 'http://localhost:5000/api/user/user_login'
+            this.$http.post(url, {
+                email: this.email,
+                password: this.password
+            }).then(response => {
+                this.loading = false
+                this.disabled = false
+                if(response.data.MSG === 'login_success'){
+                    this.$cookies.set("sid", response.data.user.sid)
+                    this.$cookies.set("t",response.data.user.token)
+                    // this.$router.push({name: 'Dashboard'})
+                    window.location.href = 'http://localhost:8080/'
+                }else {
+                    this.errorSnackbar = true,
+                    this.snackbarText = 'Something went wrong!'
+                }
+            }).catch(() => {
+                this.snackbar = true
+                this.snackbarText = 'Something went wrong!'
+            })
         }
     },
     computed: {
