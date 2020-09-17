@@ -14,15 +14,15 @@ const transporter = nodemailer.createTransport({
 exports.sendMail = (user) => {
     // Create s six charecter OTP
     function makeOTP() {
-        var result           = '';
-        var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        var result = '';
+        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         var charactersLength = 6;
-        for ( var i = 0; i < 6; i++ ) {
-           result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        for (var i = 0; i < 6; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
         }
         return result;
     }
-    
+
     const OTP = makeOTP()
 
     // Configure mail credentials and message
@@ -30,7 +30,7 @@ exports.sendMail = (user) => {
         from: config.mail.user,
         to: user.email,
         subject: 'URLyz account confirmation',
-        text: `Hello ${user.name}, ${OTP} is the OTP for confirming your account. OTP will be valid only for 2 hours`
+        text: `Hello ${user.name}, ${OTP} is the OTP for verifiying your account. OTP will be valid only for 10 minutes.`
     }
 
     // Send mail to the user

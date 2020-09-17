@@ -4,7 +4,7 @@ const verifyOTPSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: new Date(),
-        expires: 7200,
+        expires: 600,
         required: true
     },
     otp: {
