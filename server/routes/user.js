@@ -47,8 +47,7 @@ router
                     await user.save()
 
                     // Send otp to user email
-                    const mailResponse = mail.sendMail(user)
-                    const otp = mailResponse
+                    const otp = mail.sendMail(user)
 
                     // Create new otp model to save to db
                     verifyOTP = new VerifyOTP({
@@ -131,6 +130,23 @@ router
                             }
                         })
                     } else {
+                        const otpIndb = await VerifyOTP.findOne({ email }, '-_id')
+
+                        if (otpIndb != null) {
+                            await VerifyOTP.findOneAndDelete({ email: email })
+                        }
+
+                        const otp = mail.sendMail(user)
+                        const userId = user.userId
+
+                        verifyOTP = new VerifyOTP({
+                            otp,
+                            userId,
+                            email
+                        })
+
+                        await verifyOTP.save()
+
                         res.status(401).send('Account not verified')
                     }
                 } else {
