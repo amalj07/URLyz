@@ -20,12 +20,18 @@
                             label="OTP"
                             outlined    
                         ></v-text-field>
-                        <p class="text-caption">It will take upto 5 min to recive the confirmation email</p>
-                        <p
+                        <p class="text-caption">It will take upto 1 min to recive the confirmation email</p>
+                        <v-btn
+                            text
+                            :ripple=false
+                            :disabled="this.resendotpbtn_status"
                             id="resendotp"
-                            class="text-caption blue--text text--darken-2"
-                            @click="resendOTP"
-                        >Resend OTP</p>
+                            class="reg_btn mt-n3 ml-n4"
+                            color="blue darken-2 white--text"
+                            @click="resendOTP">
+                            <span class="text-body-2 text-capitalize" v-if="this.resendotpbtn_status">Resend OTP in {{ this.resendOtpTimer }} seconds.</span>
+                            <span class="text-body-2 text-capitalize" v-else >Resend OTP</span> <br>
+                        </v-btn>
                     </v-card-text>
                     <v-card-actions class="justify-end">
                         <v-btn
@@ -153,6 +159,8 @@ export default {
             successSnackbar: false,
             errorSnackbar: false,
             snackbarText: '',
+            resendOtpTimer: 30,
+            resendotpbtn_status: true,
             inputRules: [
                 value => value.length > 0 || 'required',
             ],
@@ -175,6 +183,7 @@ export default {
                     this.loadreg_form = false
                     this.reg_btnStatus = false
                     this.userVerifyDialog = true
+                    this.resentOtpCountDown()
                 }).catch(error => {
                     if(error.response.data == 'Failed to register user') {
                         this.loadreg_form = false
@@ -233,7 +242,9 @@ export default {
             }
         },
         resendOTP() {
-            console.log(this.email)
+            this.resendotpbtn_status = true
+            this.resendOtpTimer = 30
+            this.resentOtpCountDown()
             let url = 'http://localhost:5000/api/user/user_account/resendotp'
             this.$http.post(url, {
                 email: this.email
@@ -252,6 +263,16 @@ export default {
                     this.snackbarText = 'Something went wrong!'
                 }
             })
+        },
+        resentOtpCountDown() {
+            if(this.resendOtpTimer > 0) {
+                setTimeout(() => {
+                    this.resendOtpTimer -= 1
+                    this.resentOtpCountDown()
+                }, 1000);
+            }else {
+                this.resendotpbtn_status = false
+            }
         }
     },
     computed: {

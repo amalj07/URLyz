@@ -51,7 +51,6 @@
                                     text
                                     :ripple=false
                                     :disabled="this.resendotpbtn_status"
-                                    id="resendotp"
                                     class="reg_btn mt-n3 ml-n4"
                                     color="blue darken-2 white--text"
                                     @click="resendOTP">
@@ -259,8 +258,5 @@ export default {
 <style>
 .v-btn.reg_btn::before {
   background-color: transparent;
-}
-#resendotp {
-    cursor: pointer;
 }
 </style>
