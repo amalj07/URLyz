@@ -77,7 +77,7 @@
                   </v-btn>
               </template>
           </v-snackbar> 
-          <h1 class="mb-10 text-decoration-underline grey--text text--darken-2 font-italic">My URLs</h1>
+          <h1 class="mb-10 grey--text text--darken-2 font-italic">My URLs - {{ urls.length }}</h1>
           <div v-for="(url, index) in urls" :key="url.urlCode">
             <v-card outlined min-height="70" max-width="800" class="mb-4 py-2">
               <center>
@@ -126,6 +126,12 @@
                   </v-flex>
                 </v-layout>
               </center>
+                 <div class=" ml-10">
+                   <p class="grey--text text--darken-3">Total visits: {{ url.visits }}</p>
+                </div>
+                <div class="my-3 ml-10">
+                  <a :href="url.longUrl" target="_blank" class="grey--text text--darken-3">{{ url.longUrl }}</a>
+                </div>
             </v-card>
           </div>
         </v-container>
