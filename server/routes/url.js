@@ -73,6 +73,7 @@ router
 
             if (userSession) {
                 await Url.findOneAndDelete({ urlCode: url.urlCode })
+                await User.update({userId: userSession.userId}, {$inc: {urlNos: -1}})
                 res.status(200).send('Url deleted')
             } else {
                 res.status(401).send('Invalid user')

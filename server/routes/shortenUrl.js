@@ -8,6 +8,7 @@ const router = express.Router()
 // import models
 const urlModel = require('../models/Url')
 const Session = require('../models/Session')
+const User = require('../models/User')
 
 // @route POST /api/url/shorten
 // @desc Create the short url
@@ -51,6 +52,8 @@ router
                             })
 
                             await newUrl.save()
+
+                            await User.update({userId: userSession.userId}, {$inc: {urlNos: 1}})
 
                             res.status(200).json(newUrl.shortUrl)
                         }
