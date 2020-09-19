@@ -38,6 +38,7 @@
                     {{ this.snackbarText }}
                     <template v-slot:action="{ attrs }">
                         <v-btn
+                        :ripple=false
                         color="error"
                         text
                         class="copy"

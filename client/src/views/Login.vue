@@ -91,10 +91,12 @@
                     {{ this.snackbarText }}
                     <template v-slot:action="{ attrs }">
                         <v-btn
+                        :ripple=false
                         color="green"
+                        class="reg_btn"
                         text
                         v-bind="attrs"
-                        @click="snackbar = false"
+                        @click="successSnackbar = false"
                         >
                         <v-icon left>close</v-icon>
                         </v-btn>
@@ -109,10 +111,12 @@
                     {{ this.snackbarText }}
                     <template v-slot:action="{ attrs }">
                         <v-btn
+                        :ripple=false
                         color="error"
+                        class="reg_btn"
                         text
                         v-bind="attrs"
-                        @click="snackbar = false"
+                        @click="errorSnackbar = false"
                         >
                         <v-icon left>close</v-icon>
                         </v-btn>
