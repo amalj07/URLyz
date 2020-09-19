@@ -78,16 +78,22 @@
               </template>
           </v-snackbar> 
           <h1 class="mb-10 text-decoration-underline grey--text text--darken-2 font-italic">My URLs</h1>
-          <div v-for="(url, index) in urls" :key="url.urlCode">
-            <v-card outlined min-height="70" max-width="800" class="mb-4 py-2">
+          <!-- <div v-for="(url, index) in urls" :key="url.urlCode"> -->
+            <!-- <v-card outlined min-height="70" max-width="800" class="mb-4 py-2"> -->
+              <v-expansion-panels popout>
+                <v-expansion-panel
+                  v-for="(url,index) in urls"
+                  :key="index"
+                >
               <center>
-                <v-layout row wrap>
-                  <v-flex xs10 md5>
-                    <div class="my-3">
+                    <div class="text-left">
+                      <v-expansion-panel-header>
                       <a :href="url.shortUrl" target="_blank" class="grey--text text--darken-3">{{ url.shortUrl }}</a>
+                      </v-expansion-panel-header>
                     </div>
-                  </v-flex>
-                  <v-flex xs6 sm4 md2>
+                     <v-expansion-panel-content>
+                       <div class="text-left">
+                       <span>Status: </span>
                       <v-chip
                         label
                         outlined
@@ -97,9 +103,8 @@
                         class="my-3 size">
                         <span>{{ url.status }}</span>
                       </v-chip>
-                  </v-flex>
-                  <v-flex xs6 sm4 md2>
-                    <div class="text-right">
+                      </div>
+                    <div class="text-left">
                       <v-btn
                         outlined
                         shaped
@@ -112,9 +117,7 @@
                         <span v-else>Enable</span>
                       </v-btn>
                     </div>
-                  </v-flex>
-                  <v-flex xs6 sm4 md2>
-                    <div class="text-right">
+                    <div class="text-left">
                       <v-btn
                         text
                         :ripple=false
@@ -123,11 +126,12 @@
                         <v-icon @click="deleteUrl(url, index)">delete</v-icon>
                       </v-btn>
                     </div>
-                  </v-flex>
-                </v-layout>
+                   </v-expansion-panel-content>
               </center>
-            </v-card>
-          </div>
+              </v-expansion-panel>
+              </v-expansion-panels>
+            <!-- </v-card> -->
+          <!-- </div> -->
         </v-container>
       </div>
   </div>
