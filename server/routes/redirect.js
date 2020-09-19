@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 
 // import url model
-const urlModel = require('../models/Url')
+const Url = require('../models/Url')
 
 // @route GET /:code
 // @desc Redirect to original url
@@ -10,12 +10,17 @@ router
     .route('/:code')
     .get(async (req, res) => {
         try {
-            const url = await urlModel.findOne({ urlCode: req.params.code })
+
+            const urlCode = req.params.code
+
+            const url = await Url.findOne({ urlCode })
 
             if (url) {
                 if (url.status == 'disabled') {
                     res.status(404).end()
                 } else {
+                    
+                    await Url.update({urlCode}, {$inc: {visits: 1}})
                     return res.redirect(url.longUrl)
                 }
             } else {
