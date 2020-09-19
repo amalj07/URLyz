@@ -77,7 +77,7 @@
                   </v-btn>
               </template>
           </v-snackbar> 
-          <h1 class="mb-10 text-decoration-underline grey--text text--darken-2 font-italic">My URLs</h1>
+          <h1 class="mb-10 grey--text text--darken-2 font-italic">My URLs - {{ urls.length }}</h1>
           <v-expansion-panels popout>
             <v-expansion-panel
               class="mb-3"
@@ -87,7 +87,7 @@
               <center>
                 <v-expansion-panel-header>
                   <div class="text-left">
-                    <a @click.native.stop :href="url.shortUrl" target="_blank" class="grey--text text--darken-3">{{ url.shortUrl }}</a>
+                    <a @click.native.stop @click="updatevisit(url, index)" :href="url.shortUrl" target="_blank" class="grey--text text--darken-3">{{ url.shortUrl }}</a>
                   </div>
                   <div class="">
                     <v-chip
@@ -127,8 +127,8 @@
                 </v-expansion-panel-header>
               </center>
               <v-expansion-panel-content>
-                <p>Total visits: {{ url.visits }} </p>
-                <p>Original URL: {{ url.longUrl }} </p>
+                <p class="grey--text text--darken-3">Total visits: {{ url.visits }} </p>
+                <p class="grey--text text--darken-3">Original URL: <a :href="url.longUrl" target="_blank" class="grey--text text--darken-1">{{ url.longUrl }}</a> </p>
               </v-expansion-panel-content>
             </v-expansion-panel>
           </v-expansion-panels>
@@ -240,7 +240,12 @@ export default {
                 // this.$router.push('/login')
                 window.location.href = 'http://localhost:8080/'
             })
-        }
+    },
+    updatevisit(url, index) {
+      if(this.urls[index].status != 'disabled'){
+        this.urls[index].visits += 1
+      }
+    }
   },
   created() {
     this.fetchUrls()
