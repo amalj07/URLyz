@@ -136,8 +136,8 @@ export default {
                 this.loading = false
                 this.disabled =false
                 this.snackbar = true
-                if(error.response.data == 'Invalid long url'){
-                    this.snackbarText = 'Invalid URL'
+                if(error.response.data == 'Invalid URL' || error.response.data == 'Custom url already taken'){
+                    this.snackbarText = error.response.data
                 } else if (error.response.data == 'Something went wrong!' || error.response.data == 'invalid base url') {
                     this.snackbarText = 'Something went wrong!'
                 }else {
