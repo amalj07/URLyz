@@ -30,6 +30,37 @@
                             >Shorten</v-btn>
                     </v-col>
                 </v-row>
+                <v-row class="mt-n5" justify="center">
+                     <span class="url mr-1 mt-4">urlyz.xyz/</span>
+                    <v-text-field
+                        v-model="customUrl"
+                        class="customurl"
+                        placeholder="Enter a custom URL or leave blank"
+                    ></v-text-field>
+                </v-row>
+                <v-row justify="center">
+                    <v-card class="mt-3 ml-8"
+                        outlined
+                        max-width=600
+                        min-width=710
+                        min-height=60>
+                        <v-list-item>
+                            <v-card-text>
+                                {{ this.shortUrl }}
+                            </v-card-text>
+                            <v-spacer></v-spacer>
+                            <v-btn
+                                text
+                                :class="`copy white lighten-1 ${this.copyBtnTxtClr}`"
+                                height=59
+                                v-ripple="{ class: 'white--text' }"
+                                v-clipboard:copy="shortUrl"
+                                v-clipboard:success="copyShortUrl">
+                                    {{ this.copyBtn }}
+                            </v-btn>
+                        </v-list-item>
+                    </v-card>  
+                </v-row>
                 <v-snackbar
                     text
                     top
@@ -49,30 +80,7 @@
                         </v-btn>
                     </template>
                 </v-snackbar>
-            </div>
-                <v-row justify="center">
-                        <v-card class="ml-8"
-                            outlined
-                            max-width=600
-                            min-width=710
-                            min-height=60>
-                            <v-list-item>
-                                <v-card-text>
-                                    {{ this.shortUrl }}
-                                </v-card-text>
-                                <v-spacer></v-spacer>
-                                <v-btn
-                                    text
-                                    :class="`copy white lighten-1 ${this.copyBtnTxtClr}`"
-                                    height=59
-                                    v-ripple="{ class: 'white--text' }"
-                                    v-clipboard:copy="shortUrl"
-                                    v-clipboard:success="copyShortUrl">
-                                        {{ this.copyBtn }}
-                                </v-btn>
-                            </v-list-item>
-                        </v-card>  
-                </v-row>
+            </div>   
         </v-container>
     </div>
 </template>
@@ -83,6 +91,7 @@ export default {
         return {
             longUrl: '',
             shortUrl: '',
+            customUrl: '',
             copyBtn: 'COPY LINK',
             copyBtnTxtClr: 'blue--text text--darken-2',
             snackbar: false,
@@ -97,6 +106,7 @@ export default {
         longUrl: function() {
             if(this.longUrl == '') {
                 this.shortUrl = '',
+                this.customUrl = '',
                 this.copyBtn = 'COPY LINK',
                 this.copyBtnTxtClr = 'blue--text text--darken-2'
             }
@@ -114,7 +124,8 @@ export default {
             this.$http.post(url, {
                 sid: this.sid,
                 token: this.token,
-                longUrl: this.longUrl
+                longUrl: this.longUrl,
+                customUrl: this.customUrl
             }).then(response => {
                 this.loading = false
                 this.disabled = false
@@ -156,5 +167,11 @@ export default {
 <style>
 .v-btn.copy::before {
   background-color: transparent;
+}
+.v-text-field.customurl {
+    max-width: 350px !important;
+}
+.url {
+    font-size: 20px;
 }
 </style>
