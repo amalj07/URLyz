@@ -161,6 +161,8 @@ export default {
                     email: this.email,
                     password: this.password
                 }).then(response => {
+                    this.email = ''
+                    this.password = ''
                     this.loading = false
                     this.disabled = false
                     if(response.data.MSG === 'login_success'){
@@ -173,16 +175,16 @@ export default {
                         this.snackbarText = 'Something went wrong!'
                     }
                 }).catch(error => {
+                    this.email = ''
+                    this.password = ''
+                    this.loading = false
+                    this.disabled = false
                     if(error.response.data == 'Account not verified'){
                         this.notVerified = true
                         this.resentOtpCountDown()
-                        this.loading = false
-                        this.disabled = false
                     }else if(error.response.data == 'Invalid email or password') {
                         this.errorSnackbar = true,
                         this.snackbarText = error.response.data
-                        this.loading = false
-                        this.disabled = false
                     }else {
                         this.snackbar = true
                         this.snackbarText = 'Something went wrong!'
@@ -199,6 +201,7 @@ export default {
                     otp: this.otp,
                     email: this.email
                 }).then(() => {
+                    this.otp = ''
                     this.loading = false
                     this.disabled = false
                     swal.fire({
@@ -211,19 +214,16 @@ export default {
                         this.submitLogin()
                     })
                 }).catch(error => {
+                    this.otp = ''
+                    this.loading = false
+                    this.disabled = false
                     if(error.response.data == 'Failed to veriy user') {
-                        this.loading = false
-                        this.disabled = false
                         this.errorSnackbar = true
                         this.snackbarText = error.response.data
                     } else if(error.response.data == 'Invalid OTP') {
-                        this.loading = false
-                        this.disabled = false
                         this.errorSnackbar = true
                         this.snackbarText = error.response.data
                     } else {
-                        this.loading = false
-                        this.disabled = false
                         this.errorSnackbar = true
                         this.snackbarText = 'Something went wrong'
                     }
@@ -238,9 +238,11 @@ export default {
             this.$http.post(url, {
                 email: this.email
             }).then(response => {
+                this.otp = ''
                 this.successSnackbar = true
                 this.snackbarText = response.data
             }).catch(error => {
+                this.otp = ''
                 if(error.response.data == 'Invalid email'){
                     this.errorSnackbar = true
                     this.snackbarText = error.response.data

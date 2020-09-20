@@ -188,24 +188,28 @@ export default {
                     email: this.email,
                     password: this.password
                 }).then(() => {
+                    this.name = ''
+                    this.email = ''
+                    this.password = ''
+                    this.confirmPassword = ''
                     this.loadreg_form = false
                     this.reg_btnStatus = false
                     this.userVerifyDialog = true
                     this.resentOtpCountDown()
                 }).catch(error => {
-                    if(error.response.data == 'Failed to register user') {
-                        this.loadreg_form = false
+                    this.name = ''
+                    this.email = ''
+                    this.password = ''
+                    this.confirmPassword = ''
+                    this.loadreg_form = false
                         this.reg_btnStatus = false
+                    if(error.response.data == 'Failed to register user') {
                         this.errorSnackbar = true
                         this.snackbarText = error.response.data
                     }else if(error.response.data == 'Email already registered') {
-                        this.loadreg_form = false
-                        this.reg_btnStatus = false
                         this.errorSnackbar = true
                         this.snackbarText = error.response.data
                     }else {
-                        this.loadreg_form = false
-                        this.reg_btnStatus = false
                         this.errorSnackbar = true
                         this.snackbarText = 'Something went wrong!'
                     }
@@ -224,10 +228,7 @@ export default {
                     this.loadverify_form = false
                     this.verify_btnStatus = false
                     this.userVerifyDialog = false
-                    this.name = ''
-                    this.email = '',
-                    this.password = '',
-                    this.confirmPassword = ''
+                    this.registerOTP = ''
                     swal.fire({
                         title: "Success",
                         text: "Your account is verified",
@@ -238,10 +239,7 @@ export default {
                         this.submitLogin()
                     })
                 }).catch(error => {
-                    this.name = ''
-                    this.email = '',
-                    this.password = '',
-                    this.confirmPassword = ''
+                    this.registerOTP = ''
                     this.loadverify_form = false
                     this.verify_btnStatus = false
                     this.userVerifyDialog = false
