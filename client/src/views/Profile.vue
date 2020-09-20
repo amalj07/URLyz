@@ -177,7 +177,7 @@
                                     class="update_btn ml-2 mt-1 blue--text text--darken-2"
                                     text
                                     small
-                                    @click="saveUserName(name, 'name')">
+                                    @click="cancelSaveUserName">
                                     <v-icon small>cancel</v-icon>
                                     <span>Cancel</span>
                                 </v-btn>

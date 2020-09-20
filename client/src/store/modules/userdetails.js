@@ -33,8 +33,6 @@ const actions = {
             type: type
         }).then(response => {
             commit('updatedUser', response.data)
-        }).catch(error => {
-            console.log(error)
         })
 
     }
