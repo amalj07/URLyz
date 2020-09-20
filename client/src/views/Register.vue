@@ -149,6 +149,8 @@
 </template>
 
 <script>
+import swal from 'sweetalert2';
+window.swal = swal
 export default {
     data() {
         return {
@@ -219,23 +221,37 @@ export default {
                     otp: this.registerOTP,
                     email: this.email
                 }).then( () => {
-                    this.submitLogin()
+                    this.loadverify_form = false
+                    this.verify_btnStatus = false
+                    this.userVerifyDialog = false
+                    this.name = ''
+                    this.email = '',
+                    this.password = '',
+                    this.confirmPassword = ''
+                    swal.fire({
+                        title: "Success",
+                        text: "Your account is verified",
+                        icon: "success",
+                        showConfirmButton: true,
+                        confirmButtonText: 'Go to Dashboard',
+                    }).then(() =>{
+                        this.submitLogin()
+                    })
                 }).catch(error => {
+                    this.name = ''
+                    this.email = '',
+                    this.password = '',
+                    this.confirmPassword = ''
+                    this.loadverify_form = false
+                    this.verify_btnStatus = false
+                    this.userVerifyDialog = false
                     if(error.response.data == 'Failed to veriy user') {
-                        this.loadverify_form = false
-                        this.verify_btnStatus = false
-                        this.userVerifyDialog = false
                         this.errorSnackbar = true
                         this.snackbarText = error.response.data
                     } else if(error.response.data == 'Invalid OTP') {
-                        this.loadverify_form = false
-                        this.verify_btnStatus = false
                         this.errorSnackbar = true
                         this.snackbarText = error.response.data
                     } else {
-                        this.loadverify_form = false
-                        this.verify_btnStatus = false
-                        this.userVerifyDialog = false
                         this.errorSnackbar = true
                         this.snackbarText = 'Something went wrong'
                     }

@@ -127,6 +127,8 @@
 </template>
 
 <script>
+import swal from 'sweetalert2';
+window.swal = swal
 export default {
     data() {
         return {
@@ -174,8 +176,6 @@ export default {
                     if(error.response.data == 'Account not verified'){
                         this.notVerified = true
                         this.resentOtpCountDown()
-                        this.errorSnackbar = true,
-                        this.snackbarText = 'Please verify your account'
                         this.loading = false
                         this.disabled = false
                     }else if(error.response.data == 'Invalid email or password') {
@@ -198,12 +198,18 @@ export default {
                 this.$http.post(url, {
                     otp: this.otp,
                     email: this.email
-                }).then(response => {
+                }).then(() => {
                     this.loading = false
                     this.disabled = false
-                    this.successSnackbar = true
-                    this.snackbarText = response.data
-                    this.submitLogin()
+                    swal.fire({
+                        title: "Success",
+                        text: "Your account is verified",
+                        icon: "success",
+                        showConfirmButton: true,
+                        confirmButtonText: 'Go to Dashboard',
+                    }).then(() =>{
+                        this.submitLogin()
+                    })
                 }).catch(error => {
                     if(error.response.data == 'Failed to veriy user') {
                         this.loading = false
