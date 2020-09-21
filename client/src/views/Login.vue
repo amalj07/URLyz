@@ -36,6 +36,14 @@
                                 v-model="password"
                                 :rules="inputRules"
                             ></v-text-field>
+                            <v-btn
+                                text
+                                :ripple=false
+                                class="reg_btn mt-n3 ml-n4"
+                                color="blue darken-2 white--text"
+                                @click="forgetPassword">
+                                <span class="text-body-2 text-capitalize">Forget password ?</span> <br>
+                            </v-btn>
                             <div v-if="notVerified">
                                 <p class="text-caption">Enter the otp send to {{ this.email }}</p>
                                 <v-text-field
@@ -260,6 +268,14 @@ export default {
                 }, 1000);
             }else {
                 this.resendotpbtn_status = false
+            }
+        },
+        forgetPassword() {
+            if(this.email == '') {
+                this.errorSnackbar = true
+                this.snackbarText = 'Enter your email to reset password'
+            } else {
+                this.$router.push({name: 'ForgetPassword'})
             }
         }
     },
