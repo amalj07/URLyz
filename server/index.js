@@ -22,21 +22,6 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../dist', 'index.html'))
 })
 
-app.get('/register', (req, res) => {
-    res.sendFile(path.join(__dirname, '../dist', 'index.html'))
-})
-
-app.get('/myprofile', (req, res) => {
-    res.sendFile(path.join(__dirname, '../dist', 'index.html'))
-})
-
-app.get('/dashboard', (req, res) => {
-    res.sendFile(path.join(__dirname, '../dist', 'index.html'))
-})
-
-app.get('/login', (req, res) => {
-    res.sendFile(path.join(__dirname, '../dist', 'index.html'))
-})
 
 // Define routes
 app.use('/api/shortenurl', require('./routes/shortenUrl'))
