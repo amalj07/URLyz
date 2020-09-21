@@ -56,7 +56,8 @@ export default {
   methods: {
     ...mapActions(['checkLoginStatus']),
     async logout() {
-      this.$http.post('http://localhost:5000/api/user/logout', {
+      let url = `${this.$serverURLI}/api/user/logout`
+      this.$http.post(url, {
         sid: this.$cookies.get("sid"),
         token: this.$cookies.get("t")
       }).then(async () => {
@@ -64,7 +65,7 @@ export default {
         await this.$cookies.remove("t")
         await this.checkLoginStatus()
         // this.$router.push('/login')
-        window.location.href = 'http://localhost:8080/login'
+        window.location.href = `${this.$serverURLI}/login`
       }).catch(error => {
         if(error.response.data == 'Failed to logout user') {
           alert('Failed to logout user')

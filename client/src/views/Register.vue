@@ -182,7 +182,7 @@ export default {
             if(this.$refs.registerForm.validate()) {
                 this.loadreg_form = true
                 this.reg_btnStatus = true
-                let url= 'http://localhost:5000/api/user/user_register'
+                let url= `${this.$serverURLI}/api/user/user_register`
                 this.$http.post(url, {
                     name: this.name,
                     email: this.email,
@@ -218,7 +218,7 @@ export default {
             if(this.$refs.verifyUserForm.validate()) {
                 this.loadverify_form = true
                 this.verify_btnStatus = true
-                let url = 'http://localhost:5000/api/user/user_account/verify'
+                let url = `${this.$serverURLI}/api/user/user_account/verify`
                 this.$http.post(url, {
                     otp: this.registerOTP,
                     email: this.email
@@ -255,7 +255,7 @@ export default {
             this.resendotpbtn_status = true
             this.resendOtpTimer = 30
             this.resentOtpCountDown()
-            let url = 'http://localhost:5000/api/user/user_account/resendotp'
+            let url = `${this.$serverURLI}/api/user/user_account/resendotp`
             this.$http.post(url, {
                 email: this.email
             }).then(response => {
@@ -285,7 +285,7 @@ export default {
         submitLogin() {
             this.loading = true
             this.disabled = true
-            let url = 'http://localhost:5000/api/user/user_login'
+            let url = `${this.$serverURLI}/api/user/user_login`
             this.$http.post(url, {
                 email: this.email,
                 password: this.password
@@ -296,7 +296,7 @@ export default {
                     this.$cookies.set("sid", response.data.user.sid)
                     this.$cookies.set("t",response.data.user.token)
                     // this.$router.push({name: 'Dashboard'})
-                    window.location.href = 'http://localhost:8080/'
+                    window.location.href = `${this.$serverURLI}`
                 }else {
                     this.errorSnackbar = true,
                     this.snackbarText = 'Something went wrong!'

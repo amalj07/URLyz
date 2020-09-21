@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { getCookie } from '../../getCookie'
 
+let serverURLI = process.env.NODE_ENV == 'production' ? process.env.VUE_APP_PROD_URL : process.env.VUE_APP_DEV_URL
 
 const state = {
     user: {}
@@ -16,7 +17,7 @@ const actions = {
         let token = getCookie("t")
 
         if (sid != '' && token != '') {
-            axios.post('http://localhost:5000/api/user/user_details', {
+            axios.post(`${serverURLI}/api/user/user_details`, {
                 sid,
                 token
             }).then(response => {
@@ -26,7 +27,7 @@ const actions = {
     },
 
     async updateUser({ commit }, { data, type }) {
-        axios.post('http://localhost:5000/api/user_details/updateuser', {
+        axios.post(`${serverURLI}/api/user_details/updateuser`, {
             sid: getCookie("sid"),
             token: getCookie("t"),
             data: data,

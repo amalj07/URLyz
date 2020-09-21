@@ -19,7 +19,7 @@ Vue.$cookies.config('7d')
 Vue.use(VueCryptojs)
 
 Vue.prototype.$http = Axios
-Vue.prototype.$serverURLI = "http://localhost:5000";
+Vue.prototype.$serverURLI = process.env.NODE_ENV == 'production' ? process.env.VUE_APP_PROD_URL : process.env.VUE_APP_DEV_URL
 
 Vue.config.productionTip = false
 

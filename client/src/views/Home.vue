@@ -120,7 +120,7 @@ export default {
             }
             this.loading = true
             this.disabled = true
-            let url = this.$serverURLI + "/api/shortenurl/shorten"
+            let url = `${this.$serverURLI}/api/shortenurl/shorten`
             this.$http.post(url, {
                 sid: this.sid,
                 token: this.token,
@@ -150,14 +150,15 @@ export default {
             this.copyBtnTxtClr = 'green--text'
         },
         async logout() {
-            this.$http.post('http://localhost:5000/api/user/logout', {
+            let url = `${this.$serverURLI}/api/user/logout`
+            this.$http.post(url, {
                 sid: this.$cookies.get("sid"),
                 token: this.$cookies.get("t")
             }).then(async () => {
                 await this.$cookies.remove("sid")
                 await this.$cookies.remove("t")
                 // this.$router.push('/login')
-                window.location.href = 'http://localhost:8080/'
+                window.location.href = `${this.$serverURLI}`
             })
         }
     }

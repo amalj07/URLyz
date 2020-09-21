@@ -1,4 +1,5 @@
 const express = require('express')
+const path = require('path')
 const router = express.Router()
 
 // import url model
@@ -17,14 +18,14 @@ router
 
             if (url) {
                 if (url.status == 'disabled') {
-                    res.status(404).end()
+                    res.sendFile(path.join(__dirname, '../../dist', 'index.html'))
                 } else {
                     
                     await Url.update({urlCode}, {$inc: {visits: 1}})
                     return res.redirect(url.longUrl)
                 }
             } else {
-                return res.status(404).json('No url found')
+                res.sendFile(path.join(__dirname, '../../dist', 'index.html'))
             }
         } catch (error) {
             console.log(error)
