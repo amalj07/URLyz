@@ -217,14 +217,12 @@ export default {
                     this.otp = ''
                     this.loading = false
                     this.disabled = false
+                    this.errorSnackbar = true
                     if(error.response.data == 'Failed to veriy user') {
-                        this.errorSnackbar = true
                         this.snackbarText = error.response.data
                     } else if(error.response.data == 'Invalid OTP') {
-                        this.errorSnackbar = true
                         this.snackbarText = error.response.data
                     } else {
-                        this.errorSnackbar = true
                         this.snackbarText = 'Something went wrong'
                     }
                 })
@@ -243,14 +241,12 @@ export default {
                 this.snackbarText = response.data
             }).catch(error => {
                 this.otp = ''
+                this.errorSnackbar = true
                 if(error.response.data == 'Invalid email'){
-                    this.errorSnackbar = true
                     this.snackbarText = error.response.data
                 } else if(error.response.data == 'Failed to send otp'){
-                    this.errorSnackbar = true
                     this.snackbarText = error.response.data
                 } else {
-                    this.errorSnackbar = true
                     this.snackbarText = 'Something went wrong!'
                 }
             })

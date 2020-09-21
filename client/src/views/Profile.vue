@@ -384,7 +384,6 @@ export default {
                         this.snackbarText = 'User deleted succesfully'
                         this.logout()
                 }).catch(error => {
-                    console.log(error)
                     if(error.response.data == 'Invalid password' || error.response.data == 'Failed to delete user'){
                         this.password = ''
                         this.loading = false

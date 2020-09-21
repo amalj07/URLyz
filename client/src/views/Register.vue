@@ -202,15 +202,13 @@ export default {
                     this.password = ''
                     this.confirmPassword = ''
                     this.loadreg_form = false
-                        this.reg_btnStatus = false
+                    this.reg_btnStatus = false
+                    this.errorSnackbar = true
                     if(error.response.data == 'Failed to register user') {
-                        this.errorSnackbar = true
                         this.snackbarText = error.response.data
                     }else if(error.response.data == 'Email already registered') {
-                        this.errorSnackbar = true
                         this.snackbarText = error.response.data
                     }else {
-                        this.errorSnackbar = true
                         this.snackbarText = 'Something went wrong!'
                     }
                 })
@@ -243,14 +241,12 @@ export default {
                     this.loadverify_form = false
                     this.verify_btnStatus = false
                     this.userVerifyDialog = false
+                    this.errorSnackbar = true
                     if(error.response.data == 'Failed to veriy user') {
-                        this.errorSnackbar = true
                         this.snackbarText = error.response.data
                     } else if(error.response.data == 'Invalid OTP') {
-                        this.errorSnackbar = true
                         this.snackbarText = error.response.data
                     } else {
-                        this.errorSnackbar = true
                         this.snackbarText = 'Something went wrong'
                     }
                 })
@@ -267,14 +263,12 @@ export default {
                 this.successSnackbar = true
                 this.snackbarText = response.data
             }).catch(error => {
+                this.errorSnackbar = true
                 if(error.response.data == 'Invalid email'){
-                    this.errorSnackbar = true
                     this.snackbarText = error.response.data
                 } else if(error.response.data == 'Failed to send otp'){
-                    this.errorSnackbar = true
                     this.snackbarText = error.response.data
                 } else {
-                    this.errorSnackbar = true
                     this.snackbarText = 'Something went wrong!'
                 }
             })
