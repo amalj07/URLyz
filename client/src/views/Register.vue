@@ -228,8 +228,7 @@ export default {
                     this.userVerifyDialog = false
                     this.registerOTP = ''
                     swal.fire({
-                        title: "Success",
-                        text: "Your account is verified",
+                        title: "Account Verified",
                         icon: "success",
                         showConfirmButton: true,
                         confirmButtonText: 'Go to Dashboard',

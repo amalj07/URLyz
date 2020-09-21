@@ -42,7 +42,7 @@
                                 class="reg_btn mt-n3 ml-n4"
                                 color="blue darken-2 white--text"
                                 @click="forgetPassword">
-                                <span class="text-body-2 text-capitalize">Forget password ?</span> <br>
+                                <span class="text-body-2 text-capitalize">Forgot password ?</span> <br>
                             </v-btn>
                             <div v-if="notVerified">
                                 <p class="text-caption">Enter the otp send to {{ this.email }}</p>
@@ -214,8 +214,7 @@ export default {
                     this.disabled = false
                     this.notVerified = false
                     swal.fire({
-                        title: "Success",
-                        text: "Your account is verified",
+                        title: "Account Verified",
                         icon: "success",
                         showConfirmButton: true,
                         confirmButtonText: 'Go to Dashboard',
@@ -271,12 +270,7 @@ export default {
             }
         },
         forgetPassword() {
-            if(this.email == '') {
-                this.errorSnackbar = true
-                this.snackbarText = 'Enter your email to reset password'
-            } else {
-                this.$router.push({name: 'ForgetPassword'})
-            }
+            this.$router.push({name: "ForgetPassword"})
         }
     },
     created() {

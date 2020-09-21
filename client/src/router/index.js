@@ -5,7 +5,7 @@ import Register from '../views/Register'
 import Login from '../views/Login'
 import Dashboard from '../views/Dashboard'
 import Profile from '../views/Profile'
-import ForgetPassword from '../views/ForgetPassword'
+import ForgotPassword from '../views/ForgotPassword'
 import { isAuthenticated } from '../auth'
 
 Vue.use(VueRouter)
@@ -39,8 +39,8 @@ Vue.use(VueRouter)
   },
   {
     path: '/recoverpasswrod',
-    name: 'ForgetPassword',
-    component: ForgetPassword,
+    name: 'ForgotPassword',
+    component: ForgotPassword,
   }
 ]
 
