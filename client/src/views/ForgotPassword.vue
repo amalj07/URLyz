@@ -184,7 +184,7 @@ export default {
             if(this.$refs.emailForm.validate()) {
                 this.loading = true
                 this.disabled =  true
-                let url = 'http://localhost:5000/api/user_details/forgetpassword'
+                let url = `${this.$serverURLI}/user_details/forgetpassword`
                 this.$http.post(url, {
                     email: this.email
                 }).then(() => {
@@ -200,7 +200,7 @@ export default {
             if(this.$refs.otpForm.validate()){
                 this.loading = true
                 this.disabled = true
-                let url = 'http://localhost:5000/api/user/user_account/verify'
+                let url = `${this.$serverURLI}/user/user_account/verify`
                 this.$http.post(url, {
                     email: this.email,
                     otp: this.otp
@@ -225,7 +225,7 @@ export default {
                 } else {
                     this.loadingPassword = true
                     this.disabled = true
-                    let url = 'http://localhost:5000/api/user_details/forget/updatepassword'
+                    let url = `${this.$serverURLI}/user_details/forget/updatepassword`
                     this.$http.post(url, {
                         email: this.email,
                         newPassword: this.newPassword,
@@ -257,7 +257,7 @@ export default {
             this.resendotpbtn_status = true
             this.resendOtpTimer = 30
             this.resentOtpCountDown()
-            let url = 'http://localhost:5000/api/user/user_account/resendotp'
+            let url = `${this.$serverURLI}/user/user_account/resendotp`
             this.$http.post(url, {
                 email: this.email
             }).then(response => {

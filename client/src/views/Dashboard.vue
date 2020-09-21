@@ -159,7 +159,8 @@ export default {
   },
   methods: {
     fetchUrls() {
-      this.$http.post('http://localhost:5000/api/urls/fetchurl', {
+      let url = `${this.$serverURLI}/urls/fetchurl`
+      this.$http.post(url, {
             sid: this.$cookies.get("sid"),
             token: this.$cookies.get("t")
           }).then(response => {
@@ -175,7 +176,8 @@ export default {
     },
     updateLink(url, index) {
       this.updateLinkIndex = index
-      this.$http.post('http://localhost:5000/api/urls/disable', {
+      let apiurl = `${this.$serverURLI}/urls/disable`
+      this.$http.post(apiurl, {
             sid: this.$cookies.get("sid"),
             token: this.$cookies.get("t"),
             url: url
@@ -209,7 +211,8 @@ export default {
     },
     confirmDelete() {
       this.deleteurl_load = true
-      this.$http.post('http://localhost:5000/api/urls/delete', {
+      let url = `${this.$serverURLI}/urls/delete`
+      this.$http.post(url, {
         sid: this.$cookies.get("sid"),
         token: this.$cookies.get("t"),
         url: this.deleteurl
@@ -231,15 +234,16 @@ export default {
       })
     },
     async logout() {
-            this.$http.post('http://localhost:5000/api/user/logout', {
-                sid: this.$cookies.get("sid"),
-                token: this.$cookies.get("t")
-            }).then(async () => {
-                await this.$cookies.remove("sid")
-                await this.$cookies.remove("t")
-                // this.$router.push('/login')
-                window.location.href = 'http://localhost:8080/'
-            })
+      let url = `${this.$serverURLI}/user/logout`
+      this.$http.post(url, {
+          sid: this.$cookies.get("sid"),
+          token: this.$cookies.get("t")
+      }).then(async () => {
+          await this.$cookies.remove("sid")
+          await this.$cookies.remove("t")
+          // this.$router.push('/login')
+          window.location.href = 'http://localhost:8080/'
+      })
     },
     updatevisit(url, index) {
       if(this.urls[index].status != 'disabled'){

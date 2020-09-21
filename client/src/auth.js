@@ -3,7 +3,8 @@ import { getCookie } from './getCookie'
 import store from './store/index'
 
 export function isAuthenticated(to, from, next) {
-    const url = 'http://localhost:5000/api/user/authenticate'
+    let serverURLI = process.env.NODE_ENV == 'production' ? process.env.VUE_APP_PROD_URL : process.env.VUE_APP_DEV_URL
+    const url = `${serverURLI}/user/authenticate`
     axios.post(url, {
         sid: getCookie('sid'),
         token: getCookie('t')
