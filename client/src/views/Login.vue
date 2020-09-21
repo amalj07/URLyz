@@ -161,7 +161,6 @@ export default {
                     email: this.email,
                     password: this.password
                 }).then(response => {
-                    this.email = ''
                     this.password = ''
                     this.loading = false
                     this.disabled = false
@@ -175,7 +174,6 @@ export default {
                         this.snackbarText = 'Something went wrong!'
                     }
                 }).catch(error => {
-                    this.email = ''
                     this.password = ''
                     this.loading = false
                     this.disabled = false
@@ -183,9 +181,11 @@ export default {
                         this.notVerified = true
                         this.resentOtpCountDown()
                     }else if(error.response.data == 'Invalid email or password') {
+                        this.email = ''
                         this.errorSnackbar = true,
                         this.snackbarText = error.response.data
                     }else {
+                        this.email = ''
                         this.snackbar = true
                         this.snackbarText = 'Something went wrong!'
                     }
@@ -204,6 +204,7 @@ export default {
                     this.otp = ''
                     this.loading = false
                     this.disabled = false
+                    this.notVerified = false
                     swal.fire({
                         title: "Success",
                         text: "Your account is verified",
