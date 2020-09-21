@@ -169,7 +169,6 @@ export default {
                     email: this.email,
                     password: this.password
                 }).then(response => {
-                    this.password = ''
                     this.loading = false
                     this.disabled = false
                     if(response.data.MSG === 'login_success'){
@@ -270,7 +269,7 @@ export default {
             }
         },
         forgetPassword() {
-            this.$router.push({name: "ForgetPassword"})
+            this.$router.push({name: "ForgotPassword"})
         }
     },
     created() {

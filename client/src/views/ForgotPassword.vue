@@ -61,6 +61,16 @@
                                 validate-on-blur
                             ></v-text-field>
                         </v-form>
+                        <v-btn
+                            text
+                            :ripple=false
+                            :disabled="this.resendotpbtn_status"
+                            class="reg_btn"
+                            color="blue darken-2 white--text"
+                            @click="resendOTP">
+                            <span class="text-body-2 text-capitalize" v-if="this.resendotpbtn_status">Resend OTP in {{ this.resendOtpTimer }} seconds.</span>
+                            <span class="text-body-2 text-capitalize" v-else >Resend OTP</span> <br>
+                        </v-btn>
                     <v-card-actions class="justify-center">
                         <v-btn
                             :disabled="this.disabled"
@@ -159,6 +169,8 @@ export default {
             snackbarText: 'If the email is registered, an OTP will be send to the email',
             verifyOtpCard: false,
             updatePasswordDialog: false,
+            resendOtpTimer: 30,
+            resendotpbtn_status: true,
             inputRules: [
                 value => value.length > 0 || 'Required',
             ],
@@ -180,6 +192,7 @@ export default {
                     this.disabled = false
                     this.snackbar = true
                     this.verifyOtpCard = true
+                    this.resentOtpCountDown()
                 })
             }
         },
@@ -238,6 +251,39 @@ export default {
                         this.snackbarText = 'Failed to update password'
                     })
                 }
+            }
+        },
+        resendOTP() {
+            this.resendotpbtn_status = true
+            this.resendOtpTimer = 30
+            this.resentOtpCountDown()
+            let url = 'http://localhost:5000/api/user/user_account/resendotp'
+            this.$http.post(url, {
+                email: this.email
+            }).then(response => {
+                this.otp = ''
+                this.snackbar = true
+                this.snackbarText = response.data
+            }).catch(error => {
+                this.otp = ''
+                this.snackbar = true
+                if(error.response.data == 'Invalid email'){
+                    this.snackbarText = error.response.data
+                } else if(error.response.data == 'Failed to send otp'){
+                    this.snackbarText = error.response.data
+                } else {
+                    this.snackbarText = 'Something went wrong!'
+                }
+            })
+        },
+        resentOtpCountDown() {
+            if(this.resendOtpTimer > 0) {
+                setTimeout(() => {
+                    this.resendOtpTimer -= 1
+                    this.resentOtpCountDown()
+                }, 1000);
+            }else {
+                this.resendotpbtn_status = false
             }
         },
         goback() {
