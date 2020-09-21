@@ -164,7 +164,7 @@ export default {
             if(this.$refs.loginForm.validate()) {
                 this.loading = true
                 this.disabled = true
-                let url = `${this.$serverURLI}/user/user_login`
+                let url = `${this.$serverURLI}/api/user/user_login`
                 this.$http.post(url, {
                     email: this.email,
                     password: this.password
@@ -175,7 +175,7 @@ export default {
                         this.$cookies.set("sid", response.data.user.sid)
                         this.$cookies.set("t",response.data.user.token)
                         // this.$router.push({name: 'Dashboard'})
-                        window.location.href = 'http://localhost:8080/'
+                        window.location.href = `${this.$serverURLI}`
                     }else {
                         this.errorSnackbar = true,
                         this.snackbarText = 'Something went wrong!'
@@ -203,7 +203,7 @@ export default {
             if(this.$refs.loginForm.validate()) {
                 this.loading = true
                 this.disabled = true
-                let url = `${this.$serverURLI}/user/user_account/verify`
+                let url = `${this.$serverURLI}/api/user/user_account/verify`
                 this.$http.post(url, {
                     otp: this.otp,
                     email: this.email
@@ -239,7 +239,7 @@ export default {
             this.resendotpbtn_status = true
             this.resendOtpTimer = 30
             this.resentOtpCountDown()
-            let url = `${this.$serverURLI}/user/user_account/resendotp`
+            let url = `${this.$serverURLI}/api/user/user_account/resendotp`
             this.$http.post(url, {
                 email: this.email
             }).then(response => {

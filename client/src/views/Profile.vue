@@ -316,7 +316,7 @@ export default {
             this.disabledEmail = true
         },
         changeUserPassword() {
-            let url = `${this.$serverURLI}/user_details/verifypassword`
+            let url = `${this.$serverURLI}/api/user_details/verifypassword`
             this.$http.post(url, {
                 sid: this.$cookies.get("sid"),
                 token: this.$cookies.get("t"),
@@ -340,7 +340,7 @@ export default {
                     this.errorSnackbar = true,
                     this.snackbarText = 'Enter a password'
                 } else {
-                    let url = `${this.$serverURLI}/user_details/updatepassword`
+                    let url = `${this.$serverURLI}/api/user_details/updatepassword`
                     this.$http.post(url, {
                         sid: this.$cookies.get("sid"),
                         token: this.$cookies.get("t"),
@@ -379,7 +379,7 @@ export default {
             } else {
                 this.loading = true
                 this.disabled = true
-                let url = `${this.$serverURLI}/user/delete_account`
+                let url = `${this.$serverURLI}/api/user/delete_account`
                 this.$http.post(url, {
                     sid: this.$cookies.get("sid"),
                     token: this.$cookies.get("t"),
@@ -407,7 +407,7 @@ export default {
             this.deleteAccountDialog = false
         },
         async logout() {
-            let url = `${this.$serverURLI}/user/logout`
+            let url = `${this.$serverURLI}/api/user/logout`
             this.$http.post(url, {
                 sid: this.$cookies.get("sid"),
                 token: this.$cookies.get("t")
@@ -415,7 +415,7 @@ export default {
                 await this.$cookies.remove("sid")
                 await this.$cookies.remove("t")
                 // this.$router.push('/login')
-                window.location.href = 'http://localhost:8080/'
+                window.location.href = `${this.$serverURLI}`
             })
         }
     },

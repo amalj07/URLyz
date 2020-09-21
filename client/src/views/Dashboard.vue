@@ -159,7 +159,7 @@ export default {
   },
   methods: {
     fetchUrls() {
-      let url = `${this.$serverURLI}/urls/fetchurl`
+      let url = `${this.$serverURLI}/api/urls/fetchurl`
       this.$http.post(url, {
             sid: this.$cookies.get("sid"),
             token: this.$cookies.get("t")
@@ -176,7 +176,7 @@ export default {
     },
     updateLink(url, index) {
       this.updateLinkIndex = index
-      let apiurl = `${this.$serverURLI}/urls/disable`
+      let apiurl = `${this.$serverURLI}/api/urls/disable`
       this.$http.post(apiurl, {
             sid: this.$cookies.get("sid"),
             token: this.$cookies.get("t"),
@@ -211,7 +211,7 @@ export default {
     },
     confirmDelete() {
       this.deleteurl_load = true
-      let url = `${this.$serverURLI}/urls/delete`
+      let url = `${this.$serverURLI}/api/urls/delete`
       this.$http.post(url, {
         sid: this.$cookies.get("sid"),
         token: this.$cookies.get("t"),
@@ -234,7 +234,7 @@ export default {
       })
     },
     async logout() {
-      let url = `${this.$serverURLI}/user/logout`
+      let url = `${this.$serverURLI}/api/user/logout`
       this.$http.post(url, {
           sid: this.$cookies.get("sid"),
           token: this.$cookies.get("t")
@@ -242,7 +242,7 @@ export default {
           await this.$cookies.remove("sid")
           await this.$cookies.remove("t")
           // this.$router.push('/login')
-          window.location.href = 'http://localhost:8080/'
+          window.location.href = `${this.$serverURLI}`
       })
     },
     updatevisit(url, index) {
