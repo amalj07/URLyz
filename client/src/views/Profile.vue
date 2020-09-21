@@ -335,29 +335,35 @@ export default {
             })
         },
         updatePassword() {
-            if(this.newPassword == '' || this.confirmPassword == '') {
-                this.errorSnackbar = true,
-                this.snackbarText = 'Enter a password'
-            } else {
-                let url = 'http://localhost:5000/api/user_details/updatepassword'
-                this.$http.post(url, {
-                    sid: this.$cookies.get("sid"),
-                    token: this.$cookies.get("t"),
-                    newPassword: this.newPassword,
-                }).then(() => {
+            if(this.$refs.verifyUserForm.validate()){
+                if(this.newPassword == '' || this.confirmPassword == '') {
+                    this.errorSnackbar = true,
+                    this.snackbarText = 'Enter a password'
+                } else {
+                    let url = 'http://localhost:5000/api/user_details/updatepassword'
+                    this.$http.post(url, {
+                        sid: this.$cookies.get("sid"),
+                        token: this.$cookies.get("t"),
+                        newPassword: this.newPassword,
+                    }).then(() => {
+                        this.newPassword = ''
+                        this.confirmPassword = ''
                         this.updatePasswordDialog = false
                         this.successSnackbar = true
                         this.snackbarText = 'Password updated'
-                }).catch(error => {
-                    if(error.response.data == "Failed to update password") {
-                        this.updatePasswordDialog = false
-                        this.errorSnackbar = true
-                        this.snackbarText = error.response.data
-                    }
-                    else {
-                        this.logout()
-                    }
-                })
+                    }).catch(error => {
+                        this.newPassword = ''
+                        this.confirmPassword = ''
+                        if(error.response.data == "Failed to update password") {
+                            this.updatePasswordDialog = false
+                            this.errorSnackbar = true
+                            this.snackbarText = error.response.data
+                        }
+                        else {
+                            this.logout()
+                        }
+                    })
+                }
             }
         },
         cancelUpdate() {
