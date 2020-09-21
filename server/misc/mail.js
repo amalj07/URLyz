@@ -12,33 +12,37 @@ const transporter = nodemailer.createTransport({
 })
 
 exports.sendMail = (user) => {
-    // Create s six charecter OTP
-    function makeOTP() {
-        var result = '';
-        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        var charactersLength = 6;
-        for (var i = 0; i < 6; i++) {
-            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    try {
+        // Create s six charecter OTP
+        function makeOTP() {
+            var result = '';
+            var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            var charactersLength = 6;
+            for (var i = 0; i < 6; i++) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
+            return result;
         }
-        return result;
+    
+        const OTP = makeOTP()
+    
+        // Configure mail credentials and message
+        const mailOptions = {
+            from: config.mail.user,
+            to: user.email,
+            subject: 'URLyz account confirmation',
+            text: `Hello ${user.name}, ${OTP} is the OTP for verifiying your account. OTP will be valid only for 10 minutes.`
+        }
+    
+        // Send mail to the user
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error)
+                throw error
+            return info.response
+        })
+    
+        return OTP
+    } catch (error) {
+        console.log(error)
     }
-
-    const OTP = makeOTP()
-
-    // Configure mail credentials and message
-    const mailOptions = {
-        from: config.mail.user,
-        to: user.email,
-        subject: 'URLyz account confirmation',
-        text: `Hello ${user.name}, ${OTP} is the OTP for verifiying your account. OTP will be valid only for 10 minutes.`
-    }
-
-    // Send mail to the user
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error)
-            throw error
-        return info.response
-    })
-
-    return OTP
 }

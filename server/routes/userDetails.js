@@ -119,6 +119,13 @@ router
         const user = await User.findOne({email}, '-urlNos -salt -hash -_id')
 
         if(user) {
+
+            const otpIndb = await VerifyOTP.findOne({ email }, '-_id')
+
+            if (otpIndb != null) {
+                await VerifyOTP.findOneAndDelete({ email: email })
+            }
+
             const otp = mail.sendMail(user)
 
                 const userId = user.userId
