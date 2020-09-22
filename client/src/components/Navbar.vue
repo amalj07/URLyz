@@ -56,6 +56,7 @@ export default {
   methods: {
     ...mapActions(['checkLoginStatus']),
     async logout() {
+      console.log(this.$cookies.get("sid"))
       let url = `${this.$serverURLI}/api/user/logout`
       this.$http.post(url, {
         sid: this.$cookies.get("sid"),
@@ -65,7 +66,8 @@ export default {
         await this.$cookies.remove("t")
         await this.checkLoginStatus()
         // this.$router.push('/login')
-        window.location.href = `${this.$serverURLI}/login`
+        // window.location.href = `${this.$serverURLI}/login`
+        window.location.href = process.env.VUE_APP_CLIENT_URL
       }).catch(error => {
         if(error.response.data == 'Failed to logout user') {
           alert('Failed to logout user')

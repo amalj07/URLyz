@@ -188,10 +188,6 @@ export default {
                     email: this.email,
                     password: this.password
                 }).then(() => {
-                    this.name = ''
-                    this.email = ''
-                    this.password = ''
-                    this.confirmPassword = ''
                     this.loadreg_form = false
                     this.reg_btnStatus = false
                     this.userVerifyDialog = true
@@ -296,7 +292,8 @@ export default {
                     this.$cookies.set("sid", response.data.user.sid)
                     this.$cookies.set("t",response.data.user.token)
                     // this.$router.push({name: 'Dashboard'})
-                    window.location.href = `${this.$serverURLI}`
+                    // window.location.href = `${this.$serverURLI}`
+                    window.location.href = process.env.VUE_APP_CLIENT_URL
                 }else {
                     this.errorSnackbar = true,
                     this.snackbarText = 'Something went wrong!'

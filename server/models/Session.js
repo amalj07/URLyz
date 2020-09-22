@@ -15,5 +15,5 @@ const sessionSchema = new mongoose.Schema({
     }
 })
 
-const sessionSchemaModel = mongoose.model('sessions', sessionSchema)
+const sessionSchemaModel = mongoose.model('usersessions', sessionSchema)
 module.exports = sessionSchemaModel

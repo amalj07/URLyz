@@ -14,7 +14,8 @@ export function isAuthenticated(to, from, next) {
         } else {
             // next({ name: 'Login' })
             store.commit("loginStatus", false)
-            window.location.href = `${serverURLI}/login`
+            // window.location.href = `${serverURLI}/login`
+            window.location.href = process.env.VUE_APP_CLIENT_URL + '/login'
         }
     })
 }

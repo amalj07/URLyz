@@ -18,14 +18,16 @@ router
 
             if (url) {
                 if (url.status == 'disabled') {
-                    res.sendFile(path.join(__dirname, '../../dist', 'index.html'))
+                    // res.sendFile(path.join(__dirname, '../../dist', 'index.html'))
+                    res.status(404).end()
                 } else {
                     
                     await Url.update({urlCode}, {$inc: {visits: 1}})
                     return res.redirect(url.longUrl)
                 }
             } else {
-                res.sendFile(path.join(__dirname, '../../dist', 'index.html'))
+                // res.sendFile(path.join(__dirname, '../../dist', 'index.html'))
+                res.status(404).end()
             }
         } catch (error) {
             console.log(error)

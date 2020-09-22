@@ -158,7 +158,8 @@ export default {
                 await this.$cookies.remove("sid")
                 await this.$cookies.remove("t")
                 // this.$router.push('/login')
-                window.location.href = `${this.$serverURLI}`
+                // window.location.href = `${this.$serverURLI}`
+                window.location.href = process.env.VUE_APP_CLIENT_URL
             })
         }
     }

@@ -175,13 +175,13 @@ export default {
                         this.$cookies.set("sid", response.data.user.sid)
                         this.$cookies.set("t",response.data.user.token)
                         // this.$router.push({name: 'Dashboard'})
-                        window.location.href = `${this.$serverURLI}`
+                        // window.location.href = `${this.$serverURLI}`
+                        window.location.href = process.env.VUE_APP_CLIENT_URL
                     }else {
                         this.errorSnackbar = true,
                         this.snackbarText = 'Something went wrong!'
                     }
                 }).catch(error => {
-                    this.password = ''
                     this.loading = false
                     this.disabled = false
                     if(error.response.data == 'Account not verified'){
@@ -275,7 +275,6 @@ export default {
     created() {
         this.$cookies.remove("sid")
         this.$cookies.remove("t")
-        console.log(this.$serverURLI)
     }
 }
 </script>

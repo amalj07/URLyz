@@ -232,8 +232,10 @@ router
         try {
             const { sid, token } = req.body
 
-            await Session.findOneAndDelete({ sid: sid, token: token })
-            res.status(200).send("SUCCESS")
+            const user = await Session.findOneAndDelete({ sid: sid, token: token })
+            if(user) {
+                res.status(200).send("SUCCESS")
+            }
         } catch (error) {
             console.log(error)
             res.status(401).send("Failed to logout user")
