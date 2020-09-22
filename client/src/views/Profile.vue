@@ -74,7 +74,8 @@
                                     :rules="inputRules"
                                     label="Password"
                                     type="password"
-                                    outlined    
+                                    outlined
+                                    validate-on-blur
                                 ></v-text-field>
                                 <p class="mx-5">Deleting your account removes all the data and urls associated with your account. This action cannot be undone</p>
                             </v-card-text>
@@ -318,8 +319,6 @@ export default {
         changeUserPassword() {
             let url = `${this.$serverURLI}/api/user_details/verifypassword`
             this.$http.post(url, {
-                sid: this.$cookies.get("sid"),
-                token: this.$cookies.get("t"),
                 password: this.password
             }).then(() => {
                     this.updatePasswordDialog = true
@@ -342,8 +341,6 @@ export default {
                 } else {
                     let url = `${this.$serverURLI}/api/user_details/updatepassword`
                     this.$http.post(url, {
-                        sid: this.$cookies.get("sid"),
-                        token: this.$cookies.get("t"),
                         newPassword: this.newPassword,
                     }).then(() => {
                         this.newPassword = ''
@@ -381,17 +378,15 @@ export default {
                 this.disabled = true
                 let url = `${this.$serverURLI}/api/user/delete_account`
                 this.$http.post(url, {
-                    sid: this.$cookies.get("sid"),
-                    token: this.$cookies.get("t"),
                     password: this.deleteAccountPassword
                 }).then( () => {
-                        this.password = ''
+                        this.deleteAccountPassword = ''
                         this.successSnackbar = true
                         this.snackbarText = 'User deleted succesfully'
                         this.logout()
                 }).catch(error => {
                     if(error.response.data == 'Invalid password' || error.response.data == 'Failed to delete user'){
-                        this.password = ''
+                        this.deleteAccountPassword = ''
                         this.loading = false
                         this.disabled = false
                         this.deleteAccountDialog = false
@@ -406,19 +401,13 @@ export default {
         cancelDeleteAccount() {
             this.deleteAccountDialog = false
         },
-        async logout() {
+        logout() {
             let url = `${this.$serverURLI}/api/user/logout`
-            this.$http.post(url, {
-                sid: this.$cookies.get("sid"),
-                token: this.$cookies.get("t")
-            }).then(async () => {
-                await this.$cookies.remove("sid")
-                await this.$cookies.remove("t")
-                // this.$router.push('/login')
+            this.$http.get(url).then(() => {
                 // window.location.href = `${this.$serverURLI}`
-                window.location.href = process.env.VUE_APP_CLIENT_URL
+                window.location.href = process.env.VUE_APP_CLIENT_URL + '/login'
             })
-        }
+        },
     },
     computed: {
         name: {

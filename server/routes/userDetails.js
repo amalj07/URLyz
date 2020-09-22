@@ -47,9 +47,10 @@ router
     .route('/verifypassword')
     .post(async (req, res) => {
         try {
-            const { sid, token, password } = req.body
+            const { sid, t } = req.cookies
+            const { password } = req.body
 
-            const userId = await Session.findOne({ sid: sid, token: token }, '-_id -sid -token')
+            const userId = await Session.findOne({ sid: sid, token: t }, '-_id -sid -token')
 
             if (userId) {
                 const user = await User.findOne({ userId: userId.userId }, '-_id')
@@ -80,12 +81,13 @@ router
     .route('/updatepassword')
     .post(async (req, res) => {
         try {
-            const { sid, token, newPassword } = req.body
+            const { sid, t} = req.cookies
+            const { newPassword } = req.body
 
             if (newPassword == '') {
                 res.status(401).send('Failed to update password')
             } else {
-                const userId = await Session.findOne({ sid: sid, token: token }, '-_id -sid -token')
+                const userId = await Session.findOne({ sid: sid, token: t }, '-_id -sid -token')
 
                 if (userId) {
 

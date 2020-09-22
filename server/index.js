@@ -3,6 +3,7 @@ require('dotenv').config()
 const cors = require('cors')
 const path = require('path')
 const connectDB = require('./config/db')
+const cookieParser = require('cookie-parser')
 
 const app = express()
 
@@ -10,13 +11,19 @@ const app = express()
 connectDB()
 
 // Handle cross origin request
-app.use(cors())
+const corsOptions = {
+    origin: 'http://localhost:8080',
+    credentials: true,
+  };
+app.use(cors(corsOptions))
 
 // Body parser
 app.use(express.json({ extented: false}))
 app.use(express.urlencoded({ extended: false }))
 
-app.use(express.static(path.join(__dirname, '../dist')))
+app.use(cookieParser())
+
+// app.use(express.static(path.join(__dirname, '../dist')))
 
 // app.get('/', (req, res) => {
 //     res.sendFile(path.join(__dirname, '../dist', 'index.html'))

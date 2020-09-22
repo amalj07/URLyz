@@ -288,10 +288,7 @@ export default {
             }).then(response => {
                 this.loading = false
                 this.disabled = false
-                if(response.data.MSG === 'login_success'){
-                    this.$cookies.set("sid", response.data.user.sid)
-                    this.$cookies.set("t",response.data.user.token)
-                    // this.$router.push({name: 'Dashboard'})
+                if(response.data === 'login_success'){
                     // window.location.href = `${this.$serverURLI}`
                     window.location.href = process.env.VUE_APP_CLIENT_URL
                 }else {

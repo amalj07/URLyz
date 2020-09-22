@@ -48,7 +48,6 @@ router
 
                     // Send otp to user email
                     const otp = mail.sendMail(user)
-
                     // Create new otp model to save to db
                     verifyOTP = new VerifyOTP({
                         otp,
@@ -123,12 +122,11 @@ router
 
                         await session.save()
 
-                        res.status(200).json({
-                            MSG: 'login_success', user: {
-                                sid: sid,
-                                token: token,
-                            }
-                        })
+
+                        res.cookie("sid", sid)
+                        res.cookie("t", token)
+                        res.status(200).send("login_success")
+
                     } else {
                         const otpIndb = await VerifyOTP.findOne({ email }, '-_id')
 
@@ -228,14 +226,14 @@ router
 
 router
     .route('/logout')
-    .post(async (req, res) => {
+    .get(async (req, res) => {
         try {
-            const { sid, token } = req.body
+            const { sid, t } = req.cookies
 
-            const user = await Session.findOneAndDelete({ sid: sid, token: token })
-            if(user) {
-                res.status(200).send("SUCCESS")
-            }
+            await Session.findOneAndDelete({ sid: sid, token: t })
+            res.cookie("sid", "", {maxAge: "1"})
+            res.cookie("t", "", {maxAge: "1"})
+            res.status(200).send("SUCCESS")
         } catch (error) {
             console.log(error)
             res.status(401).send("Failed to logout user")
@@ -268,9 +266,10 @@ router
     .route('/delete_account')
     .post(async (req, res) => {
         try {
-            const { sid, token, password } = req.body
+            const { sid, t } = req.cookies
+            const { password } = req.body
 
-            const userId = await Session.findOneAndDelete({ sid: sid, token: token })
+            const userId = await Session.findOneAndDelete({ sid: sid, token: t })
 
             if (userId) {
                 const user = await User.findOne({ userId: userId.userId }, '-email -name -urlNos -verified -userId-_id')

@@ -160,26 +160,23 @@ export default {
   methods: {
     fetchUrls() {
       let url = `${this.$serverURLI}/api/urls/fetchurl`
-      this.$http.post(url, {
-            sid: this.$cookies.get("sid"),
-            token: this.$cookies.get("t")
-          }).then(response => {
-            this.urls = response.data
-          }).catch(error => {
-            if(error.response.data == 'Failed to fetch urls'){
+      this.$http.get(url)
+        .then(response => {
+          this.urls = response.data
+        })
+        .catch(error => {
+          if(error.response.data == 'Failed to fetch urls'){
               this.errorSnackbar = true
               this.snackbarText = error.response.data
-            }else {
-              this.logout()
-            }
-          })
+          }else {
+            this.logout()
+          }
+        })
     },
     updateLink(url, index) {
       this.updateLinkIndex = index
       let apiurl = `${this.$serverURLI}/api/urls/disable`
       this.$http.post(apiurl, {
-            sid: this.$cookies.get("sid"),
-            token: this.$cookies.get("t"),
             url: url
         }).then(response => {
           this.urls[this.updateLinkIndex].status = response.data.status
@@ -213,8 +210,6 @@ export default {
       this.deleteurl_load = true
       let url = `${this.$serverURLI}/api/urls/delete`
       this.$http.post(url, {
-        sid: this.$cookies.get("sid"),
-        token: this.$cookies.get("t"),
         url: this.deleteurl
       }).then(() => {
         this.urls.splice(this.deleteurlindex, 1)
@@ -233,18 +228,12 @@ export default {
           }
       })
     },
-    async logout() {
-      let url = `${this.$serverURLI}/api/user/logout`
-      this.$http.post(url, {
-          sid: this.$cookies.get("sid"),
-          token: this.$cookies.get("t")
-      }).then(async () => {
-          await this.$cookies.remove("sid")
-          await this.$cookies.remove("t")
-          // this.$router.push('/login')
-          // window.location.href = `${this.$serverURLI}`
-          window.location.href = process.env.VUE_APP_CLIENT_URL
-      })
+    logout() {
+        let url = `${this.$serverURLI}/api/user/logout`
+        this.$http.get(url).then(() => {
+            // window.location.href = `${this.$serverURLI}`
+            window.location.href = process.env.VUE_APP_CLIENT_URL + '/login'
+        })
     },
     updatevisit(url, index) {
       if(this.urls[index].status != 'disabled'){

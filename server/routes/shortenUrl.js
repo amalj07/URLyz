@@ -16,7 +16,8 @@ router
     .route('/shorten')
     .post(async (req, res) => {
         try {
-            const { sid, token, longUrl, customUrl } = req.body
+            const { sid, t } = req.cookies
+            const { longUrl, customUrl } = req.body
             const baseUrl = config.baseUrl.baseurl
 
             // Check base url
@@ -36,9 +37,9 @@ router
                 // Check long url
                 if (validUrl.isUri(longUrl)) {
                     // Check if sid and token is not null
-                    if (sid != '' && token != '') {
+                    if (sid != undefined && t != undefined) {
                         // Find usersession based on sid and token
-                        const userSession = await Session.findOne({ sid: sid, token: token }, '-_id')
+                        const userSession = await Session.findOne({ sid: sid, token: t }, '-_id')
     
                         if (userSession) {
                             // If valid userSession, check if short url already exist

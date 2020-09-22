@@ -98,8 +98,6 @@ export default {
             snackbarText: '',
             loading: false,
             disabled: false,
-            sid: '',
-            token: ''
         }
     },
     watch: {
@@ -114,16 +112,10 @@ export default {
     },
     methods: {
         shorten() {
-            if(this.$cookies.get("sid") != null && this.$cookies.get("t") != null) {
-                this.sid = this.$cookies.get("sid")
-                this.token = this.$cookies.get("t")
-            }
             this.loading = true
             this.disabled = true
             let url = `${this.$serverURLI}/api/shortenurl/shorten`
             this.$http.post(url, {
-                sid: this.sid,
-                token: this.token,
                 longUrl: this.longUrl,
                 customUrl: this.customUrl
             }).then(response => {
@@ -135,13 +127,15 @@ export default {
             }).catch(error => {
                 this.loading = false
                 this.disabled =false
-                this.snackbar = true
-                if(error.response.data == 'Invalid URL' || error.response.data == 'Custom url already taken'){
+                console.log(error.response.data)
+                if(error.response.data == "Invalid user") {
+                    this.logout()
+                } else if(error.response.data == 'Invalid URL' || error.response.data == 'Custom url already taken'){
+                    this.snackbar = true
                     this.snackbarText = error.response.data
-                } else if (error.response.data == 'Something went wrong!' || error.response.data == 'invalid base url') {
+                } else {
+                    this.snackbar = true
                     this.snackbarText = 'Something went wrong!'
-                }else {
-                    this.logout
                 }
             })
         },
@@ -149,19 +143,13 @@ export default {
             this.copyBtn = "LINK COPIED!"
             this.copyBtnTxtClr = 'green--text'
         },
-        async logout() {
+        logout() {
             let url = `${this.$serverURLI}/api/user/logout`
-            this.$http.post(url, {
-                sid: this.$cookies.get("sid"),
-                token: this.$cookies.get("t")
-            }).then(async () => {
-                await this.$cookies.remove("sid")
-                await this.$cookies.remove("t")
-                // this.$router.push('/login')
+            this.$http.get(url).then(() => {
                 // window.location.href = `${this.$serverURLI}`
-                window.location.href = process.env.VUE_APP_CLIENT_URL
+                window.location.href = process.env.VUE_APP_CLIENT_URL + '/login'
             })
-        }
+        },
     }
 }
 </script>

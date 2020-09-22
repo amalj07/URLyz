@@ -35,6 +35,7 @@
                                 dense
                                 v-model="password"
                                 :rules="inputRules"
+                                validate-on-blur
                             ></v-text-field>
                             <v-btn
                                 text
@@ -171,10 +172,7 @@ export default {
                 }).then(response => {
                     this.loading = false
                     this.disabled = false
-                    if(response.data.MSG === 'login_success'){
-                        this.$cookies.set("sid", response.data.user.sid)
-                        this.$cookies.set("t",response.data.user.token)
-                        // this.$router.push({name: 'Dashboard'})
+                    if(response.data === 'login_success'){
                         // window.location.href = `${this.$serverURLI}`
                         window.location.href = process.env.VUE_APP_CLIENT_URL
                     }else {
@@ -184,15 +182,18 @@ export default {
                 }).catch(error => {
                     this.loading = false
                     this.disabled = false
+                    console.log(error)
                     if(error.response.data == 'Account not verified'){
                         this.notVerified = true
                         this.resentOtpCountDown()
                     }else if(error.response.data == 'Invalid email or password') {
                         this.email = ''
+                        this.password = ''
                         this.errorSnackbar = true,
                         this.snackbarText = error.response.data
                     }else {
                         this.email = ''
+                        this.password - ''
                         this.snackbar = true
                         this.snackbarText = 'Something went wrong!'
                     }

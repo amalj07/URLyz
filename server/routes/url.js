@@ -8,30 +8,35 @@ const Url = require('../models/Url')
 
 router
     .route('/fetchurl')
-    .post(async (req, res) => {
-        const { sid, token } = req.body
-
-        const userSession = await Session.findOne({ sid: sid, token: token }, '-_id')
-        if (userSession) {
-            const urls = await Url.find({ userId: userSession.userId }, '-userId -_id -date')
-            if (urls) {
-                res.status(200).send(urls)
+    .get(async (req, res) => {
+        try {
+            const { sid, t } = req.cookies
+    
+            const userSession = await Session.findOne({ sid: sid, token: t }, '-_id')
+            if (userSession) {
+                const urls = await Url.find({ userId: userSession.userId }, '-userId -_id -date')
+                if (urls) {
+                    res.status(200).send(urls)
+                } else {
+                    res.status(401).send('Failed to fetch urls')
+                }
             } else {
-                res.status(401).send('Failed to fetch urls')
+                res.status(401).send('Invalid user')
             }
-        } else {
-            res.status(401).send('Invalid user')
+        } catch (error) {
+            console.log(error)
+            res.status(401).send('Failed to fetch urls')
         }
-
     })
 
 router
     .route('/disable')
     .post(async (req, res) => {
         try {
-            let { sid, token, url } = req.body
+            const { sid, t } = req.cookies
+            let { url } = req.body
 
-            const userSession = await Session.findOne({ sid: sid, token: token }, '-_id')
+            const userSession = await Session.findOne({ sid: sid, token: t }, '-_id')
 
             if (userSession) {
                 if (url.status === 'active') {
@@ -59,6 +64,7 @@ router
                 res.status(401).send('Invalid user')
             }
         } catch (error) {
+            console.log(error)
             res.status(401).send('Failed to update url')
         }
     })
@@ -67,9 +73,10 @@ router
     .route('/delete')
     .post(async (req, res) => {
         try {
-            let { sid, token, url } = req.body
+            let { sid, t, } = req.cookies
+            let { url } = req.body
 
-            const userSession = await Session.findOne({ sid: sid, token: token }, '-_id')
+            const userSession = await Session.findOne({ sid: sid, token: t }, '-_id')
 
             if (userSession) {
                 await Url.findOneAndDelete({ urlCode: url.urlCode })
@@ -79,6 +86,7 @@ router
                 res.status(401).send('Invalid user')
             }
         } catch (error) {
+            console.log(error)
             res.status(401).send("Failed to delete url")
         }
     })
