@@ -1,6 +1,12 @@
 const mongoose = require('mongoose')
 
 const sessionSchema = new mongoose.Schema({
+    createdAt: {
+        type: Date,
+        default: new Date(),
+        expires: 43200,
+        required: true
+    },
     sid: {
         type: String,
         required: true
