@@ -9,6 +9,7 @@ const mail = require('../misc/mail')
 const User = require('../models/User')
 const VerifyOTP = require('../models/verifyOTP')
 const Session = require('../models/Session')
+const Url = require('../models/Url')
 
 // @route POST /api/user/user_register
 // @desc Register new user
@@ -278,6 +279,7 @@ router
                     const validPassword = crypt.checkPassword(password, user.salt, user.hash)
 
                     if (validPassword == true) {
+                        const deleteUrls = await Url.deleteMany({ userId: userId.userId})
                         const deleteUser = await User.findOneAndDelete({ userId: userId.userId })
                         if (deleteUser) {
                             res.status(200).send("user_deleted")
