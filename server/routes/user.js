@@ -230,7 +230,7 @@ router
         try {
             const { sid, t } = req.cookies
 
-            await Session.findOneAndDelete({ sid: sid, token: t })
+            await Session.deleteOne({ sid: sid, token: t }).exec()
             res.cookie("sid", "", {maxAge: "1"})
             res.cookie("t", "", {maxAge: "1"})
             res.status(200).send("SUCCESS")

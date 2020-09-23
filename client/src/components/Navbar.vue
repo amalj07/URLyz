@@ -56,7 +56,6 @@ export default {
   methods: {
     ...mapActions(['checkLoginStatus']),
     async logout() {
-      console.log(this.$cookies.get("sid"))
       let url = `${this.$serverURLI}/api/user/logout`
       this.$http.get(url, {
       }).then(async () => {
