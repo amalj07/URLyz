@@ -4,6 +4,7 @@ const cors = require('cors')
 const path = require('path')
 const connectDB = require('./config/db')
 const cookieParser = require('cookie-parser')
+const isAuthenticated = require('./controllers/auth')
 
 const app = express()
 
@@ -34,7 +35,7 @@ app.use(cookieParser())
 app.use('/api/shortenurl', require('./routes/shortenUrl'))
 app.use('/', require('./routes/redirect'))
 app.use('/api/user', require('./routes/user'))
-app.use('/api/urls', require('./routes/url'))
+app.use('/api/urls', isAuthenticated, require('./routes/url'))
 app.use('/api/user_details', require('./routes/userDetails'))
 
 

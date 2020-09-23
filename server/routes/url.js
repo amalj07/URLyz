@@ -6,85 +6,73 @@ const Session = require('../models/Session')
 const User = require('../models/User')
 const Url = require('../models/Url')
 
+
+// @route POST /redirect
+// @desc Fetch every urls a user to show in dashboard
 router
     .route('/fetchurl')
     .get(async (req, res) => {
         try {
-            const { sid, t } = req.cookies
-    
-            const userSession = await Session.findOne({ sid: sid, token: t }, '-_id')
-            if (userSession) {
-                const urls = await Url.find({ userId: userSession.userId }, '-userId -_id -date')
-                if (urls) {
-                    res.status(200).send(urls)
-                } else {
-                    res.status(401).send('Failed to fetch urls')
-                }
+            const urls = await Url.find({ userId: req.userId}, '-userId -_id -date')
+            if (urls) {
+                res.status(200).send(urls)
             } else {
-                res.status(401).send('Invalid user')
+                res.status(401).send('Failed to fetch urls')
             }
+
         } catch (error) {
             console.log(error)
             res.status(401).send('Failed to fetch urls')
         }
     })
 
+
+// @route POST /updateurlstatus
+// @desc Fetch every urls a user to show in dashboard
 router
-    .route('/disable')
+    .route('/updateurlstatus')
     .post(async (req, res) => {
         try {
-            const { sid, t } = req.cookies
             let { url } = req.body
 
-            const userSession = await Session.findOne({ sid: sid, token: t }, '-_id')
+            if (url.status === 'active') {
+                const response = await Url.findOneAndUpdate({ urlCode: url.urlCode }, { status: 'disabled' }, { new: true })
 
-            if (userSession) {
-                if (url.status === 'active') {
-                    const response = await Url.findOneAndUpdate({ urlCode: url.urlCode }, { status: 'disabled' }, { new: true })
-
-                    url = {
-                        status: response.status,
-                        urlCode: response.urlCode,
-                        longUrl: response.longUrl,
-                        shortUrl: response.shortUrl
-                    }
-                } else {
-                    const response = await Url.findOneAndUpdate({ urlCode: url.urlCode }, { status: 'active' }, { new: true })
-
-                    url = {
-                        status: response.status,
-                        urlCode: response.urlCode,
-                        longUrl: response.longUrl,
-                        shortUrl: response.shortUrl
-                    }
+                url = {
+                    status: response.status,
+                    urlCode: response.urlCode,
+                    longUrl: response.longUrl,
+                    shortUrl: response.shortUrl
                 }
-
-                res.status(200).send(url)
             } else {
-                res.status(401).send('Invalid user')
+                const response = await Url.findOneAndUpdate({ urlCode: url.urlCode }, { status: 'active' }, { new: true })
+
+                url = {
+                    status: response.status,
+                    urlCode: response.urlCode,
+                    longUrl: response.longUrl,
+                    shortUrl: response.shortUrl
+                }
             }
+            res.status(200).send(url)
         } catch (error) {
             console.log(error)
             res.status(401).send('Failed to update url')
         }
     })
 
+
+// @route POST /deleteurl
+// @desc Fetch every urls a user to show in dashboard
 router
-    .route('/delete')
+    .route('/deleteurl')
     .post(async (req, res) => {
         try {
-            let { sid, t, } = req.cookies
             let { url } = req.body
 
-            const userSession = await Session.findOne({ sid: sid, token: t }, '-_id')
-
-            if (userSession) {
-                await Url.findOneAndDelete({ urlCode: url.urlCode })
-                await User.updateOne({userId: userSession.userId}, {$inc: {urlNos: -1}})
-                res.status(200).send('Url deleted')
-            } else {
-                res.status(401).send('Invalid user')
-            }
+            await Url.findOneAndDelete({ urlCode: url.urlCode })
+            await User.updateOne({userId: req.userId}, {$inc: {urlNos: -1}})
+            res.status(200).send('Url deleted')
         } catch (error) {
             console.log(error)
             res.status(401).send("Failed to delete url")

@@ -109,6 +109,7 @@
                       min-width=83
                       class="my-3"
                       color="blue darken-2"
+                      :loading="loading"
                       @click="updateLink(url, index)">
                       <span v-if="url.status === 'active'">Disable</span>
                       <span v-else>Enable</span>
@@ -154,7 +155,8 @@ export default {
       errorSnackbar: false,
       snackbarText: '',
       deleteurl: '',
-      deleteurlindex: null
+      deleteurlindex: null,
+      loading: false
     }
   },
   methods: {
@@ -174,14 +176,17 @@ export default {
         })
     },
     updateLink(url, index) {
+      this.loading = true
       this.updateLinkIndex = index
-      let apiurl = `${this.$serverURLI}/api/urls/disable`
+      let apiurl = `${this.$serverURLI}/api/urls/updateurlstatus`
       this.$http.post(apiurl, {
             url: url
         }).then(response => {
+          this.loading = false
           this.urls[this.updateLinkIndex].status = response.data.status
           this.getColor(response.data.status)
         }).catch(error => {
+          this.loading = false
           if(error.response.data == 'Failed to update url') {
             this.errorSnackbar = true
             this.snackbarText = error.response.data
@@ -208,7 +213,7 @@ export default {
     },
     confirmDelete() {
       this.deleteurl_load = true
-      let url = `${this.$serverURLI}/api/urls/delete`
+      let url = `${this.$serverURLI}/api/urls/deleteurl`
       this.$http.post(url, {
         url: this.deleteurl
       }).then(() => {
