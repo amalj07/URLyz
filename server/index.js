@@ -36,7 +36,7 @@ app.use('/api/shortenurl', require('./routes/shortenUrl'))
 app.use('/', require('./routes/redirect'))
 app.use('/api/user', require('./routes/user'))
 app.use('/api/urls', isAuthenticated, require('./routes/url'))
-app.use('/api/user_details', require('./routes/userDetails'))
+app.use('/api/user_details',isAuthenticated, require('./routes/userDetails'))
 
 
 const PORT = process.env.PORT || 5000

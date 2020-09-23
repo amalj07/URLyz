@@ -9,7 +9,6 @@ const mail = require('../misc/mail')
 const User = require('../models/User')
 const VerifyOTP = require('../models/verifyOTP')
 const Session = require('../models/Session')
-const Url = require('../models/Url')
 
 // @route POST /api/user/user_register
 // @desc Register new user
@@ -229,6 +228,73 @@ router
         }
     })
 
+// @route POST /api/user/forgetpassword
+// @desc Verify the user (email) before updating password
+router
+    .route('/forgetpassword')
+    .post(async (req, res) => {
+        const { email } = req.body
+
+        const user = await User.findOne({email}, '-urlNos -salt -hash -_id')
+
+        if(user) {
+
+            const otpIndb = await VerifyOTP.findOne({ email }, '-_id')
+
+            if (otpIndb != null) {
+                await VerifyOTP.findOneAndDelete({ email: email })
+            }
+
+            const otp = mail.sendMail(user)
+
+                const userId = user.userId
+
+                verifyOTP = new VerifyOTP({
+                    otp,
+                    userId,
+                    email
+                })
+
+                await verifyOTP.save()
+
+                res.status(200).send('If the email is registered, an OTP will be send to the email')
+        }else {
+            res.status(200).send('If the email is registered, an OTP will be send to the email')
+        }
+    })
+
+// @route POST /api/user/forget/updatepassword
+// @desc Update password of the user (password recovery)
+router
+    .route('/forget/updatepassword')
+    .post(async (req, res) => {
+        try {
+            const { email, newPassword } = req.body
+
+            if (newPassword == '') {
+                res.status(401).send('Failed to update password')
+            } else {
+                // Create a new password hash and salt
+                const setPassword = crypt.createPassword(newPassword)
+                const salt = (await setPassword).salt
+                const hash = (await setPassword).hash
+
+                const user = await User.findOneAndUpdate({ email }, { salt: salt, hash: hash }, { new: true })
+
+                if (user) {
+                    res.status(200).send('password_updated')
+                } else {
+                    res.status(401).send('Failed to update password')
+                }
+            }
+        } catch (error) {
+            console.log(error)
+            res.status(401).send('Failed to update password')
+        }
+    })
+
+// @route POST /api/user/logout
+// @desc Logout the user
 router
     .route('/logout')
     .get(async (req, res) => {

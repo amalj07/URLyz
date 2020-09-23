@@ -4,17 +4,14 @@ const crypt = require('../misc/crypt')
 
 // Import Models
 const User = require('../models/User')
-const VerifyOTP = require('../models/verifyOTP')
 const Url = require('../models/Url')
 
-const mail = require('../misc/mail')
-const isAuthenticated = require('../controllers/auth')
 
 // @route POST /api/user_details/fetchuser
 // @desc Fetch user details
 router
     .route('/fetchuser')
-    .get(isAuthenticated, async (req, res) => {
+    .get(async (req, res) => {
         try {
             const user = await User.findOne({ userId: req.userId }, '-_id -userId -salt -hash -verified')
             res.status(200).send(user)
@@ -27,7 +24,7 @@ router
 // @desc Update details of user
 router
     .route('/updateuser')
-    .post(isAuthenticated, async (req, res) => {
+    .post(async (req, res) => {
         try {
             const { data, type } = req.body
 
@@ -58,7 +55,7 @@ router
 // @desc Verify the password of user before updating password
 router
     .route('/verifypassword')
-    .post(isAuthenticated, async (req, res) => {
+    .post(async (req, res) => {
         try {
             const { password } = req.body
 
@@ -85,7 +82,7 @@ router
 // @desc Update password of the user
 router
     .route('/updatepassword')
-    .post(isAuthenticated, async (req, res) => {
+    .post(async (req, res) => {
         try {
             const { newPassword } = req.body
 
@@ -115,7 +112,7 @@ router
 // @desc Delete account of user and delete all data associated with the user
 router
 .route('/delete_account')
-.post(isAuthenticated, async (req, res) => {
+.post(async (req, res) => {
     try {
         const { password } = req.body
 
@@ -146,66 +143,5 @@ router
         res.status(401).send("Failed to delete user")
     }
 })
-
-router
-    .route('/forgetpassword')
-    .post(async (req, res) => {
-        const { email } = req.body
-
-        const user = await User.findOne({email}, '-urlNos -salt -hash -_id')
-
-        if(user) {
-
-            const otpIndb = await VerifyOTP.findOne({ email }, '-_id')
-
-            if (otpIndb != null) {
-                await VerifyOTP.findOneAndDelete({ email: email })
-            }
-
-            const otp = mail.sendMail(user)
-
-                const userId = user.userId
-
-                verifyOTP = new VerifyOTP({
-                    otp,
-                    userId,
-                    email
-                })
-
-                await verifyOTP.save()
-
-                res.status(200).send('If the email is registered, an OTP will be send to the email')
-        }else {
-            res.status(200).send('If the email is registered, an OTP will be send to the email')
-        }
-    })
-
-    router
-    .route('/forget/updatepassword')
-    .post(async (req, res) => {
-        try {
-            const { email, newPassword } = req.body
-
-            if (newPassword == '') {
-                res.status(401).send('Failed to update password')
-            } else {
-                // Create a new password hash and salt
-                const setPassword = crypt.createPassword(newPassword)
-                const salt = (await setPassword).salt
-                const hash = (await setPassword).hash
-
-                const user = await User.findOneAndUpdate({ email }, { salt: salt, hash: hash }, { new: true })
-
-                if (user) {
-                    res.status(200).send('password_updated')
-                } else {
-                    res.status(401).send('Failed to update password')
-                }
-            }
-        } catch (error) {
-            console.log(error)
-            res.status(401).send('Failed to update password')
-        }
-    })
 
 module.exports = router

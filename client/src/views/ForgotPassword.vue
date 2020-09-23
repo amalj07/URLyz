@@ -184,7 +184,7 @@ export default {
             if(this.$refs.emailForm.validate()) {
                 this.loading = true
                 this.disabled =  true
-                let url = `${this.$serverURLI}/api/user_details/forgetpassword`
+                let url = `${this.$serverURLI}/api/user/forgetpassword`
                 this.$http.post(url, {
                     email: this.email
                 }).then(() => {
@@ -225,7 +225,7 @@ export default {
                 } else {
                     this.loadingPassword = true
                     this.disabled = true
-                    let url = `${this.$serverURLI}/api/user_details/forget/updatepassword`
+                    let url = `${this.$serverURLI}/api/user/forget/updatepassword`
                     this.$http.post(url, {
                         email: this.email,
                         newPassword: this.newPassword,

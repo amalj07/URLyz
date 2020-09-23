@@ -39,7 +39,7 @@ Vue.use(VueRouter)
     beforeEnter: isAuthenticated
   },
   {
-    path: '/recoverpasswrod',
+    path: '/recoverpassword',
     name: 'ForgotPassword',
     component: ForgotPassword,
   },
