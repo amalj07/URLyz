@@ -166,7 +166,7 @@ router
     .route('/user_account/resendotp')
     .post(async (req, res) => {
         try {
-            const { email } = req.body
+            const { email, type } = req.body
 
             const user = await User.findOne({ email }, 'userId name email -_id')
 
@@ -191,7 +191,11 @@ router
 
                 res.status(200).send(`OTP send to ${email}`)
             } else {
-                res.status(401).send("Invalid email")
+                if(type == 'PUPDT'){
+                    res.status(401).send("If the email is registered, an OTP will be send to the email")
+                }else{
+                    res.status(401).send("Invalid email")
+                }
             }
 
         } catch (error) {

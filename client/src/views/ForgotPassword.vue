@@ -259,15 +259,16 @@ export default {
             this.resentOtpCountDown()
             let url = `${this.$serverURLI}/api/user/user_account/resendotp`
             this.$http.post(url, {
+                type: 'PUPDT',
                 email: this.email
-            }).then(response => {
+            }).then(() => {
                 this.otp = ''
                 this.snackbar = true
-                this.snackbarText = response.data
+                this.snackbarText = 'If the email is registered, an OTP will be send to the email'
             }).catch(error => {
                 this.otp = ''
                 this.snackbar = true
-                if(error.response.data == 'Invalid email'){
+                if(error.response.data == 'If the email is registered, an OTP will be send to the email'){
                     this.snackbarText = error.response.data
                 } else if(error.response.data == 'Failed to send otp'){
                     this.snackbarText = error.response.data
