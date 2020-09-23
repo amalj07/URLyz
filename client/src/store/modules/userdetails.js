@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { getCookie } from '../../getCookie'
 
 let serverURLI = process.env.NODE_ENV == 'production' ? process.env.VUE_APP_PROD_URL : process.env.VUE_APP_DEV_URL
 
@@ -13,27 +12,28 @@ const getters = {
 
 const actions = {
     async fetchUser({ commit }) {
-        let sid = getCookie("sid")
-        let token = getCookie("t")
-
-        if (sid != '' && token != '') {
-            axios.post(`${serverURLI}/api/user/user_details`, {
-                sid,
-                token
-            }).then(response => {
-                commit('userDetails', response.data)
-            })
-        }
+        axios.get(`${serverURLI}/api/user_details/fetchuser`).then(response => {
+            console.log(response.data)
+            commit('userDetails', response.data)
+        }).catch(error => {
+            if(error.response.data == 'Invalid user') {
+                // window.location.href = serverURLI + '/login'
+                window.location.href = process.env.VUE_APP_CLIENT_URL
+            }
+        })
     },
 
     async updateUser({ commit }, { data, type }) {
         axios.post(`${serverURLI}/api/user_details/updateuser`, {
-            sid: getCookie("sid"),
-            token: getCookie("t"),
             data: data,
             type: type
         }).then(response => {
             commit('updatedUser', response.data)
+        }).catch(error => {
+            if(error.response.data == 'Invalid user') {
+                // window.location.href = serverURLI + '/login'
+                window.location.href = process.env.VUE_APP_CLIENT_URL
+            }
         })
 
     }

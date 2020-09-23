@@ -22,7 +22,8 @@
                                     :rules="inputRules"
                                     label="New password"
                                     type="password"
-                                    outlined    
+                                    outlined
+                                    validate-on-blur
                                 ></v-text-field>
                                 <v-text-field
                                     class="mx-5"
@@ -31,7 +32,8 @@
                                     :rules="inputRules.concat(confirmPasswordRule)"
                                     label="Confirm new password"
                                     type="password"
-                                    outlined    
+                                    outlined
+                                    validate-on-blur
                                 ></v-text-field>
                             </v-card-text>
                             <v-card-actions class="justify-end">
@@ -237,6 +239,7 @@
                                     v-model="password"  
                                 ></v-text-field>
                                 <v-btn
+                                    :loading="btnloading"
                                     class="blue white--text mt-n2"
                                     @click="changeUserPassword">
                                     Change Password
@@ -275,6 +278,7 @@ export default {
             password: '',
             loading: false,
             disabled: false,
+            btnloading: false,
             updatePasswordDialog: false,
             newPassword: '',
             confirmPassword: '',
@@ -317,19 +321,23 @@ export default {
             this.disabledEmail = true
         },
         changeUserPassword() {
+            this.btnloading = true
             let url = `${this.$serverURLI}/api/user_details/verifypassword`
             this.$http.post(url, {
                 password: this.password
             }).then(() => {
+                    this.btnloading = false
                     this.updatePasswordDialog = true
                     this.password = ''
             }).catch(error => {
+                this.btnloading = false
                 if(error.response.data == 'Invalid password' || error.response.data == 'Failed to verify password'){
                     this.password = ''
                     this.errorSnackbar = true,
                     this.snackbarText = error.response.data
                 }else {
-                    this.logout()
+                    // window.location.href = `${this.$serverURLI}`
+                    window.location.href = process.env.VUE_APP_CLIENT_URL + '/login'
                 }
             })
         },
@@ -357,7 +365,8 @@ export default {
                             this.snackbarText = error.response.data
                         }
                         else {
-                            this.logout()
+                            // window.location.href = `${this.$serverURLI}`
+                            window.location.href = process.env.VUE_APP_CLIENT_URL + '/login'
                         }
                     })
                 }
@@ -365,6 +374,8 @@ export default {
         },
         cancelUpdate() {
             this.updatePasswordDialog = false
+            this.newPassword = ''
+            this.confirmPassword = ''
         },
         deleteAccount(){
             this.deleteAccountDialog = true
@@ -376,14 +387,15 @@ export default {
             } else {
                 this.loading = true
                 this.disabled = true
-                let url = `${this.$serverURLI}/api/user/delete_account`
+                let url = `${this.$serverURLI}/api/user_details/delete_account`
                 this.$http.post(url, {
                     password: this.deleteAccountPassword
                 }).then( () => {
                         this.deleteAccountPassword = ''
                         this.successSnackbar = true
                         this.snackbarText = 'User deleted succesfully'
-                        this.logout()
+                        // window.location.href = `${this.$serverURLI}`
+                        window.location.href = process.env.VUE_APP_CLIENT_URL + '/login'
                 }).catch(error => {
                     if(error.response.data == 'Invalid password' || error.response.data == 'Failed to delete user'){
                         this.deleteAccountPassword = ''
@@ -393,21 +405,16 @@ export default {
                         this.errorSnackbar = true
                         this.snackbarText = error.response.data
                     }else {
-                        this.logout()
+                        // window.location.href = `${this.$serverURLI}`
+                        window.location.href = process.env.VUE_APP_CLIENT_URL + '/login'
                     }
                 })
             }
         },
         cancelDeleteAccount() {
             this.deleteAccountDialog = false
-        },
-        logout() {
-            let url = `${this.$serverURLI}/api/user/logout`
-            this.$http.get(url).then(() => {
-                // window.location.href = `${this.$serverURLI}`
-                window.location.href = process.env.VUE_APP_CLIENT_URL + '/login'
-            })
-        },
+            this.deleteAccountPassword = ''
+        }
     },
     computed: {
         name: {

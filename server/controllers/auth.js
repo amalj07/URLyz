@@ -9,6 +9,7 @@ const isAuthenticated = async function(req, res, next) {
         if(userId) {
             req.userId = userId.userId
             req.user = true
+            next()
         } else {
             res.cookie("sid", "", {maxAge: "1"})
             res.cookie("t", "", {maxAge: "1"})
@@ -19,7 +20,6 @@ const isAuthenticated = async function(req, res, next) {
         res.cookie("t", "", {maxAge: "1"})
         res.status(401).send("Invalid user")
     }
-    next()
 }
 
 module.exports = isAuthenticated
