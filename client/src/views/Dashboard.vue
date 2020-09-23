@@ -171,7 +171,8 @@ export default {
               this.errorSnackbar = true
               this.snackbarText = error.response.data
           }else {
-            this.logout()
+            // window.location.href = `${this.$serverURLI}`
+            window.location.href = process.env.VUE_APP_CLIENT_URL + '/login'
           }
         })
     },
@@ -191,7 +192,8 @@ export default {
             this.errorSnackbar = true
             this.snackbarText = error.response.data
           }else {
-            this.logout()
+            // window.location.href = `${this.$serverURLI}`
+            window.location.href = process.env.VUE_APP_CLIENT_URL + '/login'
           }
         })
     },
@@ -213,7 +215,7 @@ export default {
     },
     confirmDelete() {
       this.deleteurl_load = true
-      let url = `${this.$serverURLI}/api/urls/deleteurl`
+      let url = `${this.$serverURLI}/api/urls/delete`
       this.$http.post(url, {
         url: this.deleteurl
       }).then(() => {
@@ -229,16 +231,10 @@ export default {
             this.errorSnackbar = true
             this.snackbarText = error.response.data
           }else {
-            this.logout()
-          }
-      })
-    },
-    logout() {
-        let url = `${this.$serverURLI}/api/user/logout`
-        this.$http.get(url).then(() => {
             // window.location.href = `${this.$serverURLI}`
             window.location.href = process.env.VUE_APP_CLIENT_URL + '/login'
-        })
+          }
+      })
     },
     updatevisit(url, index) {
       if(this.urls[index].status != 'disabled'){

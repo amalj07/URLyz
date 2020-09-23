@@ -7,7 +7,7 @@ const User = require('../models/User')
 const Url = require('../models/Url')
 
 
-// @route POST /redirect
+// @route POST /fetchurl
 // @desc Fetch every urls a user to show in dashboard
 router
     .route('/fetchurl')
@@ -28,7 +28,7 @@ router
 
 
 // @route POST /updateurlstatus
-// @desc Fetch every urls a user to show in dashboard
+// @desc Update the status of the url
 router
     .route('/updateurlstatus')
     .post(async (req, res) => {
