@@ -51,6 +51,46 @@
                 </v-card-actions>
               </v-card>
           </v-form>
+          <v-snackbar
+                    text
+                    top
+                    color="success"
+                    class="update_btn"
+                    v-model="successSnackbar">
+                    {{ this.snackbarText }}
+                    <template v-slot:action="{ attrs }">
+                        <v-btn
+                        :ripple=false
+                        color="green"
+                        class="update_btn"
+                        text
+                        v-bind="attrs"
+                        @click="successSnackbar = false"
+                        >
+                        <v-icon left>close</v-icon>
+                        </v-btn>
+                    </template>
+                </v-snackbar> 
+                <v-snackbar
+                    text
+                    top
+                    color="error"
+                    class="update_btn"
+                    v-model="errorSnackbar">
+                    {{ this.snackbarText }}
+                    <template v-slot:action="{ attrs }">
+                        <v-btn
+                        :ripple=false
+                        color="error"
+                        class="update_btn"
+                        text
+                        v-bind="attrs"
+                        @click="errorSnackbar = false"
+                        >
+                        <v-icon left>close</v-icon>
+                        </v-btn>
+                    </template>
+                </v-snackbar> 
       </v-container>
   </div>
 </template>
@@ -65,6 +105,9 @@ export default {
             message: '',
             loading: false,
             disabled: false,
+            successSnackbar: false,
+            errorSnackbar: false,
+            snackbarText: '',
             inputRules: [
                 value => value.length > 0 || 'required',
             ],
@@ -87,11 +130,21 @@ export default {
                 }).then(() => {
                     this.loading = false
                     this.disabled = false
-                    console.log("success")
-                }).catch(error => {
+                    this.name = ''
+                    this.email = ''
+                    this.phone = ''
+                    this.message = ''
+                    this.successSnackbar = true,
+                    this.snackbarText = "New support request created."
+                }).catch(() => {
                     this.loading = false,
                     this.disabled = false
-                    console.log(error)
+                    this.name = ''
+                    this.email = ''
+                    this.phone = ''
+                    this.message = ''
+                    this.errorSnackbar = true,
+                    this.snackbarText = "Failed to create support request, Please try again"
                 })
             }
         }

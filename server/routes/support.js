@@ -32,6 +32,7 @@ router
             res.status(200).send("Support request created")
         } catch (error) {
             console.log(error)
+            res.status(400).send("Failed to create support request")
         }
     })
 
