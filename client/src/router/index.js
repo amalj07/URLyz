@@ -7,6 +7,7 @@ import Dashboard from '../views/Dashboard'
 import Profile from '../views/Profile'
 import ForgotPassword from '../views/ForgotPassword'
 import NotFoundPage from '../views/NotFoundPage'
+import Support from '../views/Support'
 import { isAuthenticated } from '../auth'
 
 Vue.use(VueRouter)
@@ -46,6 +47,11 @@ Vue.use(VueRouter)
   {
     path: '*',
     component: NotFoundPage
+  },
+  {
+    path: '/support',
+    name: 'Support',
+    component: Support,
   }
 ]
 
