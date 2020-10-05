@@ -46,3 +46,27 @@ exports.sendMail = (user) => {
         console.log(error)
     }
 }
+
+exports.sendSupportMail = (support) => {
+    try {
+    
+        // Configure mail credentials and message
+        const mailOptions = {
+            from: config.mail.user,
+            to: support.email,
+            subject: `Case ${support.supportId} URLyz issue`,
+            text: `Hello ${support.name}, We've create a new support issue with support Id ${support.supportId}. We will contact you soon.`
+        }
+    
+        // Send mail to the user
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error)
+                throw error
+            return info.response
+        })
+    
+        return OTP
+    } catch (error) {
+        console.log(error)
+    }
+}

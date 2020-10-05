@@ -1,6 +1,10 @@
 const mongoose = require('mongoose')
 
 const supportSchema = new mongoose.Schema({
+    supportId: {
+        type: String,
+        required: true
+    },
     name: {
         type: String,
         required: true

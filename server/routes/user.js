@@ -28,7 +28,7 @@ router
                     res.status(401).send('Email already registered')
                 } else {
                     // Create a new userId
-                    const userId = uid.uid()
+                    const userId = uid.uid('user')
 
                     // Create a new password hash and salt
                     const setPassword = crypt.createPassword(password)

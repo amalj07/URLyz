@@ -1,7 +1,7 @@
 const process = require('process')
 
 // Create a unique userid
-exports.uid = () => {
+exports.uid = (type) => {
     var year = new Date().getFullYear().toString().slice(-2)
     var month = new Date().getMonth() + 1
     var date = new Date().getDate().toString()
@@ -13,8 +13,13 @@ exports.uid = () => {
         month = month.toString()
     }
 
-    var userId = "U" + year + month + date + time + pid;
-    return userId
+    if(type === 'user') {
+        var userId = "U" + year + month + date + time + pid;
+        return userId
+    } else {
+        var supportId = "S" + year + month + date + time + pid;
+        return supportId
+    }
 }
 
 // Create a unique sessionId

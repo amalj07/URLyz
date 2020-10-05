@@ -37,7 +37,7 @@ app.use('/', require('./routes/redirect'))
 app.use('/api/user', require('./routes/user'))
 app.use('/api/urls', isAuthenticated, require('./routes/url'))
 app.use('/api/user_details',isAuthenticated, require('./routes/userDetails'))
-
+app.use('/api', require('./routes/support'))
 
 const PORT = process.env.PORT || 5000
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
