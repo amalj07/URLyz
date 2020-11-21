@@ -13,7 +13,6 @@ const getters = {
 const actions = {
     async fetchUser({ commit }) {
         axios.get(`${serverURLI}/api/user_details/fetchuser`).then(response => {
-            console.log(response.data)
             commit('userDetails', response.data)
         }).catch(error => {
             if(error.response.data == 'Invalid user') {
