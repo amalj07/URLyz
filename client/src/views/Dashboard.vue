@@ -215,7 +215,7 @@ export default {
     },
     confirmDelete() {
       this.deleteurl_load = true
-      let url = `${this.$serverURLI}/api/urls/delete`
+      let url = `${this.$serverURLI}/api/urls/deleteurl`
       this.$http.post(url, {
         url: this.deleteurl
       }).then(() => {

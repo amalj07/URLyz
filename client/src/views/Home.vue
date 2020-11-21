@@ -127,7 +127,6 @@ export default {
             }).catch(error => {
                 this.loading = false
                 this.disabled =false
-                console.log(error.response.data)
                 if(error.response.data == "Invalid user") {
                     this.logout()
                 } else if(error.response.data == 'Invalid URL' || error.response.data == 'Custom url already taken'){
