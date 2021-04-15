@@ -8,7 +8,7 @@ const isAuthenticated = require('./controllers/auth')
 
 const app = express()
 
-// connect ot database
+// connect to database
 connectDB()
 
 // Handle cross origin request
