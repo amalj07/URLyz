@@ -22,7 +22,7 @@ exports.checkPassword = (password, salt, hash) => {
     key = key.toString('hex')
 
     // Verify if the original hash and login attempt hash are same
-    if(key == hash) {
+    if (key == hash) {
         return true
     } else {
         return 'incorrect password'
@@ -31,7 +31,7 @@ exports.checkPassword = (password, salt, hash) => {
 
 // encrypts userid
 exports.encrypt = text => {
-    var mykey = crypto.createCipher('aes-128-cbc', 'aICt27c@v9y#');
+    var mykey = crypto.createCipheriv('aes-128-cbc', 'aICt27c@v9y#');
     var mystr = mykey.update(text, 'utf8', 'hex')
     mystr += mykey.final('hex');
     return mystr
@@ -39,8 +39,8 @@ exports.encrypt = text => {
 
 // decrypts userid
 exports.decrypt = text => {
-    var mykey = crypto.createDecipher('aes-128-cbc', 'aICt27c@v9y#');
-	var mystr = mykey.update(text, 'hex', 'utf8')
-	mystr += mykey.final('utf8');
-	return mystr;
+    var mykey = crypto.createDecipheriv('aes-128-cbc', 'aICt27c@v9y#');
+    var mystr = mykey.update(text, 'hex', 'utf8')
+    mystr += mykey.final('utf8');
+    return mystr;
 }

@@ -28,10 +28,10 @@ router
             const urlCode = customUrl == '' ? shortid.generate() : customUrl
 
             // Check if the custom URL is already registered
-            const urlCodeInDb = await Url.findOne({urlCode})
-            
+            const urlCodeInDb = await Url.findOne({ urlCode })
 
-            if(urlCodeInDb != null) {
+
+            if (urlCodeInDb != null) {
                 res.status(401).send("Custom url already taken")
             } else {
                 // Check long url
@@ -40,7 +40,7 @@ router
                     if (sid != undefined && t != undefined) {
                         // Find usersession based on sid and token
                         const userSession = await Session.findOne({ sid: sid, token: t }, '-_id')
-    
+
                         if (userSession) {
                             // If valid userSession, check if short url already exist
                             const url = await Url.findOne({ longUrl: longUrl, userId: userSession.userId })
@@ -49,7 +49,7 @@ router
                             } else {
                                 // Create new short url if long url is not present
                                 const shortUrl = baseUrl + '/' + urlCode
-    
+
                                 newUrl = new Url({
                                     longUrl,
                                     shortUrl,
@@ -57,11 +57,11 @@ router
                                     userId: userSession.userId,
                                     date: new Date
                                 })
-    
+
                                 await newUrl.save()
-    
-                                await User.update({userId: userSession.userId}, {$inc: {urlNos: 1}})
-    
+
+                                await User.updateOne({ userId: userSession.userId }, { $inc: { urlNos: 1 } })
+
                                 res.status(200).json(newUrl.shortUrl)
                             }
                         } else {
@@ -76,7 +76,7 @@ router
                             // Create new short url if long url is not present
                             const shortUrl = baseUrl + '/' + urlCode
                             console.log(shortUrl)
-    
+
                             newUrl = new Url({
                                 longUrl,
                                 shortUrl,
@@ -84,9 +84,9 @@ router
                                 userId: 'nouser',
                                 date: new Date
                             })
-    
+
                             await newUrl.save()
-    
+
                             res.status(200).json(newUrl.shortUrl)
                         }
                     }
